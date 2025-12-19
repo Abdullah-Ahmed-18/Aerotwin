@@ -7,7 +7,7 @@ const Landing = () => {
 
   return (
     <div className={styles.loginContainer}>
-      <h1 className={styles.title}>WELCOME TO AEROSPACE</h1>
+      <h1 className={styles.title}>WELCOME TO AEROTWIN</h1>
       
       <div className={styles.buttonsContainer}>
         <button 
