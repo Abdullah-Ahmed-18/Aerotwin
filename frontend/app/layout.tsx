@@ -10,7 +10,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <div className="flex flex-1 min-h-0">
 
           {/* Left Sidebar Container */}
-          <aside className="w-[450px] border-r border-slate-200 bg-[#F4F7FB] flex flex-col shrink-0 overflow-hidden">
+          <aside className="w-[50%] border-r border-slate-200 bg-[#F4F7FB] flex flex-col shrink-0 overflow-hidden">
             {/* Reduced from p-5 to p-2 to gain 24px of vertical space */}
             <div className="flex-1 overflow-hidden p-2 flex flex-col">
               {children}

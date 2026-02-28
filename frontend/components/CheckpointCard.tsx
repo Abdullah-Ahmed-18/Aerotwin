@@ -1,86 +1,305 @@
-import { Edit2, Trash2, ListTree, PlusCircle, ChevronDown, Plus } from 'lucide-react';
+'use client';
+
+import { Edit2, Trash2, ListTree, PlusCircle, ChevronDown, Plus, ShieldHalf, Ticket, TicketsPlane, ShoppingBag, QrCode, BaggageClaim, BriefcaseConveyorBelt, ShieldUser, X } from 'lucide-react';
 import StationCard from './StationCard';
+import { useState } from 'react';
 
 interface CheckpointProps {
+    id: string;
     title: string;
     idCode: string;
     type: string;
     colorType: 'security' | 'checkin';
     icon: React.ElementType;
-    stations: { id: string; name: string }[];
+    stations: { id: string; name: string; settings?: StationSettings }[];
+    onDelete: (id: string) => void;
+    onUpdateStations: (id: string, stations: { id: string; name: string; settings?: StationSettings }[]) => void;
 }
 
-export default function CheckpointCard({ title, idCode, type, colorType, icon: Icon, stations }: CheckpointProps) {
-    const leftBorder = colorType === 'security' ? 'border-l-amber-500' : 'border-l-[#1E3A8A]';
-    const iconColor = colorType === 'security' ? 'text-amber-500' : 'text-[#1E3A8A]';
+interface StationSettings {
+    staffing: string;
+    avgServiceTime: string;
+    maxQueue: string;
+    experience: string;
+    allowedClass: string[];
+    hasXRayScanner: boolean;
+}
+
+export default function CheckpointCard({ id, title, idCode, type, colorType, icon: Icon, stations, onDelete, onUpdateStations }: CheckpointProps) {
+    const [isEditing, setIsEditing] = useState(false);
+    const [currentType, setCurrentType] = useState(type);
+    const [showAddStation, setShowAddStation] = useState(false);
+    const [applyToAll, setApplyToAll] = useState(false);
+    const [newStation, setNewStation] = useState({
+        id: '',
+        name: ''
+    });
+
+    // Dynamically determine colorType and icon based on current type
+    const securityTypes = ['Security', 'Passport Check'];
+    const currentColorType = securityTypes.includes(currentType) ? 'security' : 'checkin';
+    
+    const getIcon = (checkpointType: string) => {
+        switch (checkpointType) {
+            case 'Security':
+                return ShieldHalf;
+            case 'Check-in /w Baggage Tagging':
+                return TicketsPlane;
+            case 'Digital Check-in':
+                return QrCode;
+            case 'Self-Service Bag Drop':
+                return BaggageClaim;
+            case 'Baggage Retrieval':
+                return BriefcaseConveyorBelt;
+            case 'Passport Check':
+                return ShieldUser;
+            default:
+                return Ticket;
+        }
+    };
+
+    const getColors = (checkpointType: string) => {
+        switch (checkpointType) {
+            case 'Security':
+                return { border: 'border-l-orange-500', icon: 'text-orange-500' };
+            case 'Check-in /w Baggage Tagging':
+                return { border: 'border-l-blue-600', icon: 'text-blue-600' };
+            case 'Digital Check-in':
+                return { border: 'border-l-purple-600', icon: 'text-purple-600' };
+            case 'Self-Service Bag Drop':
+                return { border: 'border-l-emerald-600', icon: 'text-emerald-600' };
+            case 'Baggage Retrieval':
+                return { border: 'border-l-cyan-600', icon: 'text-cyan-600' };
+            case 'Passport Check':
+                return { border: 'border-l-indigo-700', icon: 'text-indigo-700' };
+            default:
+                return { border: 'border-l-slate-500', icon: 'text-slate-500' };
+        }
+    };
+
+    const CurrentIcon = getIcon(currentType);
+    const colors = getColors(currentType);
+    const leftBorder = colors.border;
+    const iconColor = colors.icon;
+
+    const handleAddStation = () => {
+        if (!newStation.id || !newStation.name) {
+            alert('Please fill in all required fields');
+            return;
+        }
+
+        // Check for duplicate station ID or name
+        const duplicateId = stations.some(s => s.id.toLowerCase() === newStation.id.toLowerCase());
+        const duplicateName = stations.some(s => s.name.toLowerCase() === newStation.name.toLowerCase());
+        
+        if (duplicateId) {
+            alert('A station with this ID already exists in this checkpoint');
+            return;
+        }
+        if (duplicateName) {
+            alert('A station with this name already exists in this checkpoint');
+            return;
+        }
+
+        // Determine default staffing based on checkpoint type
+        const automatedTypes = ['Digital Check-in', 'Self-Service Bag Drop', 'Baggage Retrieval'];
+        const defaultStaffing = automatedTypes.includes(currentType) ? '0' : '';
+
+        const updatedStations = [...stations, { 
+            id: newStation.id, 
+            name: newStation.name,
+            settings: {
+                staffing: defaultStaffing,
+                avgServiceTime: '',
+                maxQueue: '',
+                experience: 'Experienced',
+                allowedClass: ['All Classes'],
+                hasXRayScanner: false
+            }
+        }];
+        onUpdateStations(id, updatedStations);
+        setNewStation({ id: '', name: '' });
+        setShowAddStation(false);
+    };
+
+    const handleDeleteStation = (stationId: string) => {
+        const updatedStations = stations.filter(s => s.id !== stationId);
+        onUpdateStations(id, updatedStations);
+    };
+
+    const handleStationSettingsChange = (stationId: string, settings: StationSettings) => {
+        const updatedStations = stations.map(s => 
+            s.id === stationId ? { ...s, settings } : s
+        );
+        onUpdateStations(id, updatedStations);
+
+        // If "apply to all" is toggled and this is the first station, copy to all
+        if (applyToAll && stations[0]?.id === stationId && stations.length > 1) {
+            const allUpdated = stations.map(s => ({ ...s, settings }));
+            onUpdateStations(id, allUpdated);
+        }
+    };
+
+    const handleApplyToAllToggle = () => {
+        const newApplyToAll = !applyToAll;
+        setApplyToAll(newApplyToAll);
+
+        // If turning on and there's a first station with settings, copy to all
+        if (newApplyToAll && stations.length > 1 && stations[0]?.settings) {
+            const firstSettings = stations[0].settings;
+            const allUpdated = stations.map(s => ({ ...s, settings: firstSettings }));
+            onUpdateStations(id, allUpdated);
+        }
+    };
 
     return (
         <div className={`bg-white border-l-[3px] ${leftBorder} rounded shadow-sm border border-slate-200 flex flex-col`}>
 
-            <div className="px-2 py-1.5 flex justify-between items-center border-b border-slate-50">
-                <div className="flex items-center gap-1.5">
-                    <Icon size={12} className={iconColor} />
-                    <span className="text-[11px] font-bold text-slate-900">{title}</span>
+            <div className="px-3 py-2 flex justify-between items-center border-b border-slate-50">
+                <div className="flex items-center gap-2">
+                    {currentType === 'Check-in /w Baggage Tagging' ? (
+                        <div className="flex items-center -space-x-1">
+                            <TicketsPlane size={16} className={iconColor} />
+                            <ShoppingBag size={16} className={iconColor} />
+                        </div>
+                    ) : (
+                        <CurrentIcon size={20} className={iconColor} />
+                    )}
+                    <span className="text-sm font-bold text-slate-900">{title}</span>
                 </div>
                 <div className="flex gap-2 text-slate-300">
-                    <Edit2 size={10} className="cursor-pointer hover:text-slate-500" />
-                    <Trash2 size={10} className="cursor-pointer hover:text-red-500" />
+                    <Edit2 
+                        size={14} 
+                        className={`cursor-pointer ${isEditing ? 'text-[#1ED5F4]' : 'hover:text-slate-500'}`}
+                        onClick={() => setIsEditing(!isEditing)}
+                    />
+                    <Trash2 
+                        size={14} 
+                        className="cursor-pointer hover:text-red-500" 
+                        onClick={() => onDelete(id)}
+                    />
                 </div>
             </div>
 
-            <div className="p-2 flex flex-col gap-1.5">
-                <div className="grid grid-cols-2 gap-1.5">
-                    <div className="flex flex-col gap-0.5">
-                        <label className="text-[7px] font-bold text-slate-400 uppercase tracking-wider">ID Code</label>
+            <div className="p-3 flex flex-col gap-2.5">
+                <div className="grid grid-cols-2 gap-2.5">
+                    <div className="flex flex-col gap-1.5">
+                        <label className="text-[10px] font-bold text-slate-600 uppercase tracking-wider">ID Code</label>
                         <input
                             defaultValue={idCode}
-                            className="bg-slate-100 border border-transparent rounded px-1.5 h-5 text-[9px] text-slate-700 outline-none font-mono"
+                            disabled={!isEditing}
+                            className="bg-slate-100 border border-transparent rounded px-2 h-7 text-xs text-slate-700 outline-none font-mono disabled:opacity-50 disabled:cursor-not-allowed"
                         />
                     </div>
-                    <div className="flex flex-col gap-0.5">
-                        <label className="text-[7px] font-bold text-slate-400 uppercase tracking-wider">Type</label>
+                    <div className="flex flex-col gap-1.5">
+                        <label className="text-[10px] font-bold text-slate-600 uppercase tracking-wider">Type</label>
                         <div className="relative">
                             <select
-                                defaultValue={type}
-                                className="w-full bg-slate-100 border border-transparent rounded pl-1.5 pr-4 h-5 text-[9px] text-slate-700 outline-none appearance-none"
+                                value={currentType}
+                                onChange={(e) => setCurrentType(e.target.value)}
+                                disabled={!isEditing}
+                                className="w-full bg-slate-100 border border-transparent rounded pl-2 pr-6 h-7 text-xs text-slate-700 outline-none appearance-none disabled:opacity-50 disabled:cursor-not-allowed"
                             >
-                                <option value={type}>{type}</option>
+                                <option value="Security">Security</option>
+                                <option value="Check-in /w Baggage Tagging">Check-in /w Baggage Tagging</option>
+                                <option value="Digital Check-in">Digital Check-in</option>
+                                <option value="Self-Service Bag Drop">Self-Service Bag Drop</option>
+                                <option value="Baggage Retrieval">Baggage Retrieval</option>
+                                <option value="Passport Check">Passport Check</option>
                             </select>
-                            <ChevronDown size={8} className="absolute right-1 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
+                            <ChevronDown size={10} className="absolute right-1.5 top-1/2 -translate-y-1/2 text-slate-600 pointer-events-none" />
                         </div>
                     </div>
                 </div>
 
-                <div className="flex items-center gap-1.5">
-                    <div className="w-5 h-3 bg-slate-300 rounded-full relative cursor-pointer">
-                        <div className="w-2 h-2 bg-white rounded-full absolute left-[2px] top-[2px] shadow-sm"></div>
+                <div className="flex items-center gap-2">
+                    <div 
+                        className={`w-7 h-4 rounded-full relative cursor-pointer transition-colors ${
+                            applyToAll ? 'bg-[#1ED5F4]' : 'bg-slate-300'
+                        }`}
+                        onClick={handleApplyToAllToggle}
+                    >
+                        <div className={`w-3 h-3 bg-white rounded-full absolute top-[2px] shadow-sm transition-all ${
+                            applyToAll ? 'left-[14px]' : 'left-[2px]'
+                        }`}></div>
                     </div>
-                    <span className="text-[8px] text-slate-500">Apply settings to all stations</span>
+                    <span className="text-[11px] text-slate-500">Apply settings to all stations</span>
                 </div>
 
                 <hr className="border-slate-100 my-0.5" />
 
                 <div className="flex justify-between items-center text-[#1ED5F4]">
-                    <div className="flex items-center gap-1 text-[7px] font-bold uppercase tracking-wider">
-                        <ListTree size={8} />
+                    <div className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider">
+                        <ListTree size={11} />
                         <span>Active Stations</span>
                     </div>
-                    <div className="flex items-center gap-1 text-[7px] cursor-pointer">
-                        <PlusCircle size={8} />
+                    <div 
+                        className="flex items-center gap-1.5 text-[10px] cursor-pointer hover:text-[#1ac1de]"
+                        onClick={() => setShowAddStation(!showAddStation)}
+                    >
+                        <PlusCircle size={11} />
                         <span>Add Station</span>
                     </div>
                 </div>
 
-                <div className="flex flex-col gap-1">
+                {/* Add Station Form */}
+                {showAddStation && (
+                    <div className="bg-slate-50 border border-slate-200 rounded p-2.5 flex flex-col gap-2.5">
+                        <div className="flex justify-between items-center">
+                            <span className="text-xs font-bold text-slate-700">New Station</span>
+                            <X 
+                                size={12} 
+                                className="cursor-pointer text-slate-400 hover:text-slate-600"
+                                onClick={() => setShowAddStation(false)}
+                            />
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-2">
+                            <div className="flex flex-col gap-1.5">
+                                <label className="text-[9px] font-bold text-slate-600 uppercase tracking-wider">Station ID</label>
+                                <input
+                                    type="text"
+                                    value={newStation.id}
+                                    onChange={(e) => setNewStation({ ...newStation, id: e.target.value })}
+                                    placeholder="e.g., ST-01"
+                                    className="bg-white border border-slate-200 rounded px-1.5 h-6 text-[11px] text-slate-700 outline-none focus:border-[#1ED5F4] font-mono"
+                                />
+                            </div>
+                            <div className="flex flex-col gap-1.5">
+                                <label className="text-[9px] font-bold text-slate-600 uppercase tracking-wider">Name</label>
+                                <input
+                                    type="text"
+                                    value={newStation.name}
+                                    onChange={(e) => setNewStation({ ...newStation, name: e.target.value })}
+                                    placeholder="e.g., Lane 1"
+                                    className="bg-white border border-slate-200 rounded px-1.5 h-6 text-[11px] text-slate-700 outline-none focus:border-[#1ED5F4]"
+                                />
+                            </div>
+                        </div>
+
+                        <button
+                            onClick={handleAddStation}
+                            className="bg-[#1ED5F4] text-slate-900 text-[10px] font-bold px-2 py-1 rounded hover:bg-[#1ac1de] transition-colors"
+                        >
+                            Add Station
+                        </button>
+                    </div>
+                )}
+
+                <div className="flex flex-col gap-1.5">
                     {stations.map((s) => (
-                        <StationCard key={s.id} id={s.id} name={s.name} />
+                        <StationCard 
+                            key={s.id} 
+                            id={s.id} 
+                            name={s.name} 
+                            checkpointType={currentType}
+                            settings={s.settings}
+                            onSettingsChange={(settings) => handleStationSettingsChange(s.id, settings)}
+                            onDelete={() => handleDeleteStation(s.id)}
+                        />
                     ))}
                 </div>
 
-                <div className="w-full h-5 border border-dashed border-slate-200 bg-slate-50/50 rounded flex items-center gap-1 text-slate-400 text-[8px] font-medium cursor-pointer">
-                    <Plus size={8} className="ml-1.5" />
-                    Configure new station parameter block...
-                </div>
             </div>
         </div>
     );

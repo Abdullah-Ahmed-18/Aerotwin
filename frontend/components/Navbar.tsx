@@ -9,14 +9,14 @@ export default function Navbar() {
                     <span className="text-2xl">✈</span> AEROTWIN
                 </div>
                 <span className="text-xs text-gray-400 font-medium mt-1 uppercase tracking-widest">
-                    Configuration System v2.4
+                    Configuration System v0.1
                 </span>
             </div>
 
             {/* Right: Status & Actions */}
             <div className="flex items-center gap-6">
                 {/* System Status */}
-                <div className="flex items-center gap-2 bg-blue-50 px-3 py-1.5 rounded-full">
+                <div className="flex items-center gap-2 bg-blue-50 px-3 py-1.5 rounded-full hidden">
                     <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
                     <span className="text-xs font-bold text-blue-900 uppercase">System Online</span>
                 </div>
@@ -30,7 +30,7 @@ export default function Navbar() {
                 {/* User Profile */}
                 <div className="flex items-center gap-2 border-l pl-4 border-gray-200">
                     <div className="w-8 h-8 bg-blue-900 rounded-full flex items-center justify-center text-white text-xs font-bold">
-                        JD
+                        AA
                     </div>
                 </div>
             </div>
