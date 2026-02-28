@@ -34,7 +34,7 @@ export default function StationCard({ id, name, checkpointType, settings, onSett
     );
     const [isClassDropdownOpen, setIsClassDropdownOpen] = useState(false);
     const isSecurity = checkpointType === 'Security';
-    
+
     const classOptions = ['All Classes', 'Business', 'Economy', 'PRM', 'First Class', 'VIP'];
 
     // Update local settings when prop changes (for "apply to all" functionality)
@@ -71,14 +71,14 @@ export default function StationCard({ id, name, checkpointType, settings, onSett
 
     const toggleClassOption = (option: string) => {
         let newClasses: string[];
-        
+
         if (option === 'All Classes') {
             // If selecting "All Classes", replace with just that
             newClasses = ['All Classes'];
         } else {
             // Remove "All Classes" if it exists and we're selecting a specific class
             const currentClasses = localSettings.allowedClass.filter(c => c !== 'All Classes');
-            
+
             if (currentClasses.includes(option)) {
                 // Deselect the option
                 newClasses = currentClasses.filter(c => c !== option);
@@ -91,7 +91,7 @@ export default function StationCard({ id, name, checkpointType, settings, onSett
                 newClasses = [...currentClasses, option];
             }
         }
-        
+
         updateSetting('allowedClass', newClasses);
     };
     return (
@@ -103,8 +103,8 @@ export default function StationCard({ id, name, checkpointType, settings, onSett
                     <span className="text-[11px] font-bold text-slate-800">{name}</span>
                 </div>
                 {onDelete && (
-                    <Trash2 
-                        size={12} 
+                    <Trash2
+                        size={12}
                         className="cursor-pointer text-slate-300 hover:text-red-500 flex-shrink-0"
                         onClick={onDelete}
                     />
@@ -152,7 +152,7 @@ export default function StationCard({ id, name, checkpointType, settings, onSett
                     <div className="flex flex-col gap-0.5">
                         <label className="text-[9px] font-bold text-slate-600 uppercase tracking-wider">Staffing Experience</label>
                         <div className="relative">
-                            <select 
+                            <select
                                 value={localSettings.experience}
                                 onChange={(e) => updateSetting('experience', e.target.value)}
                                 className="w-full bg-white border border-slate-200 rounded pl-1.5 pr-5 h-6 text-[11px] text-slate-700 appearance-none outline-none"
@@ -181,9 +181,9 @@ export default function StationCard({ id, name, checkpointType, settings, onSett
                             </span>
                         </div>
                         <ChevronDown size={8} className="absolute right-1.5 top-1/2 -translate-y-1/2 text-slate-600 pointer-events-none" />
-                        
+
                         {isClassDropdownOpen && (
-                            <div 
+                            <div
                                 className="absolute z-10 w-full mt-1 bg-white border border-slate-200 rounded shadow-lg max-h-40 overflow-y-auto"
                                 onClick={(e) => e.stopPropagation()}
                             >
@@ -199,7 +199,7 @@ export default function StationCard({ id, name, checkpointType, settings, onSett
                                         <input
                                             type="checkbox"
                                             checked={localSettings.allowedClass.includes(option)}
-                                            onChange={() => {}} // Handled by label click
+                                            onChange={() => { }} // Handled by label click
                                             className="w-3 h-3 text-[#1ED5F4] bg-white border-slate-300 rounded focus:ring-[#1ED5F4] focus:ring-1 cursor-pointer"
                                         />
                                         <span className="text-[11px] text-slate-700">{option}</span>

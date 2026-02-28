@@ -9,7 +9,7 @@ interface CheckpointProps {
     title: string;
     idCode: string;
     type: string;
-    colorType: 'security' | 'checkin';
+    colorType: string; // Updated to accept our dynamic string colors
     icon: React.ElementType;
     stations: { id: string; name: string; settings?: StationSettings }[];
     onDelete: (id: string) => void;
@@ -35,45 +35,36 @@ export default function CheckpointCard({ id, title, idCode, type, colorType, ico
         name: ''
     });
 
-    // Dynamically determine colorType and icon based on current type
-    const securityTypes = ['Security', 'Passport Check'];
-    const currentColorType = securityTypes.includes(currentType) ? 'security' : 'checkin';
-    
+    // Dynamically determine icon based on current type
     const getIcon = (checkpointType: string) => {
         switch (checkpointType) {
-            case 'Security':
-                return ShieldHalf;
-            case 'Check-in /w Baggage Tagging':
-                return TicketsPlane;
-            case 'Digital Check-in':
-                return QrCode;
-            case 'Self-Service Bag Drop':
-                return BaggageClaim;
-            case 'Baggage Retrieval':
-                return BriefcaseConveyorBelt;
-            case 'Passport Check':
-                return ShieldUser;
-            default:
-                return Ticket;
+            case 'Security': return ShieldHalf;
+            case 'Check-in /w Baggage Tagging': return TicketsPlane;
+            case 'Digital Check-in': return QrCode;
+            case 'Self-Service Bag Drop': return BaggageClaim;
+            case 'Baggage Retrieval': return BriefcaseConveyorBelt;
+            case 'Passport Check': return ShieldUser;
+            default: return Ticket;
         }
     };
 
+    // Dynamically determine color matching the Flow Diagram Nodes!
     const getColors = (checkpointType: string) => {
         switch (checkpointType) {
             case 'Security':
-                return { border: 'border-l-orange-500', icon: 'text-orange-500' };
+                return { border: 'border-l-amber-500', icon: 'text-amber-500' };
             case 'Check-in /w Baggage Tagging':
-                return { border: 'border-l-blue-600', icon: 'text-blue-600' };
+                return { border: 'border-l-blue-500', icon: 'text-blue-500' };
             case 'Digital Check-in':
-                return { border: 'border-l-purple-600', icon: 'text-purple-600' };
+                return { border: 'border-l-[#22D3EE]', icon: 'text-[#22D3EE]' };
             case 'Self-Service Bag Drop':
-                return { border: 'border-l-emerald-600', icon: 'text-emerald-600' };
+                return { border: 'border-l-purple-500', icon: 'text-purple-500' };
             case 'Baggage Retrieval':
-                return { border: 'border-l-cyan-600', icon: 'text-cyan-600' };
+                return { border: 'border-l-emerald-500', icon: 'text-emerald-500' };
             case 'Passport Check':
-                return { border: 'border-l-indigo-700', icon: 'text-indigo-700' };
+                return { border: 'border-l-rose-500', icon: 'text-rose-500' };
             default:
-                return { border: 'border-l-slate-500', icon: 'text-slate-500' };
+                return { border: 'border-l-slate-400', icon: 'text-slate-400' };
         }
     };
 
@@ -91,7 +82,7 @@ export default function CheckpointCard({ id, title, idCode, type, colorType, ico
         // Check for duplicate station ID or name
         const duplicateId = stations.some(s => s.id.toLowerCase() === newStation.id.toLowerCase());
         const duplicateName = stations.some(s => s.name.toLowerCase() === newStation.name.toLowerCase());
-        
+
         if (duplicateId) {
             alert('A station with this ID already exists in this checkpoint');
             return;
@@ -105,8 +96,8 @@ export default function CheckpointCard({ id, title, idCode, type, colorType, ico
         const automatedTypes = ['Digital Check-in', 'Self-Service Bag Drop', 'Baggage Retrieval'];
         const defaultStaffing = automatedTypes.includes(currentType) ? '0' : '';
 
-        const updatedStations = [...stations, { 
-            id: newStation.id, 
+        const updatedStations = [...stations, {
+            id: newStation.id,
             name: newStation.name,
             settings: {
                 staffing: defaultStaffing,
@@ -128,7 +119,7 @@ export default function CheckpointCard({ id, title, idCode, type, colorType, ico
     };
 
     const handleStationSettingsChange = (stationId: string, settings: StationSettings) => {
-        const updatedStations = stations.map(s => 
+        const updatedStations = stations.map(s =>
             s.id === stationId ? { ...s, settings } : s
         );
         onUpdateStations(id, updatedStations);
@@ -168,14 +159,14 @@ export default function CheckpointCard({ id, title, idCode, type, colorType, ico
                     <span className="text-sm font-bold text-slate-900">{title}</span>
                 </div>
                 <div className="flex gap-2 text-slate-300">
-                    <Edit2 
-                        size={14} 
+                    <Edit2
+                        size={14}
                         className={`cursor-pointer ${isEditing ? 'text-[#1ED5F4]' : 'hover:text-slate-500'}`}
                         onClick={() => setIsEditing(!isEditing)}
                     />
-                    <Trash2 
-                        size={14} 
-                        className="cursor-pointer hover:text-red-500" 
+                    <Trash2
+                        size={14}
+                        className="cursor-pointer hover:text-red-500"
                         onClick={() => onDelete(id)}
                     />
                 </div>
@@ -213,15 +204,13 @@ export default function CheckpointCard({ id, title, idCode, type, colorType, ico
                 </div>
 
                 <div className="flex items-center gap-2">
-                    <div 
-                        className={`w-7 h-4 rounded-full relative cursor-pointer transition-colors ${
-                            applyToAll ? 'bg-[#1ED5F4]' : 'bg-slate-300'
-                        }`}
+                    <div
+                        className={`w-7 h-4 rounded-full relative cursor-pointer transition-colors ${applyToAll ? 'bg-[#1ED5F4]' : 'bg-slate-300'
+                            }`}
                         onClick={handleApplyToAllToggle}
                     >
-                        <div className={`w-3 h-3 bg-white rounded-full absolute top-[2px] shadow-sm transition-all ${
-                            applyToAll ? 'left-[14px]' : 'left-[2px]'
-                        }`}></div>
+                        <div className={`w-3 h-3 bg-white rounded-full absolute top-[2px] shadow-sm transition-all ${applyToAll ? 'left-[14px]' : 'left-[2px]'
+                            }`}></div>
                     </div>
                     <span className="text-[11px] text-slate-500">Apply settings to all stations</span>
                 </div>
@@ -233,7 +222,7 @@ export default function CheckpointCard({ id, title, idCode, type, colorType, ico
                         <ListTree size={11} />
                         <span>Active Stations</span>
                     </div>
-                    <div 
+                    <div
                         className="flex items-center gap-1.5 text-[10px] cursor-pointer hover:text-[#1ac1de]"
                         onClick={() => setShowAddStation(!showAddStation)}
                     >
@@ -247,8 +236,8 @@ export default function CheckpointCard({ id, title, idCode, type, colorType, ico
                     <div className="bg-slate-50 border border-slate-200 rounded p-2.5 flex flex-col gap-2.5">
                         <div className="flex justify-between items-center">
                             <span className="text-xs font-bold text-slate-700">New Station</span>
-                            <X 
-                                size={12} 
+                            <X
+                                size={12}
                                 className="cursor-pointer text-slate-400 hover:text-slate-600"
                                 onClick={() => setShowAddStation(false)}
                             />
@@ -288,10 +277,10 @@ export default function CheckpointCard({ id, title, idCode, type, colorType, ico
 
                 <div className="flex flex-col gap-1.5">
                     {stations.map((s) => (
-                        <StationCard 
-                            key={s.id} 
-                            id={s.id} 
-                            name={s.name} 
+                        <StationCard
+                            key={s.id}
+                            id={s.id}
+                            name={s.name}
                             checkpointType={currentType}
                             settings={s.settings}
                             onSettingsChange={(settings) => handleStationSettingsChange(s.id, settings)}
