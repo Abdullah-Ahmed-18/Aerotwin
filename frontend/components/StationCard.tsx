@@ -211,7 +211,9 @@ export default function StationCard({ id, name, checkpointType, settings, onSett
                 </div>
 
                 {isSecurity && (
-                    <div className="col-span-2 flex items-center gap-2 pt-0.5">
+                    <div className="col-span-2 flex items-left gap-2 pt-0.5 flex-col">
+                        <label className="text-[9px] font-bold text-slate-600 uppercase tracking-wider">Additional Attributes</label>
+                        <div className="flex items-center gap-4">
                         <input
                             type="checkbox"
                             id={`xray-${id}`}
@@ -222,6 +224,7 @@ export default function StationCard({ id, name, checkpointType, settings, onSett
                         <label htmlFor={`xray-${id}`} className="text-[11px] text-slate-700 cursor-pointer">
                             X Ray Scanner
                         </label>
+                        </div>
                     </div>
                 )}
             </div>

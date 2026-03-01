@@ -22,6 +22,7 @@ export interface Checkpoint {
     colorType: 'security' | 'checkin';
     icon: React.ElementType;
     stations: { id: string; name: string; settings?: StationSettings }[];
+    nextCheckpointIds?: string[];
 }
 
 interface SidebarProps {
@@ -41,6 +42,12 @@ export default function ConfigurationSidebar({ checkpoints = [], setCheckpoints 
 
     const handleDeleteCheckpoint = (id: string) => {
         setCheckpoints(checkpoints.filter(cp => cp.id !== id));
+    };
+
+    const handleUpdateNextCheckpoints = (id: string, nextCheckpointIds: string[] | undefined) => {
+        setCheckpoints(checkpoints.map(cp =>
+            cp.id === id ? { ...cp, nextCheckpointIds } : cp
+        ));
     };
 
     const handleUpdateCheckpoint = (id: string, updatedStations: { id: string; name: string; settings?: StationSettings }[]) => {
@@ -217,8 +224,11 @@ export default function ConfigurationSidebar({ checkpoints = [], setCheckpoints 
                             colorType={checkpoint.colorType}
                             icon={checkpoint.icon}
                             stations={checkpoint.stations}
+                            nextCheckpointIds={checkpoint.nextCheckpointIds}
+                            checkpoints={checkpoints}
                             onDelete={handleDeleteCheckpoint}
                             onUpdateStations={handleUpdateCheckpoint}
+                            onUpdateNextCheckpoints={handleUpdateNextCheckpoints}
                         />
                     ))
                 )}

@@ -40,18 +40,27 @@ export default function Dashboard() {
       return updatedNodes.filter((n) => checkpoints.some((cp) => cp.id === n.id));
     });
 
-    // 2. Auto-draw Edges between sequential checkpoints
+    // 2. Auto-draw Edges based on nextCheckpointIds (supports forking)
     const newEdges = [];
-    for (let i = 1; i < checkpoints.length; i++) {
-      newEdges.push({
-        id: `e-${checkpoints[i - 1].id}-${checkpoints[i].id}`,
-        source: checkpoints[i - 1].id,
-        target: checkpoints[i].id,
-        type: 'smoothstep', // Gives it that clean, curved routing
-        animated: true,     // Flowing animation effect
-        style: { stroke: '#94A3B8', strokeWidth: 2 }
-      });
-    }
+    checkpoints.forEach((checkpoint) => {
+      if (checkpoint.nextCheckpointIds && checkpoint.nextCheckpointIds.length > 0) {
+        checkpoint.nextCheckpointIds.forEach((targetId) => {
+          // Check if the target checkpoint exists
+          const targetExists = checkpoints.some(cp => cp.id === targetId);
+          if (targetExists) {
+            newEdges.push({
+              id: `e-${checkpoint.id}-${targetId}`,
+              source: checkpoint.id,
+              target: targetId,
+              type: 'smoothstep', // Gives it that clean, curved routing
+              animated: true,     // Flowing animation effect
+              style: { stroke: '#94A3B8', strokeWidth: 2 },
+              markerEnd: { type: 'arrowclosed', color: '#94A3B8' }
+            });
+          }
+        });
+      }
+    });
     setEdges(newEdges);
   }, [checkpoints, setNodes, setEdges]);
 

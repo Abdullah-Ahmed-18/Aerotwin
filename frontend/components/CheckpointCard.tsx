@@ -2,7 +2,7 @@
 
 import { Edit2, Trash2, ListTree, PlusCircle, ChevronDown, Plus, ShieldHalf, Ticket, TicketsPlane, ShoppingBag, QrCode, BaggageClaim, BriefcaseConveyorBelt, ShieldUser, X } from 'lucide-react';
 import StationCard from './StationCard';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 interface CheckpointProps {
     id: string;
@@ -12,8 +12,11 @@ interface CheckpointProps {
     colorType: string; // Updated to accept our dynamic string colors
     icon: React.ElementType;
     stations: { id: string; name: string; settings?: StationSettings }[];
+    nextCheckpointIds?: string[];
+    checkpoints: { id: string; title: string; idCode: string }[];
     onDelete: (id: string) => void;
     onUpdateStations: (id: string, stations: { id: string; name: string; settings?: StationSettings }[]) => void;
+    onUpdateNextCheckpoints: (id: string, nextCheckpointIds: string[] | undefined) => void;
 }
 
 interface StationSettings {
@@ -25,11 +28,12 @@ interface StationSettings {
     hasXRayScanner: boolean;
 }
 
-export default function CheckpointCard({ id, title, idCode, type, colorType, icon: Icon, stations, onDelete, onUpdateStations }: CheckpointProps) {
+export default function CheckpointCard({ id, title, idCode, type, colorType, icon: Icon, stations, nextCheckpointIds, checkpoints, onDelete, onUpdateStations, onUpdateNextCheckpoints }: CheckpointProps) {
     const [isEditing, setIsEditing] = useState(false);
     const [currentType, setCurrentType] = useState(type);
     const [showAddStation, setShowAddStation] = useState(false);
     const [applyToAll, setApplyToAll] = useState(false);
+    const [showNextCheckpointsDropdown, setShowNextCheckpointsDropdown] = useState(false);
     const [newStation, setNewStation] = useState({
         id: '',
         name: ''
@@ -143,6 +147,36 @@ export default function CheckpointCard({ id, title, idCode, type, colorType, ico
         }
     };
 
+    const toggleNextCheckpoint = (checkpointId: string) => {
+        const currentIds = nextCheckpointIds || [];
+        let newIds: string[];
+        
+        if (currentIds.includes(checkpointId)) {
+            newIds = currentIds.filter(id => id !== checkpointId);
+        } else {
+            newIds = [...currentIds, checkpointId];
+        }
+        
+        onUpdateNextCheckpoints(id, newIds.length > 0 ? newIds : undefined);
+    };
+
+    // Close dropdown when clicking outside
+    useEffect(() => {
+        const handleClickOutside = () => {
+            if (showNextCheckpointsDropdown) {
+                setShowNextCheckpointsDropdown(false);
+            }
+        };
+
+        if (showNextCheckpointsDropdown) {
+            document.addEventListener('click', handleClickOutside);
+        }
+
+        return () => {
+            document.removeEventListener('click', handleClickOutside);
+        };
+    }, [showNextCheckpointsDropdown]);
+
     return (
         <div className={`bg-white border-l-[3px] ${leftBorder} rounded shadow-sm border border-slate-200 flex flex-col`}>
 
@@ -200,6 +234,61 @@ export default function CheckpointCard({ id, title, idCode, type, colorType, ico
                             </select>
                             <ChevronDown size={10} className="absolute right-1.5 top-1/2 -translate-y-1/2 text-slate-600 pointer-events-none" />
                         </div>
+                    </div>
+                </div>
+
+                <div className="flex flex-col gap-1.5">
+                    <label className="text-[10px] font-bold text-slate-600 uppercase tracking-wider">Next Checkpoint/s</label>
+                    <div className="relative">
+                        <div
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                if (isEditing) {
+                                    setShowNextCheckpointsDropdown(!showNextCheckpointsDropdown);
+                                }
+                            }}
+                            className={`w-full bg-slate-100 border border-transparent rounded px-2 h-7 text-xs text-slate-700 cursor-pointer flex items-center justify-between ${!isEditing ? 'opacity-50 cursor-not-allowed' : ''}`}
+                        >
+                            <span className="truncate">
+                                {nextCheckpointIds && nextCheckpointIds.length > 0
+                                    ? `${nextCheckpointIds.length} selected`
+                                    : '— None —'}
+                            </span>
+                            <ChevronDown size={10} className="text-slate-600 flex-shrink-0" />
+                        </div>
+
+                        {showNextCheckpointsDropdown && isEditing && (
+                            <div 
+                                onClick={(e) => e.stopPropagation()}
+                                className="absolute z-20 w-full mt-1 bg-white border border-slate-200 rounded shadow-lg max-h-48 overflow-y-auto"
+                            >
+                                {checkpoints.filter(cp => cp.id !== id).length === 0 ? (
+                                    <div className="px-2 py-2 text-[11px] text-slate-400 text-center">
+                                        No other checkpoints available
+                                    </div>
+                                ) : (
+                                    checkpoints
+                                        .filter(cp => cp.id !== id)
+                                        .map(cp => (
+                                            <div
+                                                key={cp.id}
+                                                onClick={() => toggleNextCheckpoint(cp.id)}
+                                                className="px-2 py-1.5 hover:bg-slate-50 cursor-pointer flex items-center gap-2"
+                                            >
+                                                <input
+                                                    type="checkbox"
+                                                    checked={nextCheckpointIds?.includes(cp.id) || false}
+                                                    onChange={() => {}} // Handled by parent div click
+                                                    className="w-3 h-3 text-[#1ED5F4] bg-white border-slate-300 rounded focus:ring-[#1ED5F4] focus:ring-1 cursor-pointer"
+                                                />
+                                                <span className="text-[11px] text-slate-700">
+                                                    {cp.title} ({cp.idCode})
+                                                </span>
+                                            </div>
+                                        ))
+                                )}
+                            </div>
+                        )}
                     </div>
                 </div>
 

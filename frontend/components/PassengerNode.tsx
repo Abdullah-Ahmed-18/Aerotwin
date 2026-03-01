@@ -28,20 +28,20 @@ export default function PassengerNode({ data }: { data: any }) {
     const Icon = style.icon;
 
     return (
-        <div className="flex flex-col items-center gap-3 w-40">
+        <div className="flex flex-col items-center gap-3 w-40 touch-none">
             {/* Input Handle (Left) */}
-            <Handle type="target" position={Position.Left} className={`w-3 h-3 ${style.text.replace('text', 'bg')} border-2 border-gray-900 z-10`} />
+            <Handle type="target" position={Position.Left} className="!opacity-0" />
 
             {/* The Glowing Circular Node */}
-            <div className={`w-32 h-32 rounded-full bg-gray-900 border-2 ${style.border} ${style.glow} flex items-center justify-center relative cursor-grab active:cursor-grabbing transition-shadow`}>
+            <div className={`w-32 h-32 rounded-full bg-gray-900 border-2 ${style.border} ${style.glow} flex items-center justify-center relative cursor-grab active:cursor-grabbing transition-shadow touch-none select-none`}>
                 <Icon size={48} className={style.text} strokeWidth={1.5} />
             </div>
 
             {/* Output Handle (Right) */}
-            <Handle type="source" position={Position.Right} className={`w-3 h-3 ${style.text.replace('text', 'bg')} border-2 border-gray-900 z-10`} />
+            <Handle type="source" position={Position.Right} className="!opacity-0" />
 
             {/* Node Labels */}
-            <div className="flex flex-col items-center text-center">
+            <div className="flex flex-col items-center text-center pointer-events-none">
                 <span className="text-sm font-bold text-slate-700">{title}</span>
                 <span className="text-[10px] text-slate-400 font-medium uppercase tracking-wider mt-0.5">
                     {idCode} • {type}
