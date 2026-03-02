@@ -100,9 +100,28 @@ export default function ConfigurationSidebar({ checkpoints = [], setCheckpoints 
             }
 
             const result = await response.json();
+            
+            // Trigger file download
+            if (result.success && result.data) {
+                const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, -5);
+                const filename = `AerotwinConfig_${timestamp}.json`;
+                
+                // Create blob and download
+                const jsonString = JSON.stringify(result.data, null, 2);
+                const blob = new Blob([jsonString], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = filename;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                URL.revokeObjectURL(url);
+            }
+            
             setFormatStatus({
                 type: 'success',
-                message: `✅ Successfully formatted and sent configuration! Checkpoints: ${checkpoints.length}`
+                message: `✅ Successfully formatted and downloaded configuration! Checkpoints: ${checkpoints.length}`
             });
 
             console.log('Formatted response:', result);
