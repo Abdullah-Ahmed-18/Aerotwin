@@ -29,14 +29,14 @@ function getTasksForCheckpoint(checkpointType, featureVal, avgServiceTime) {
             
             // For Security checkpoints, match by Feature_Val or Avg_Service_Time
             if (checkpointType === "Security") {
-                // Feature_Val 1 or long service time = full security screening (Security_2)
-                // Feature_Val 0 and short service time = simple security (Security_1)
-                const isFullScreening = featureVal === 1 || (avgServiceTime && avgServiceTime > 150);
+                // Default to full security screening (Security_2)
+                // Only use simple security (Security_1) if Feature_Val explicitly set to 1
+                const isSimpleScreening = featureVal === 1;
                 
                 // Find Security_1 or Security_2 based on screening type
-                const targetCheckpoint = isFullScreening ? 
-                    checkpoints.find(cp => cp.Checkpoint_ID === "Security_2") :
-                    checkpoints.find(cp => cp.Checkpoint_ID === "Security_1");
+                const targetCheckpoint = isSimpleScreening ? 
+                    checkpoints.find(cp => cp.Checkpoint_ID === "Security_1") :
+                    checkpoints.find(cp => cp.Checkpoint_ID === "Security_2");
                 
                 if (targetCheckpoint && targetCheckpoint.Stations[0]) {
                     return targetCheckpoint.Stations[0].Tasks || [];
