@@ -1,6 +1,6 @@
 'use client';
 
-import { Plus, ShieldHalf, Ticket, X, TicketsPlane, ShoppingBag, QrCode, BaggageClaim, BriefcaseConveyorBelt, ShieldUser } from 'lucide-react';
+import { Plus, ShieldHalf, Ticket, X, TicketsPlane, ShoppingBag, QrCode, BaggageClaim, BriefcaseConveyorBelt, ShieldUser, Send, Loader2 } from 'lucide-react';
 import CheckpointCard from './CheckpointCard';
 import { useState } from 'react';
 
@@ -39,9 +39,83 @@ export default function ConfigurationSidebar({ checkpoints = [], setCheckpoints 
         idCode: '',
         type: 'Security'
     });
+    const [isFormatting, setIsFormatting] = useState(false);
+    const [formatStatus, setFormatStatus] = useState<{ type: 'success' | 'error' | null; message: string }>({ type: null, message: '' });
 
     const handleDeleteCheckpoint = (id: string) => {
         setCheckpoints(checkpoints.filter(cp => cp.id !== id));
+    };
+
+    const handleFormatAndSend = async () => {
+        if (checkpoints.length === 0) {
+            setFormatStatus({ type: 'error', message: 'Please create at least one checkpoint first' });
+            return;
+        }
+
+        setIsFormatting(true);
+        setFormatStatus({ type: null, message: '' });
+
+        try {
+            // Format checkpoint data to match backend expectations
+            const formattedData = checkpoints.map(cp => ({
+                id: cp.idCode,
+                title: cp.title,
+                idCode: cp.idCode,
+                type: cp.type,
+                stations: cp.stations.map(station => {
+                    // Preserve full station structure, including tasks if present
+                    const stationData: any = {
+                        id: station.id,
+                        name: station.name,
+                    };
+                    
+                    // Add settings fields if they exist
+                    if (station.settings) {
+                        stationData.staffing = parseInt(station.settings.staffing) || 1;
+                        stationData.avgServiceTime = parseInt(station.settings.avgServiceTime) || 60;
+                        stationData.maxQueue = parseInt(station.settings.maxQueue) || 30;
+                        stationData.experience = parseFloat(station.settings.experience) || 1.0;
+                        stationData.allowedClass = station.settings.allowedClass;
+                        stationData.hasXRayScanner = station.settings.hasXRayScanner ? 1 : 0;
+                    }
+                    
+                    return stationData;
+                }),
+                nextCheckpointIds: cp.nextCheckpointIds || []
+            }));
+
+            console.log('Sending formatted data:', formattedData);
+
+            // Send to backend
+            const response = await fetch('http://localhost:5000/api/format-aerotwin-data', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formattedData),
+            });
+
+            if (!response.ok) {
+                throw new Error(`Server error: ${response.status} ${response.statusText}`);
+            }
+
+            const result = await response.json();
+            setFormatStatus({
+                type: 'success',
+                message: `✅ Successfully formatted and sent configuration! Checkpoints: ${checkpoints.length}`
+            });
+
+            console.log('Formatted response:', result);
+        } catch (error) {
+            console.error('Format and send error:', error);
+            const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+            setFormatStatus({
+                type: 'error',
+                message: `❌ ${errorMessage}. Make sure backend is running on localhost:5000`
+            });
+        } finally {
+            setIsFormatting(false);
+        }
     };
 
     const handleUpdateNextCheckpoints = (id: string, nextCheckpointIds: string[] | undefined) => {
@@ -233,6 +307,34 @@ export default function ConfigurationSidebar({ checkpoints = [], setCheckpoints 
                     ))
                 )}
             </div>
+
+            {/* Status Message */}
+            {formatStatus.type && (
+                <div className={`px-3 py-2 rounded text-xs font-medium text-white flex-shrink-0 ${
+                    formatStatus.type === 'success' ? 'bg-emerald-500' : 'bg-red-500'
+                }`}>
+                    {formatStatus.message}
+                </div>
+            )}
+
+            {/* Format & Send Button */}
+            <button
+                onClick={handleFormatAndSend}
+                disabled={isFormatting}
+                className="bg-gradient-to-r from-[#1ED5F4] to-[#00A8D8] text-slate-900 text-xs font-bold px-3 py-2 rounded flex items-center justify-center gap-2 w-full hover:opacity-90 transition-opacity shadow-sm disabled:opacity-50 disabled:cursor-not-allowed flex-shrink-0"
+            >
+                {isFormatting ? (
+                    <>
+                        <Loader2 size={14} className="animate-spin" />
+                        Formatting...
+                    </>
+                ) : (
+                    <>
+                        <Send size={14} strokeWidth={2.5} />
+                        Format & Send Config
+                    </>
+                )}
+            </button>
         </div>
     );
 }
