@@ -58,7 +58,7 @@ export default function ConfigurationSidebar({ checkpoints = [], setCheckpoints 
         try {
             // Format checkpoint data to match backend expectations
             const formattedData = checkpoints.map(cp => ({
-                id: cp.idCode,
+                id: cp.id,  // Use the actual component ID for mapping, not idCode
                 title: cp.title,
                 idCode: cp.idCode,
                 type: cp.type,

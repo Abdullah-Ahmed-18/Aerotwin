@@ -29,7 +29,6 @@ interface StationSettings {
 }
 
 export default function CheckpointCard({ id, title, idCode, type, colorType, icon: Icon, stations, nextCheckpointIds, checkpoints, onDelete, onUpdateStations, onUpdateNextCheckpoints }: CheckpointProps) {
-    const [isEditing, setIsEditing] = useState(false);
     const [currentType, setCurrentType] = useState(type);
     const [showAddStation, setShowAddStation] = useState(false);
     const [applyToAll, setApplyToAll] = useState(false);
@@ -193,11 +192,6 @@ export default function CheckpointCard({ id, title, idCode, type, colorType, ico
                     <span className="text-sm font-bold text-slate-900">{title}</span>
                 </div>
                 <div className="flex gap-2 text-slate-300">
-                    <Edit2
-                        size={14}
-                        className={`cursor-pointer ${isEditing ? 'text-[#1ED5F4]' : 'hover:text-slate-500'}`}
-                        onClick={() => setIsEditing(!isEditing)}
-                    />
                     <Trash2
                         size={14}
                         className="cursor-pointer hover:text-red-500"
@@ -212,8 +206,7 @@ export default function CheckpointCard({ id, title, idCode, type, colorType, ico
                         <label className="text-[10px] font-bold text-slate-600 uppercase tracking-wider">ID Code</label>
                         <input
                             defaultValue={idCode}
-                            disabled={!isEditing}
-                            className="bg-slate-100 border border-transparent rounded px-2 h-7 text-xs text-slate-700 outline-none font-mono disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="bg-slate-100 border border-transparent rounded px-2 h-7 text-xs text-slate-700 outline-none font-mono"
                         />
                     </div>
                     <div className="flex flex-col gap-1.5">
@@ -222,8 +215,7 @@ export default function CheckpointCard({ id, title, idCode, type, colorType, ico
                             <select
                                 value={currentType}
                                 onChange={(e) => setCurrentType(e.target.value)}
-                                disabled={!isEditing}
-                                className="w-full bg-slate-100 border border-transparent rounded pl-2 pr-6 h-7 text-xs text-slate-700 outline-none appearance-none disabled:opacity-50 disabled:cursor-not-allowed"
+                                className="w-full bg-slate-100 border border-transparent rounded pl-2 pr-6 h-7 text-xs text-slate-700 outline-none appearance-none"
                             >
                                 <option value="Security">Security</option>
                                 <option value="Check-in /w Baggage Tagging">Check-in /w Baggage Tagging</option>
@@ -243,11 +235,9 @@ export default function CheckpointCard({ id, title, idCode, type, colorType, ico
                         <div
                             onClick={(e) => {
                                 e.stopPropagation();
-                                if (isEditing) {
-                                    setShowNextCheckpointsDropdown(!showNextCheckpointsDropdown);
-                                }
+                                setShowNextCheckpointsDropdown(!showNextCheckpointsDropdown);
                             }}
-                            className={`w-full bg-slate-100 border border-transparent rounded px-2 h-7 text-xs text-slate-700 cursor-pointer flex items-center justify-between ${!isEditing ? 'opacity-50 cursor-not-allowed' : ''}`}
+                            className="w-full bg-slate-100 border border-transparent rounded px-2 h-7 text-xs text-slate-700 cursor-pointer flex items-center justify-between"
                         >
                             <span className="truncate">
                                 {nextCheckpointIds && nextCheckpointIds.length > 0
@@ -257,7 +247,7 @@ export default function CheckpointCard({ id, title, idCode, type, colorType, ico
                             <ChevronDown size={10} className="text-slate-600 flex-shrink-0" />
                         </div>
 
-                        {showNextCheckpointsDropdown && isEditing && (
+                        {showNextCheckpointsDropdown && (
                             <div 
                                 onClick={(e) => e.stopPropagation()}
                                 className="absolute z-20 w-full mt-1 bg-white border border-slate-200 rounded shadow-lg max-h-48 overflow-y-auto"

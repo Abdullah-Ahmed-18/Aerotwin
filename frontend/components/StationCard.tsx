@@ -166,49 +166,51 @@ export default function StationCard({ id, name, checkpointType, settings, onSett
                     </div>
                 )}
 
-                <div className="col-span-2 flex flex-col gap-0.5">
-                    <label className="text-[9px] font-bold text-slate-600 uppercase tracking-wider">Allowed Class</label>
-                    <div className="relative">
-                        <div
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                setIsClassDropdownOpen(!isClassDropdownOpen);
-                            }}
-                            className="w-full bg-white border border-slate-200 rounded pl-1.5 pr-5 h-6 text-[11px] text-slate-700 cursor-pointer flex items-center"
-                        >
-                            <span className="truncate">
-                                {localSettings.allowedClass.join(', ')}
-                            </span>
-                        </div>
-                        <ChevronDown size={8} className="absolute right-1.5 top-1/2 -translate-y-1/2 text-slate-600 pointer-events-none" />
-
-                        {isClassDropdownOpen && (
+                {checkpointType === 'Check-in /w Baggage Tagging' && (
+                    <div className="col-span-2 flex flex-col gap-0.5">
+                        <label className="text-[9px] font-bold text-slate-600 uppercase tracking-wider">Allowed Class</label>
+                        <div className="relative">
                             <div
-                                className="absolute z-10 w-full mt-1 bg-white border border-slate-200 rounded shadow-lg max-h-40 overflow-y-auto"
-                                onClick={(e) => e.stopPropagation()}
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    setIsClassDropdownOpen(!isClassDropdownOpen);
+                                }}
+                                className="w-full bg-white border border-slate-200 rounded pl-1.5 pr-5 h-6 text-[11px] text-slate-700 cursor-pointer flex items-center"
                             >
-                                {classOptions.map((option) => (
-                                    <label
-                                        key={option}
-                                        className="flex items-center gap-2 px-2 py-1.5 hover:bg-slate-50 cursor-pointer"
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            toggleClassOption(option);
-                                        }}
-                                    >
-                                        <input
-                                            type="checkbox"
-                                            checked={localSettings.allowedClass.includes(option)}
-                                            onChange={() => { }} // Handled by label click
-                                            className="w-3 h-3 text-[#1ED5F4] bg-white border-slate-300 rounded focus:ring-[#1ED5F4] focus:ring-1 cursor-pointer"
-                                        />
-                                        <span className="text-[11px] text-slate-700">{option}</span>
-                                    </label>
-                                ))}
+                                <span className="truncate">
+                                    {localSettings.allowedClass.join(', ')}
+                                </span>
                             </div>
-                        )}
+                            <ChevronDown size={8} className="absolute right-1.5 top-1/2 -translate-y-1/2 text-slate-600 pointer-events-none" />
+
+                            {isClassDropdownOpen && (
+                                <div
+                                    className="absolute z-10 w-full mt-1 bg-white border border-slate-200 rounded shadow-lg max-h-40 overflow-y-auto"
+                                    onClick={(e) => e.stopPropagation()}
+                                >
+                                    {classOptions.map((option) => (
+                                        <label
+                                            key={option}
+                                            className="flex items-center gap-2 px-2 py-1.5 hover:bg-slate-50 cursor-pointer"
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                toggleClassOption(option);
+                                            }}
+                                        >
+                                            <input
+                                                type="checkbox"
+                                                checked={localSettings.allowedClass.includes(option)}
+                                                onChange={() => { }} // Handled by label click
+                                                className="w-3 h-3 text-[#1ED5F4] bg-white border-slate-300 rounded focus:ring-[#1ED5F4] focus:ring-1 cursor-pointer"
+                                            />
+                                            <span className="text-[11px] text-slate-700">{option}</span>
+                                        </label>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
                     </div>
-                </div>
+                )}
 
                 {isSecurity && (
                     <div className="col-span-2 flex items-left gap-2 pt-0.5 flex-col">

@@ -102,13 +102,19 @@ app.post('/api/format-aerotwin-data', (req, res) => {
     try {
         const incomingData = req.body;
         
+        console.log("\n=== INCOMING DATA DEBUG ===");
+        console.log("Number of checkpoints:", incomingData.length);
+        incomingData.forEach(cp => {
+            console.log(`  ${cp.idCode}: nextCheckpointIds =`, cp.nextCheckpointIds);
+        });
+        
         // Step 0: Create mapping from frontend checkpoint IDs to their Checkpoint_ID (idCode)
         const frontendIdToCheckpointId = {};
         incomingData.forEach(checkpoint => {
             frontendIdToCheckpointId[checkpoint.id] = checkpoint.idCode;
         });
 
-        console.log("Frontend ID to Checkpoint ID mapping:", frontendIdToCheckpointId);
+        console.log("\nFrontend ID to Checkpoint ID mapping:", frontendIdToCheckpointId);
         
         // Step 1: Pass the deeply nested payload through the recursive formatter
         let finalPayload = mapKeysDeep(incomingData, keyMapping);
@@ -118,53 +124,107 @@ app.post('/api/format-aerotwin-data', (req, res) => {
             finalPayload = [];
         }
 
-        // Step 2: Build a mapping of checkpoint ID to next checkpoint ID for quick lookup
+        // Step 2: Build a mapping of checkpoint ID to next checkpoint IDs (array for forks)
         const checkpointNextMap = {};
         incomingData.forEach((checkpoint) => {
             if (checkpoint.nextCheckpointIds && Array.isArray(checkpoint.nextCheckpointIds) && checkpoint.nextCheckpointIds.length > 0) {
-                const frontendNextId = checkpoint.nextCheckpointIds[0];
-                // Convert frontend ID to actual Checkpoint_ID
-                const nextCheckpointId = frontendIdToCheckpointId[frontendNextId];
-                if (nextCheckpointId) {
-                    checkpointNextMap[checkpoint.idCode] = nextCheckpointId;
+                // Convert ALL frontend IDs to actual Checkpoint_IDs (handle forks)
+                const nextCheckpointIds = checkpoint.nextCheckpointIds
+                    .map(frontendNextId => {
+                        const mapped = frontendIdToCheckpointId[frontendNextId];
+                        console.log(`  Mapping frontend ID "${frontendNextId}" → "${mapped}"`);
+                        return mapped;
+                    })
+                    .filter(id => id); // Remove undefined values
+                
+                console.log(`  ${checkpoint.idCode} will have Next_Anchor:`, nextCheckpointIds);
+                
+                if (nextCheckpointIds.length > 0) {
+                    checkpointNextMap[checkpoint.idCode] = nextCheckpointIds;
                 }
             }
         });
 
-        console.log("Checkpoint next mapping:", checkpointNextMap);
+        console.log("\nFinal Checkpoint next mapping:", JSON.stringify(checkpointNextMap, null, 2));
+
+        // Check if we have explicit connections or need to use sequential fallback
+        const hasExplicitConnections = Object.keys(checkpointNextMap).length > 0;
+        console.log("Has explicit connections:", hasExplicitConnections);
 
         // Step 3: Build reverse mapping for previous anchors (computed from next anchors)
         const previousAnchorMap = {};
-        Object.entries(checkpointNextMap).forEach(([currentId, nextId]) => {
-            previousAnchorMap[nextId] = currentId;
-        });
+        
+        if (hasExplicitConnections) {
+            // Use explicit connections from frontend
+            Object.entries(checkpointNextMap).forEach(([currentId, nextIds]) => {
+                // nextIds is now an array, so iterate through all of them
+                nextIds.forEach(nextId => {
+                    previousAnchorMap[nextId] = currentId;
+                });
+            });
+        } else {
+            // Fallback: Use sequential order
+            console.log("No explicit connections found, using sequential order");
+            for (let i = 1; i < finalPayload.length; i++) {
+                previousAnchorMap[finalPayload[i].Checkpoint_ID] = finalPayload[i - 1].Checkpoint_ID;
+            }
+        }
 
         console.log("Previous anchor mapping (computed):", previousAnchorMap);
 
-        // Step 4: Update all checkpoints with proper structure, Prev_Anchor, and Next_Anchor
+        // Step 4: Identify terminal checkpoints (those that aren't referenced as next by any other checkpoint)
+        const referencedCheckpoints = new Set();
+        Object.values(checkpointNextMap).forEach(nextIds => {
+            nextIds.forEach(id => referencedCheckpoints.add(id));
+        });
+        
+        const terminalCheckpoints = finalPayload
+            .map(cp => cp.Checkpoint_ID)
+            .filter(id => !referencedCheckpoints.has(id) && id !== finalPayload[0]?.Checkpoint_ID);
+
+        console.log("Terminal checkpoints (will point to Boarding_Gate):", terminalCheckpoints);
+
+        // Step 5: Update all checkpoints with proper structure, Prev_Anchor, and Next_Anchor
         finalPayload = finalPayload.map((checkpoint, index) => {
             const checkpointId = checkpoint.Checkpoint_ID;
             
+            console.log(`\nProcessing checkpoint: ${checkpointId} (index: ${index})`);
+            
             // Set Prev_Anchor: use computed mapping or "Terminal_Entrance" for first checkpoint
-            if (previousAnchorMap[checkpointId]) {
-                checkpoint.Prev_Anchor = previousAnchorMap[checkpointId];
-            } else if (index === 0) {
+            if (index === 0) {
                 checkpoint.Prev_Anchor = "Terminal_Entrance";
+                console.log(`  → Prev_Anchor: "Terminal_Entrance" (first checkpoint)`);
+            } else if (previousAnchorMap[checkpointId]) {
+                checkpoint.Prev_Anchor = previousAnchorMap[checkpointId];
+                console.log(`  → Prev_Anchor: "${previousAnchorMap[checkpointId]}" (from mapping)`);
             } else {
-                // If no previous anchor mapping and not first checkpoint, use the previous checkpoint in the array
-                checkpoint.Prev_Anchor = finalPayload[index - 1].Checkpoint_ID;
+                // Fallback for disconnected checkpoints
+                checkpoint.Prev_Anchor = "Terminal_Entrance";
+                console.log(`  → Prev_Anchor: "Terminal_Entrance" (fallback)`);
             }
             
-            // Set Next_Anchor from the mapping or sequential order
-            if (checkpointNextMap[checkpointId]) {
-                // Use explicit mapping from frontend
-                checkpoint.Next_Anchor = [checkpointNextMap[checkpointId]];
-            } else if (index < finalPayload.length - 1) {
-                // Not the last checkpoint and no explicit mapping - use next in sequence
-                checkpoint.Next_Anchor = [finalPayload[index + 1].Checkpoint_ID];
-            } else {
-                // Last checkpoint - set to Boarding_Gate
+            // Set Next_Anchor from the explicit mapping or fallback to sequential
+            if (hasExplicitConnections && checkpointNextMap[checkpointId]) {
+                // Use explicit mapping from frontend (already an array for forks)
+                checkpoint.Next_Anchor = checkpointNextMap[checkpointId];
+                console.log(`  → Next_Anchor:`, checkpoint.Next_Anchor, "(from explicit mapping)");
+            } else if (hasExplicitConnections && terminalCheckpoints.includes(checkpointId)) {
+                // Terminal checkpoint - points to Boarding_Gate
                 checkpoint.Next_Anchor = ["Boarding_Gate"];
+                console.log(`  → Next_Anchor: ["Boarding_Gate"] (terminal checkpoint)`);
+            } else if (!hasExplicitConnections) {
+                // Fallback to sequential order
+                if (index < finalPayload.length - 1) {
+                    checkpoint.Next_Anchor = [finalPayload[index + 1].Checkpoint_ID];
+                    console.log(`  → Next_Anchor: [${finalPayload[index + 1].Checkpoint_ID}] (sequential)`);
+                } else {
+                    checkpoint.Next_Anchor = ["Boarding_Gate"];
+                    console.log(`  → Next_Anchor: ["Boarding_Gate"] (last in sequence)`);
+                }
+            } else {
+                // No explicit next connection and not a terminal - default
+                checkpoint.Next_Anchor = ["Boarding_Gate"];
+                console.log(`  → Next_Anchor: ["Boarding_Gate"] (default)`);
             }
             
             // Fix Stations: remove Checkpoint_ID and rename Station_Name to Station_ID
