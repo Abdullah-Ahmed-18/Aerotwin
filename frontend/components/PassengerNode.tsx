@@ -1,5 +1,5 @@
 import { Handle, Position } from '@xyflow/react';
-import { ShieldHalf, Ticket, TicketsPlane, QrCode, BaggageClaim, BriefcaseConveyorBelt, ShieldUser } from 'lucide-react';
+import { ShieldHalf, Ticket, TicketsPlane, QrCode, BaggageClaim, BriefcaseConveyorBelt, ShieldUser, PlaneTakeoff } from 'lucide-react';
 
 // React Flow passes data through a specific 'data' object
 export default function PassengerNode({ data }: { data: any }) {
@@ -19,6 +19,8 @@ export default function PassengerNode({ data }: { data: any }) {
                 return { border: 'border-emerald-500', text: 'text-emerald-500', icon: BriefcaseConveyorBelt, glow: 'shadow-[0_0_20px_rgba(16,185,129,0.4)] hover:shadow-[0_0_30px_rgba(16,185,129,0.6)]' };
             case 'Passport Check':
                 return { border: 'border-rose-500', text: 'text-rose-500', icon: ShieldUser, glow: 'shadow-[0_0_20px_rgba(244,63,94,0.4)] hover:shadow-[0_0_30px_rgba(244,63,94,0.6)]' };
+            case 'Boarding':
+                return { border: 'border-sky-500', text: 'text-sky-500', icon: PlaneTakeoff, glow: 'shadow-[0_0_20px_rgba(14,165,233,0.4)] hover:shadow-[0_0_30px_rgba(14,165,233,0.6)]' };
             default:
                 return { border: 'border-slate-400', text: 'text-slate-400', icon: Ticket, glow: 'shadow-[0_0_20px_rgba(148,163,184,0.4)] hover:shadow-[0_0_30px_rgba(148,163,184,0.6)]' };
         }
