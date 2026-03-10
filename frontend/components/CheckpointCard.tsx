@@ -1,6 +1,6 @@
 'use client';
 
-import { Edit2, Trash2, ListTree, PlusCircle, ChevronDown, Plus, ShieldHalf, Ticket, TicketsPlane, ShoppingBag, QrCode, BaggageClaim, BriefcaseConveyorBelt, ShieldUser, X } from 'lucide-react';
+import { Edit2, Trash2, ListTree, PlusCircle, ChevronDown, Plus, ShieldHalf, Ticket, TicketsPlane, ShoppingBag, QrCode, BaggageClaim, BriefcaseConveyorBelt, ShieldUser, PlaneTakeoff, X } from 'lucide-react';
 import StationCard from './StationCard';
 import { useState, useEffect } from 'react';
 
@@ -47,6 +47,7 @@ export default function CheckpointCard({ id, title, idCode, type, colorType, ico
             case 'Self-Service Bag Drop': return BaggageClaim;
             case 'Baggage Retrieval': return BriefcaseConveyorBelt;
             case 'Passport Check': return ShieldUser;
+            case 'Boarding': return PlaneTakeoff;
             default: return Ticket;
         }
     };
@@ -66,6 +67,8 @@ export default function CheckpointCard({ id, title, idCode, type, colorType, ico
                 return { border: 'border-l-emerald-500', icon: 'text-emerald-500' };
             case 'Passport Check':
                 return { border: 'border-l-rose-500', icon: 'text-rose-500' };
+            case 'Boarding':
+                return { border: 'border-l-sky-500', icon: 'text-sky-500' };
             default:
                 return { border: 'border-l-slate-400', icon: 'text-slate-400' };
         }
@@ -96,7 +99,7 @@ export default function CheckpointCard({ id, title, idCode, type, colorType, ico
         }
 
         // Determine default staffing based on checkpoint type
-        const automatedTypes = ['Digital Check-in', 'Self-Service Bag Drop', 'Baggage Retrieval'];
+        const automatedTypes = ['Digital Check-in', 'Self-Service Bag Drop', 'Baggage Retrieval', 'Boarding'];
         const defaultStaffing = automatedTypes.includes(currentType) ? '0' : '';
 
         const updatedStations = [...stations, {
@@ -223,6 +226,7 @@ export default function CheckpointCard({ id, title, idCode, type, colorType, ico
                                 <option value="Self-Service Bag Drop">Self-Service Bag Drop</option>
                                 <option value="Baggage Retrieval">Baggage Retrieval</option>
                                 <option value="Passport Check">Passport Check</option>
+                                <option value="Boarding">Boarding</option>
                             </select>
                             <ChevronDown size={10} className="absolute right-1.5 top-1/2 -translate-y-1/2 text-slate-600 pointer-events-none" />
                         </div>

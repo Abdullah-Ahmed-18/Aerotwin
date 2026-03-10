@@ -1,6 +1,6 @@
 'use client';
 
-import { Plus, ShieldHalf, Ticket, X, TicketsPlane, ShoppingBag, QrCode, BaggageClaim, BriefcaseConveyorBelt, ShieldUser, Send, Loader2 } from 'lucide-react';
+import { Plus, ShieldHalf, Ticket, X, TicketsPlane, ShoppingBag, QrCode, BaggageClaim, BriefcaseConveyorBelt, ShieldUser, PlaneTakeoff, Send, Loader2 } from 'lucide-react';
 import CheckpointCard from './CheckpointCard';
 import { useState } from 'react';
 
@@ -162,6 +162,8 @@ export default function ConfigurationSidebar({ checkpoints = [], setCheckpoints 
                 icon = BriefcaseConveyorBelt; colorType = 'emerald'; break;
             case 'Passport Check':
                 icon = ShieldUser; colorType = 'rose'; break;
+            case 'Boarding':
+                icon = PlaneTakeoff; colorType = 'sky'; break;
             default:
                 icon = Ticket; colorType = 'slate';
         }
@@ -209,6 +211,7 @@ export default function ConfigurationSidebar({ checkpoints = [], setCheckpoints 
             case 'Self-Service Bag Drop': icon = BaggageClaim; break;
             case 'Baggage Retrieval': icon = BriefcaseConveyorBelt; break;
             case 'Passport Check': icon = ShieldUser; break;
+            case 'Boarding': icon = PlaneTakeoff; break;
             default: icon = Ticket;
         }
 
@@ -290,6 +293,7 @@ export default function ConfigurationSidebar({ checkpoints = [], setCheckpoints 
                             <option value="Self-Service Bag Drop">Self-Service Bag Drop</option>
                             <option value="Baggage Retrieval">Baggage Retrieval</option>
                             <option value="Passport Check">Passport Check</option>
+                            <option value="Boarding">Boarding</option>
                         </select>
                     </div>
                     <button
