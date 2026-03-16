@@ -12,8 +12,19 @@ const PORT = 5000;
 const API_KEY = "a359142e5c2139ed3800f0f6ae381010"; // <--- PASTE KEY HERE
 const TARGET_AIRPORT = "HBE";
 const API_URL = "http://api.aviationstack.com/v1/flights";
+const AIRPORTS_URL = "http://api.aviationstack.com/v1/airports";
 const DOMESTIC_EGYPT_AIRPORTS = ["CAI", "SSH", "HRG", "LXR", "ASW", "HBE", "ALY", "TCP", "RMF"];
 const AIRCRAFT_CAPACITIES = { "B738": 189, "A320": 180, "A220": 135, "B38M": 189, "A321": 220, "A333": 300, "A21N": 240, "AT72": 72 };
+const AIRPORT_COORDINATES = {
+    HBE: { code: "HBE", name: "Borg El Arab Airport", coords: [30.9177, 29.6964] },
+    CAI: { code: "CAI", name: "Cairo International Airport", coords: [30.1219, 31.4056] },
+    DXB: { code: "DXB", name: "Dubai International Airport", coords: [25.2532, 55.3657] },
+    JFK: { code: "JFK", name: "John F. Kennedy International Airport", coords: [40.6413, -73.7781] },
+    LHR: { code: "LHR", name: "London Heathrow Airport", coords: [51.47, -0.4543] },
+    IST: { code: "IST", name: "Istanbul Airport", coords: [41.2753, 28.7519] },
+    AUH: { code: "AUH", name: "Abu Dhabi International Airport", coords: [24.433, 54.6511] },
+    MED: { code: "MED", name: "Prince Mohammad Bin Abdulaziz Airport", coords: [24.5534, 39.7051] }
+};
 
 // Load the key mapping configuration for transforming frontend data
 const keyMapping = require('./KeyMapping.json');
@@ -53,6 +64,7 @@ function getTasksForCheckpoint(checkpointType, featureVal, avgServiceTime) {
     
     return [];
 }
+//ACTIVE FLIGHTS
 function resolvePlaneType(flightIata, apiPlane) {
     // If API provides it, use it. Otherwise, mark it Dummy.
     if (apiPlane) return apiPlane;
@@ -80,14 +92,6 @@ const fleetDatabase = {
   AT: ["AT72"],
 };
 
-// Helper to fill missing plane types
-function resolvePlaneType(flightIata, apiPlane) {
-  if (apiPlane) return apiPlane;
-  if (!flightIata) return "A320";
-  const airline = flightIata.substring(0, 2).toUpperCase();
-  const fleet = fleetDatabase[airline];
-  return fleet ? fleet[Math.floor(Math.random() * fleet.length)] : "A320";
-}
 
 // ==========================================
 // 1. FORMATTING ENDPOINT FOR DIGITAL TWIN
@@ -289,100 +293,6 @@ app.post('/api/format-aerotwin-data', (req, res) => {
     }
 });
 
-// // ==========================================
-// // 2. FETCH FLIGHTS
-// // ==========================================
-// async function fetchAndSimulate() {
-//   console.log(`\n=== 1. FETCHING FLIGHTS FOR ${TARGET_AIRPORT} ===`);
-
-//   let allFlights = [];
-//   let offset = 0;
-//   let keepFetching = true;
-
-//   // Loop to get as many flights as possible
-//   while (keepFetching) {
-//     try {
-//       const response = await axios.get(API_URL, {
-//         params: {
-//           access_key: API_KEY,
-//           arr_iata: TARGET_AIRPORT,
-//           flight_status: "landed",
-//           limit: 100,
-//           offset: offset,
-//         },
-//       });
-
-//       const data = response.data.data || [];
-//       if (data.length === 0) break;
-
-//       const cleanBatch = data.map((f) => ({
-//         Flight: f.flight.iata,
-//         Airline: f.airline.name,
-//         Plane: resolvePlaneType(f.flight.iata, f.aircraft?.iata),
-//         Time: f.arrival.actual,
-//       }));
-
-//       allFlights = allFlights.concat(cleanBatch);
-//       if (data.length < 100) keepFetching = false;
-//       offset += 100;
-//     } catch (error) {
-//       console.error("API Error (Using MOCK data for safety):", error.message);
-//       // MOCK DATA BACKUP if API fails
-//       allFlights = [
-//         {
-//           Flight: "MS999",
-//           Airline: "EgyptAir",
-//           Plane: "B738",
-//           Time: new Date().toISOString(),
-//         },
-//         {
-//           Flight: "FZ123",
-//           Airline: "FlyDubai",
-//           Plane: "B38M",
-//           Time: new Date().toISOString(),
-//         },
-//       ];
-//       keepFetching = false;
-//     }
-//   }
-
-//   console.log(`[+] Retrieved ${allFlights.length} flights.`);
-//   console.log(`=== 2. STARTING PYTHON MONTE CARLO SIMULATION ===`);
-
-//   runPythonSimulation(allFlights);
-// }
-
-// ==========================================
-// 3. RUN PYTHON
-// ==========================================
-function runPythonSimulation(flightList) {
-  // Convert flight list to JSON string to pass to Python
-  const flightsJson = JSON.stringify(flightList);
-
-  const python = spawn("python", ["passenger_generator.py", flightsJson]);
-
-  let csvData = "";
-
-  python.stdout.on("data", (data) => {
-    csvData += data.toString();
-  });
-
-  python.stderr.on("data", (data) => {
-    console.error(`Python Error: ${data}`);
-  });
-
-  python.on("close", (code) => {
-    if (code === 0) {
-      // SAVE CSV TO FILE
-      fs.writeFileSync("simulation_data.csv", csvData);
-      console.log(`\n✅ SUCCESS! Simulation complete.`);
-      console.log(`📄 Data saved to: simulation_data.csv`);
-      console.log(`📊 Total Rows generated: ${csvData.split("\n").length - 1}`);
-    } else {
-      console.log(`Python process exited with code ${code}`);
-    }
-  });
-}
 app.get('/api/fetch-active-flights', async (req, res) => {
     try {
         const airportCode = req.query.airport || TARGET_AIRPORT;
@@ -423,6 +333,7 @@ app.get('/api/fetch-active-flights', async (req, res) => {
             return {
                 flight_id: f.flight.iata || f.flight.icao,
                 airline: f.airline.name,
+                flight_status: f.flight_status || "unknown",
                 flight_type: isDomestic ? "Domestic" : "International",
                 
                 route: {
@@ -465,8 +376,47 @@ app.get('/api/fetch-active-flights', async (req, res) => {
         res.status(500).json({ error: "Failed to fetch active flights." });
     }
 });
+
+app.get('/api/airport-location', async (req, res) => {
+    try {
+        const airportCode = String(req.query.airport || TARGET_AIRPORT).trim().toUpperCase();
+
+        if (!airportCode) {
+            return res.status(400).json({ error: 'Airport code is required.' });
+        }
+
+        const fallbackAirport = AIRPORT_COORDINATES[airportCode];
+        if (fallbackAirport) {
+            return res.status(200).json(fallbackAirport);
+        }
+
+        const response = await axios.get(AIRPORTS_URL, {
+            params: {
+                access_key: API_KEY,
+                iata_code: airportCode,
+                limit: 1
+            }
+        });
+
+        const airport = response.data?.data?.[0];
+        const latitude = Number(airport?.latitude);
+        const longitude = Number(airport?.longitude);
+
+        if (!Number.isFinite(latitude) || !Number.isFinite(longitude)) {
+            return res.status(404).json({ error: `No coordinates found for ${airportCode}.` });
+        }
+
+        return res.status(200).json({
+            code: airportCode,
+            name: airport?.airport_name || airport?.airport || airportCode,
+            coords: [latitude, longitude]
+        });
+    } catch (error) {
+        console.error('Airport lookup error:', error.message);
+        res.status(500).json({ error: 'Failed to fetch airport location.' });
+    }
+});
 // START
 app.listen(PORT, () => {
   console.log(`Server running on ${PORT}`);
-  //fetchAndSimulate();
 });

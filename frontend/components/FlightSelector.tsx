@@ -2,40 +2,37 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { RefreshCw, Radio } from 'lucide-react';
 
-const FlightSelector = ({ onFlightsFetched }: { onFlightsFetched?: (flights: any) => void }) => {
+const FlightSelector = ({ onFlightsFetched, onAirportChange }: { onFlightsFetched?: (flights: any) => void, onAirportChange?: (airportCode: string) => void }) => {
     const [selectedAirport, setSelectedAirport] = useState('HBE');
-    const [selectedStatus, setSelectedStatus] = useState('active');
     const [loading, setLoading] = useState(false);
     const [autoRefresh, setAutoRefresh] = useState(false);
     const [lastUpdated, setLastUpdated] = useState<string | null>(null);
 
-    const airports = [
-        { code: 'HBE', name: 'Borg El Arab (Alexandria)' },
-        { code: 'CAI', name: 'Cairo International' },
-        { code: 'DXB', name: 'Dubai International' },
-        { code: 'JFK', name: 'John F. Kennedy' },
-        { code: 'LHR', name: 'London Heathrow' }
-    ];
-
-    const flightStatuses = ['all', 'scheduled', 'active', 'landed', 'cancelled', 'incident', 'diverted'];
+    const formatSyncTime = () =>
+        new Date().toLocaleTimeString([], {
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit'
+        });
 
     // Wrap the fetch logic so it can be reused by the timer
     const handleFetchFlights = useCallback(async (isAuto = false) => {
         if (!isAuto) setLoading(true);
         try {
-            const response = await fetch(`http://localhost:5000/api/fetch-active-flights?airport=${selectedAirport}&status=${selectedStatus}`);
+            const response = await fetch(`http://localhost:5000/api/fetch-active-flights?airport=${selectedAirport}&status=all`);
             const data = await response.json();
             
             console.log('🔵 API Response:', data);
             
             if (response.ok) {
-                setLastUpdated(new Date().toLocaleTimeString());
+                setLastUpdated(formatSyncTime());
                 if (!isAuto) alert(`✅ Success! Downloaded ${data.meta.count} flights.`);
                 
                 // Call the callback with fetched flights
                 if (onFlightsFetched) {
-                    console.log('📍 Flights to map:', data.flights || []);
-                    onFlightsFetched(data.flights || []);
+                    const flights = Array.isArray(data.flights) ? data.flights : [];
+                    console.log('📍 Flights to map:', flights);
+                    onFlightsFetched(flights);
                 } else {
                     console.warn('⚠️ onFlightsFetched callback not provided');
                 }
@@ -48,7 +45,7 @@ const FlightSelector = ({ onFlightsFetched }: { onFlightsFetched?: (flights: any
         } finally {
             if (!isAuto) setLoading(false);
         }
-    }, [selectedAirport, selectedStatus, onFlightsFetched]);
+    }, [selectedAirport, onFlightsFetched]);
 
     // Timer Logic for Auto-Refresh
     useEffect(() => {
@@ -56,10 +53,16 @@ const FlightSelector = ({ onFlightsFetched }: { onFlightsFetched?: (flights: any
         if (autoRefresh) {
             interval = setInterval(() => {
                 handleFetchFlights(true);
-            }, 60000); // 60 Seconds
+            }, 30000); // 60 Seconds
         }
         return () => clearInterval(interval);
     }, [autoRefresh, handleFetchFlights]);
+
+    useEffect(() => {
+        if (onAirportChange) {
+            onAirportChange(selectedAirport);
+        }
+    }, [selectedAirport, onAirportChange]);
 
     return (
         <div className="p-4 border border-slate-200 rounded-xl bg-white shadow-sm text-slate-800 w-full">
@@ -75,29 +78,13 @@ const FlightSelector = ({ onFlightsFetched }: { onFlightsFetched?: (flights: any
             </div>
             
             <div className="flex flex-col gap-3">
-                <select 
-                    value={selectedAirport} 
-                    onChange={(e) => setSelectedAirport(e.target.value)}
-                    className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-lg text-slate-900 text-xs font-semibold cursor-pointer outline-none focus:border-[#1ED5F4] appearance-auto"
-                >
-                    {airports.map(ap => (
-                        <option key={ap.code} value={ap.code}>
-                            {ap.code} - {ap.name}
-                        </option>
-                    ))}
-                </select>
-
-                <select 
-                    value={selectedStatus} 
-                    onChange={(e) => setSelectedStatus(e.target.value)}
-                    className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-lg text-slate-900 text-xs font-semibold cursor-pointer outline-none focus:border-[#1ED5F4] appearance-auto"
-                >
-                    {flightStatuses.map(status => (
-                        <option key={status} value={status}>
-                            {status.charAt(0).toUpperCase() + status.slice(1)}
-                        </option>
-                    ))}
-                </select>
+                <input
+                    type="text"
+                    value={selectedAirport}
+                    onChange={(e) => setSelectedAirport(e.target.value.toUpperCase().slice(0, 4))}
+                    placeholder="Airport code"
+                    className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-lg text-slate-900 text-xs font-semibold outline-none focus:border-[#1ED5F4] uppercase tracking-widest"
+                />
 
                 <button 
                     onClick={() => handleFetchFlights(false)} 
@@ -120,7 +107,7 @@ const FlightSelector = ({ onFlightsFetched }: { onFlightsFetched?: (flights: any
                     }`}
                 >
                     <Radio size={14} className={autoRefresh ? "animate-pulse" : ""} />
-                    {autoRefresh ? 'Live Sync: ON (60s)' : 'Live Sync: OFF'}
+                    {autoRefresh ? 'Live Sync: ON (30s)' : 'Live Sync: OFF'}
                 </button>
             </div>
         </div>

@@ -1,5 +1,4 @@
 'use client';
-import FlightSelector from './FlightSelector';
 import { Plus, ShieldHalf, Ticket, X, TicketsPlane, ShoppingBag, QrCode, BaggageClaim, BriefcaseConveyorBelt, ShieldUser, PlaneTakeoff, Send, Loader2 } from 'lucide-react';
 import CheckpointCard from './CheckpointCard';
 import { useState } from 'react';
@@ -293,12 +292,7 @@ export default function ConfigurationSidebar({ checkpoints = [], setCheckpoints 
                 )}
             </div>
 
-            {/* ========================================= */}
-            {/* ✈️ NEW FLIGHT SELECTOR COMPONENT DROPPED HERE */}
-            {/* ========================================= */}
-            <div className="flex-shrink-0 mt-2 border-t pt-4 border-slate-200">
-                <FlightSelector />
-            </div>
+
 
             {/* Status Message */}
             {formatStatus.type && (

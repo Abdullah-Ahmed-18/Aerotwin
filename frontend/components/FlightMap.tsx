@@ -16,14 +16,10 @@ export default function FlightMap({ center, selectedId, flights = [] }: { center
         console.log(`🗺️ Mapping flight ${idx}:`, f);
         return {
             id: f.id,
-            pos: f.coords || [30.9177 + (Math.random() - 0.5) * 0.5, 29.6964 + (Math.random() - 0.5) * 0.5] as [number, number],
+            pos: f.coords || [center[0] + (Math.random() - 0.5) * 0.5, center[1] + (Math.random() - 0.5) * 0.5] as [number, number],
             heading: f.heading || (idx * 120)
         };
-    }) : [
-        { id: 'MS-441', pos: [30.9500, 29.6500] as [number, number], heading: 135 },
-        { id: 'QR-1301', pos: [30.8800, 29.8500] as [number, number], heading: 220 },
-        { id: 'TU-512', pos: [31.1000, 29.5000] as [number, number], heading: 310 },
-    ];
+    }) : [];
 
     console.log('🎨 FlightMap rendered with flights:', activeHubFlights);
 
@@ -31,8 +27,8 @@ export default function FlightMap({ center, selectedId, flights = [] }: { center
         <div className="w-full h-full relative holographic-radar overflow-hidden">
             <Map center={center} zoom={11} animate={true} dprs={[1, 2]}>
 
-                {/* HBE Hub Center */}
-                <Overlay anchor={[30.9177, 29.6964]} offset={[40, 40]}>
+                {/* Selected Airport Center */}
+                <Overlay anchor={center} offset={[40, 40]}>
                     <div className="relative flex items-center justify-center w-20 h-20">
                         <div className="absolute w-full h-full border border-blue-500/20 rounded-full animate-[ping_3s_linear_infinite]" />
                         <div className="w-4 h-4 bg-blue-600 rounded-full shadow-[0_0_15px_#2563eb] border-2 border-white" />

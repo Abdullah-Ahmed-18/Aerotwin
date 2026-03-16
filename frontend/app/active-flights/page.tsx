@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import dynamic from 'next/dynamic';
 import { Plane, Info, Globe, Activity, Navigation, ChevronDown, Users, Radar, Repeat, Crown, Clock, X, PieChart } from 'lucide-react';
 import FlightSelector from '@/components/FlightSelector';
@@ -22,7 +22,15 @@ const AIRCRAFT_CONFIG: Record<string, { maxCap: number }> = {
     'Airbus A320neo': { maxCap: 180 },
     'Airbus A350-900': { maxCap: 350 },
     'Boeing 777-300ER': { maxCap: 396 },
-    'Embraer E190': { maxCap: 114 }
+    'Embraer E190': { maxCap: 114 },
+    'B738': { maxCap: 189 },
+    'A320': { maxCap: 180 },
+    'A220': { maxCap: 135 },
+    'B38M': { maxCap: 189 },
+    'A321': { maxCap: 220 },
+    'A333': { maxCap: 300 },
+    'A21N': { maxCap: 240 },
+    'AT72': { maxCap: 72 }
 };
 
 const MODEL_CONFIG: Record<string, { path: string, scale: number }> = {
@@ -45,7 +53,63 @@ const ABS_PERSONAS = {
 
 type PersonaKey = keyof typeof ABS_PERSONAS;
 
+const AIRPORT_NAMES: Record<string, string> = {
+    HBE: 'Borg El Arab (Alexandria)',
+    CAI: 'Cairo International',
+    DXB: 'Dubai International',
+    JFK: 'John F. Kennedy',
+    LHR: 'London Heathrow',
+    IST: 'Istanbul Airport',
+    AUH: 'Abu Dhabi International',
+    MED: 'Mohammad Bin Abdulaziz'
+};
+
+const DEFAULT_AIRCRAFT_MAX_CAP = 180;
+
+function parseSimulatedNumber(value: unknown, fallback = 0): number {
+    if (typeof value === 'number' && Number.isFinite(value)) return value;
+    if (typeof value === 'string') {
+        const match = value.match(/\d+/);
+        if (match) return parseInt(match[0], 10);
+    }
+    return fallback;
+}
+
+function getAircraftMaxCapacity(aircraftType: string): number {
+    return AIRCRAFT_CONFIG[aircraftType]?.maxCap || DEFAULT_AIRCRAFT_MAX_CAP;
+}
+
+function formatFlightStatus(status: unknown): string {
+    const normalizedStatus = String(status || 'unknown').toLowerCase();
+    return normalizedStatus === 'unknown'
+        ? 'UNKNOWN'
+        : normalizedStatus.replace(/_/g, ' ').toUpperCase();
+}
+
+function getFlightStatusClass(status: unknown): string {
+    switch (String(status || 'unknown').toLowerCase()) {
+        case 'active':
+            return 'text-blue-600 bg-blue-50 border-blue-100';
+        case 'scheduled':
+            return 'text-violet-600 bg-violet-50 border-violet-100';
+        case 'landed':
+            return 'text-emerald-600 bg-emerald-50 border-emerald-100';
+        case 'cancelled':
+            return 'text-rose-600 bg-rose-50 border-rose-100';
+        case 'incident':
+            return 'text-amber-700 bg-amber-50 border-amber-100';
+        case 'diverted':
+            return 'text-orange-600 bg-orange-50 border-orange-100';
+        default:
+            return 'text-slate-500 bg-slate-100 border-slate-200';
+    }
+}
+
 export default function ActiveFlightsPage() {
+    const [selectedAirportCode, setSelectedAirportCode] = useState('HBE');
+    const [selectedAirportCenter, setSelectedAirportCenter] = useState<[number, number]>([30.9177, 29.6964]);
+    const [selectedStatusFilters, setSelectedStatusFilters] = useState<string[]>(['all']);
+    const [fetchedFlights, setFetchedFlights] = useState<any[]>([]);
     const [selectedId, setSelectedId] = useState<string | null>('MS-441');
     const [manageId, setManageId] = useState<string | null>(null);
     const [time, setTime] = useState(new Date());
@@ -77,33 +141,131 @@ export default function ActiveFlightsPage() {
         }
     ]);
 
-    // Handle fetched flights from API and transform for map display
-    const handleFlightsFetched = (apiFlight: any[]) => {
+    const flightStatuses = ['all', 'scheduled', 'active', 'landed', 'cancelled', 'incident', 'diverted'];
+    const sourceFlightCount = fetchedFlights.length > 0 ? fetchedFlights.length : flights.length;
+    const filteredFlightCount = flights.length;
+
+    const toggleStatusFilter = (status: string) => {
+        setSelectedStatusFilters((currentStatuses) => {
+            if (status === 'all') {
+                return ['all'];
+            }
+
+            const withoutAll = currentStatuses.filter((value) => value !== 'all');
+            const nextStatuses = withoutAll.includes(status)
+                ? withoutAll.filter((value) => value !== status)
+                : [...withoutAll, status];
+
+            return nextStatuses.length > 0 ? nextStatuses : ['all'];
+        });
+    };
+
+    // Handle fetched flights from API and map fields used by the cards
+    const handleFlightsFetched = useCallback((apiFlight: any[]) => {
         console.log('🎯 Received API flights in page:', apiFlight);
+        if (!Array.isArray(apiFlight)) {
+            setFetchedFlights([]);
+            return;
+        }
         
         // Deduplicate flights by flight_id
         const uniqueFlights = Array.from(new Map(apiFlight.map(f => [f.flight_id, f])).values());
         console.log('✅ Deduplicated flights (removed duplicates):', uniqueFlights);
-        
-        const transformedFlights = uniqueFlights.map((f, idx) => {
-            const transformed = {
+
+        setFetchedFlights(uniqueFlights);
+    }, []);
+
+    useEffect(() => {
+        if (fetchedFlights.length === 0) {
+            setFlights([]);
+            setMapFlights([]);
+            setSelectedId(null);
+            return;
+        }
+
+        const filteredFlights = selectedStatusFilters.includes('all')
+            ? fetchedFlights
+            : fetchedFlights.filter((flight) => {
+                const status = String(flight?.flight_status || 'unknown').toLowerCase();
+                return selectedStatusFilters.includes(status);
+            });
+
+        const mappedFlights = filteredFlights.map((f, idx) => {
+            const aircraftType = f?.aircraft?.type || 'A320';
+            const maxCap = getAircraftMaxCapacity(aircraftType);
+            const originCode = f?.route?.source || 'UNK';
+            const destinationCode = f?.route?.destination || 'UNK';
+            const passengerCount = Math.min(
+                parseSimulatedNumber(f?.payload_stats?.total_passengers, Math.floor(maxCap * 0.8)),
+                maxCap
+            );
+
+            return {
                 id: f.flight_id,
+                status: formatFlightStatus(f?.flight_status),
+                statusClass: getFlightStatusClass(f?.flight_status),
+                origin: originCode,
+                originName: f?.route?.details?.origin_name || AIRPORT_NAMES[originCode] || 'Unknown Origin',
+                dest: destinationCode,
+                destName: AIRPORT_NAMES[destinationCode] || destinationCode,
+                eta: 30 + (idx * 7) % 90,
+                progress: 25 + (idx * 9) % 65,
                 coords: [
-                    30.9177 + (Math.sin(idx) * 0.3),
-                    29.6964 + (Math.cos(idx) * 0.3)
+                    selectedAirportCenter[0] + (Math.sin(idx) * 0.3),
+                    selectedAirportCenter[1] + (Math.cos(idx) * 0.3)
                 ] as [number, number],
-                heading: (idx * 120) % 360
+                heading: (idx * 120) % 360,
+                passengers: passengerCount,
+                aircraft: aircraftType,
+                personas: { p1: 0, p2: 0, p3: 0, p4: 70, p5: 0, p6: 20, p7: 10 }
             };
-            console.log(`✈️ Transformed flight ${idx}:`, transformed);
-            return transformed;
         });
-        
-        console.log('📊 All transformed flights:', transformedFlights);
-        setMapFlights(transformedFlights);
-    };
+
+        setFlights(mappedFlights);
+        setMapFlights(mappedFlights.map(({ id, coords, heading }) => ({ id, coords, heading })));
+        setSelectedId((currentId) => {
+            if (currentId && mappedFlights.some((flight) => flight.id === currentId)) {
+                return currentId;
+            }
+            return mappedFlights[0]?.id || null;
+        });
+    }, [fetchedFlights, selectedStatusFilters, selectedAirportCenter]);
+
+    useEffect(() => {
+        const airportCode = selectedAirportCode.trim().toUpperCase();
+
+        if (airportCode.length < 3) {
+            return;
+        }
+
+        let isCancelled = false;
+
+        const fetchAirportLocation = async () => {
+            try {
+                const response = await fetch(`http://localhost:5000/api/airport-location?airport=${airportCode}`);
+                const data = await response.json();
+
+                if (!response.ok || !Array.isArray(data.coords) || data.coords.length !== 2) {
+                    return;
+                }
+
+                if (!isCancelled) {
+                    setSelectedAirportCenter([data.coords[0], data.coords[1]]);
+                }
+            } catch (error) {
+                console.error('Airport location fetch error:', error);
+            }
+        };
+
+        fetchAirportLocation();
+
+        return () => {
+            isCancelled = true;
+        };
+    }, [selectedAirportCode]);
 
     const handleAircraftChange = (flightId: string, newAircraft: string) => {
-        const newMax = AIRCRAFT_CONFIG[newAircraft].maxCap;
+        const newMax = getAircraftMaxCapacity(newAircraft);
         setFlights(prev => prev.map(f => f.id === flightId ? { ...f, aircraft: newAircraft, passengers: Math.min(f.passengers, newMax) } : f));
     };
 
@@ -176,10 +338,42 @@ export default function ActiveFlightsPage() {
                         </div>
                     </div>
 
+                    {/* Local status filters for already-fetched flights */}
+                    <div className="mb-4 p-4 rounded-2xl bg-white border border-slate-200 shadow-sm">
+                        <div className="flex items-center justify-between mb-3">
+                            <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Card Filters (Local Only)</p>
+                            <span className="text-[9px] font-black uppercase tracking-widest text-blue-600 bg-blue-50 border border-blue-100 rounded-full px-2.5 py-1">
+                                {filteredFlightCount} / {sourceFlightCount} Flights
+                            </span>
+                        </div>
+                        <div className="flex flex-wrap gap-2">
+                            {flightStatuses.map((status) => {
+                                const selected = selectedStatusFilters.includes(status);
+                                return (
+                                    <label
+                                        key={status}
+                                        className={`px-3 py-1.5 rounded-full border text-[10px] font-black uppercase tracking-widest cursor-pointer transition-all ${selected
+                                            ? 'bg-blue-600 text-white border-blue-600'
+                                            : 'bg-white text-slate-600 border-slate-200 hover:border-slate-300'
+                                            }`}
+                                    >
+                                        <input
+                                            type="checkbox"
+                                            checked={selected}
+                                            onChange={() => toggleStatusFilter(status)}
+                                            className="sr-only"
+                                        />
+                                        {status}
+                                    </label>
+                                );
+                            })}
+                        </div>
+                    </div>
+
                     {/* Flight List Container (Scrollable with massive padding at the bottom) */}
                     <div className="flex-1 overflow-y-auto space-y-4 pr-2 custom-scrollbar pb-32">
                         {flights.map((f, idx) => {
-                            const currentMax = AIRCRAFT_CONFIG[f.aircraft].maxCap;
+                            const currentMax = getAircraftMaxCapacity(f.aircraft);
                             return (
                                 <div
                                     key={`flight-${idx}-${f.id}`}
@@ -297,7 +491,7 @@ export default function ActiveFlightsPage() {
                         {/* ✈️ CONTROL PANEL RESTORED TO THE BOTTOM */}
                         {/* ========================================== */}
                         <div className="mt-6 pt-6 border-t border-slate-200">
-                            <FlightSelector onFlightsFetched={handleFlightsFetched} />
+                            <FlightSelector onFlightsFetched={handleFlightsFetched} onAirportChange={setSelectedAirportCode} />
                         </div>
                     </div>
                 </div>
@@ -307,7 +501,7 @@ export default function ActiveFlightsPage() {
 
                     {/* FULL SCREEN MAP */}
                     <div className="absolute inset-0 z-0">
-                        <FlightMap center={activeFlight?.coords || [30.9177, 29.6964]} selectedId={selectedId} flights={mapFlights} />
+                        <FlightMap center={selectedAirportCenter} selectedId={selectedId} flights={mapFlights} />
                     </div>
 
                     {/* TOP LEFT RADAR BADGE */}
@@ -406,10 +600,10 @@ export default function ActiveFlightsPage() {
                                     <div>
                                         <div className="flex justify-between items-end mb-2">
                                             <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Cabin Load Factor</span>
-                                            <span className="text-xs font-black text-slate-800">{activeFlight.passengers} <span className="text-slate-400">/ {AIRCRAFT_CONFIG[activeFlight.aircraft].maxCap} PAX</span></span>
+                                            <span className="text-xs font-black text-slate-800">{activeFlight.passengers} <span className="text-slate-400">/ {getAircraftMaxCapacity(activeFlight.aircraft)} PAX</span></span>
                                         </div>
                                         <div className="h-3 w-full bg-slate-100 rounded-full overflow-hidden shadow-inner flex">
-                                            <div className="h-full bg-blue-500 transition-all duration-500" style={{ width: `${(activeFlight.passengers / AIRCRAFT_CONFIG[activeFlight.aircraft].maxCap) * 100}%` }} />
+                                            <div className="h-full bg-blue-500 transition-all duration-500" style={{ width: `${(activeFlight.passengers / getAircraftMaxCapacity(activeFlight.aircraft)) * 100}%` }} />
                                         </div>
                                     </div>
 
