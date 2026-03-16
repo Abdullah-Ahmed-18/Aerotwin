@@ -4,16 +4,32 @@ import React from 'react';
 import { Map, Overlay } from 'pigeon-maps';
 import { Plane } from 'lucide-react';
 
-export default function FlightMap({ center, selectedId }: { center: [number, number], selectedId: string | null }) {
-    const activeHubFlights = [
+interface MapFlight {
+    id: string;
+    coords?: [number, number];
+    heading?: number;
+}
+
+export default function FlightMap({ center, selectedId, flights = [] }: { center: [number, number], selectedId: string | null, flights?: MapFlight[] }) {
+    // Use provided flights or fallback to default
+    const activeHubFlights = flights.length > 0 ? flights.map((f, idx) => {
+        console.log(`🗺️ Mapping flight ${idx}:`, f);
+        return {
+            id: f.id,
+            pos: f.coords || [30.9177 + (Math.random() - 0.5) * 0.5, 29.6964 + (Math.random() - 0.5) * 0.5] as [number, number],
+            heading: f.heading || (idx * 120)
+        };
+    }) : [
         { id: 'MS-441', pos: [30.9500, 29.6500] as [number, number], heading: 135 },
         { id: 'QR-1301', pos: [30.8800, 29.8500] as [number, number], heading: 220 },
         { id: 'TU-512', pos: [31.1000, 29.5000] as [number, number], heading: 310 },
     ];
 
+    console.log('🎨 FlightMap rendered with flights:', activeHubFlights);
+
     return (
         <div className="w-full h-full relative holographic-radar overflow-hidden">
-            <Map center={center} zoom={11} animate={true} dpr={2}>
+            <Map center={center} zoom={11} animate={true} dprs={[1, 2]}>
 
                 {/* HBE Hub Center */}
                 <Overlay anchor={[30.9177, 29.6964]} offset={[40, 40]}>
@@ -24,10 +40,10 @@ export default function FlightMap({ center, selectedId }: { center: [number, num
                 </Overlay>
 
                 {/* ALWAYS BLUE AIRCRAFT ICONS */}
-                {activeHubFlights.map((f) => {
+                {activeHubFlights.map((f, idx) => {
                     const isSelected = selectedId === f.id;
                     return (
-                        <Overlay key={f.id} anchor={f.pos} offset={[24, 24]}>
+                        <Overlay key={`map-flight-${idx}-${f.id}`} anchor={f.pos} offset={[24, 24]}>
                             <div className="flex flex-col items-center group cursor-pointer">
 
                                 <div className="relative">

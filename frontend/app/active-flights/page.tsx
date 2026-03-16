@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import { Plane, Info, Globe, Activity, Navigation, ChevronDown, Users, Radar, Repeat, Crown, Clock, X, PieChart } from 'lucide-react';
+import FlightSelector from '@/components/FlightSelector';
 
 const FlightMap = dynamic(() => import('@/components/FlightMap'), {
     ssr: false,
@@ -49,9 +50,8 @@ export default function ActiveFlightsPage() {
     const [manageId, setManageId] = useState<string | null>(null);
     const [time, setTime] = useState(new Date());
     const [mounted, setMounted] = useState(false);
-
-    // UX UPGRADE: Card is now hidden by default to show off the full map
     const [showCard, setShowCard] = useState(false);
+    const [mapFlights, setMapFlights] = useState<any[]>([]);
 
     const [flights, setFlights] = useState([
         {
@@ -76,6 +76,31 @@ export default function ActiveFlightsPage() {
             personas: { p1: 0, p2: 0, p3: 80, p4: 0, p5: 0, p6: 10, p7: 10 }
         }
     ]);
+
+    // Handle fetched flights from API and transform for map display
+    const handleFlightsFetched = (apiFlight: any[]) => {
+        console.log('🎯 Received API flights in page:', apiFlight);
+        
+        // Deduplicate flights by flight_id
+        const uniqueFlights = Array.from(new Map(apiFlight.map(f => [f.flight_id, f])).values());
+        console.log('✅ Deduplicated flights (removed duplicates):', uniqueFlights);
+        
+        const transformedFlights = uniqueFlights.map((f, idx) => {
+            const transformed = {
+                id: f.flight_id,
+                coords: [
+                    30.9177 + (Math.sin(idx) * 0.3),
+                    29.6964 + (Math.cos(idx) * 0.3)
+                ] as [number, number],
+                heading: (idx * 120) % 360
+            };
+            console.log(`✈️ Transformed flight ${idx}:`, transformed);
+            return transformed;
+        });
+        
+        console.log('📊 All transformed flights:', transformedFlights);
+        setMapFlights(transformedFlights);
+    };
 
     const handleAircraftChange = (flightId: string, newAircraft: string) => {
         const newMax = AIRCRAFT_CONFIG[newAircraft].maxCap;
@@ -151,15 +176,16 @@ export default function ActiveFlightsPage() {
                         </div>
                     </div>
 
-                    <div className="flex-1 overflow-y-auto space-y-4 pr-2 custom-scrollbar pb-4">
-                        {flights.map((f) => {
+                    {/* Flight List Container (Scrollable with massive padding at the bottom) */}
+                    <div className="flex-1 overflow-y-auto space-y-4 pr-2 custom-scrollbar pb-32">
+                        {flights.map((f, idx) => {
                             const currentMax = AIRCRAFT_CONFIG[f.aircraft].maxCap;
                             return (
                                 <div
-                                    key={f.id}
+                                    key={`flight-${idx}-${f.id}`}
                                     onClick={() => {
                                         setSelectedId(f.id);
-                                        setShowCard(true); // Pops open the analytics card automatically
+                                        setShowCard(true); 
                                     }}
                                     className={`group rounded-[28px] border transition-all duration-500 cursor-pointer overflow-hidden ${selectedId === f.id
                                         ? 'bg-white border-blue-600 shadow-2xl shadow-blue-600/10 scale-[1.01]'
@@ -266,6 +292,13 @@ export default function ActiveFlightsPage() {
                                 </div>
                             );
                         })}
+
+                        {/* ========================================== */}
+                        {/* ✈️ CONTROL PANEL RESTORED TO THE BOTTOM */}
+                        {/* ========================================== */}
+                        <div className="mt-6 pt-6 border-t border-slate-200">
+                            <FlightSelector onFlightsFetched={handleFlightsFetched} />
+                        </div>
                     </div>
                 </div>
 
@@ -274,7 +307,7 @@ export default function ActiveFlightsPage() {
 
                     {/* FULL SCREEN MAP */}
                     <div className="absolute inset-0 z-0">
-                        <FlightMap center={activeFlight?.coords || [30.9177, 29.6964]} selectedId={selectedId} />
+                        <FlightMap center={activeFlight?.coords || [30.9177, 29.6964]} selectedId={selectedId} flights={mapFlights} />
                     </div>
 
                     {/* TOP LEFT RADAR BADGE */}

@@ -12,6 +12,8 @@ const PORT = 5000;
 const API_KEY = "a359142e5c2139ed3800f0f6ae381010"; // <--- PASTE KEY HERE
 const TARGET_AIRPORT = "HBE";
 const API_URL = "http://api.aviationstack.com/v1/flights";
+const DOMESTIC_EGYPT_AIRPORTS = ["CAI", "SSH", "HRG", "LXR", "ASW", "HBE", "ALY", "TCP", "RMF"];
+const AIRCRAFT_CAPACITIES = { "B738": 189, "A320": 180, "A220": 135, "B38M": 189, "A321": 220, "A333": 300, "A21N": 240, "AT72": 72 };
 
 // Load the key mapping configuration for transforming frontend data
 const keyMapping = require('./KeyMapping.json');
@@ -51,7 +53,17 @@ function getTasksForCheckpoint(checkpointType, featureVal, avgServiceTime) {
     
     return [];
 }
-
+function resolvePlaneType(flightIata, apiPlane) {
+    // If API provides it, use it. Otherwise, mark it Dummy.
+    if (apiPlane) return apiPlane;
+    
+    const fleet = { MS: ["B738", "A320"], FZ: ["B38M"], G9: ["A320"], SV: ["A333"] };
+    const airline = flightIata?.substring(0, 2).toUpperCase();
+    const fleetMatch = fleet[airline];
+    const fallback = fleetMatch ? fleetMatch[Math.floor(Math.random() * fleetMatch.length)] : "A320";
+    
+    return `${fallback} (Dummy)`;
+}
 // Middleware
 app.use(cors()); // Enable CORS for all routes
 app.use(express.json());
@@ -371,7 +383,88 @@ function runPythonSimulation(flightList) {
     }
   });
 }
+app.get('/api/fetch-active-flights', async (req, res) => {
+    try {
+        const airportCode = req.query.airport || TARGET_AIRPORT;
+        const flightStatus = req.query.status || 'active';
+        
+        const params = { access_key: API_KEY, arr_iata: airportCode };
+        
+        // Only add flight_status filter if it's not 'all'
+        if (flightStatus !== 'all') {
+            params.flight_status = flightStatus;
+        }
+        
+        const response = await axios.get(API_URL, { params });
 
+        const rawFlights = response.data.data || [];
+
+        const formattedFlights = rawFlights.map(f => {
+            const aircraftRaw = f.aircraft?.iata;
+            const aircraftCode = resolvePlaneType(f.flight.iata, aircraftRaw);
+            
+            // Extract clean code for capacity lookup even if it says "(Dummy)"
+            const lookupCode = aircraftCode.split(' ')[0];
+            const maxCapacity = AIRCRAFT_CAPACITIES[lookupCode] || 180;
+            
+            const loadFactor = (Math.random() * (0.20) + 0.75);
+            const estimatedPax = Math.floor(maxCapacity * loadFactor);
+
+            const sourceCode = f.departure?.iata || "UNK";
+            const isDomestic = DOMESTIC_EGYPT_AIRPORTS.includes(sourceCode);
+
+            // --- OPERATIONAL LOGIC WITH DUMMY LABELS ---
+            const terminal = (f.airline.name.includes("EgyptAir")) ? "T1" : "T2";
+            
+            // Check if Gate/Belt exists in API, otherwise generate and label as Dummy
+            const gate = f.arrival?.gate ? f.arrival.gate : `${terminal}-G${Math.floor(Math.random() * 12) + 1} (Dummy)`;
+            const belt = f.arrival?.baggage ? f.arrival.baggage : `B${Math.floor(Math.random() * 4) + 1} (Dummy)`;
+
+            return {
+                flight_id: f.flight.iata || f.flight.icao,
+                airline: f.airline.name,
+                flight_type: isDomestic ? "Domestic" : "International",
+                
+                route: {
+                    source: sourceCode,
+                    destination: airportCode,
+                    details: {
+                        origin_name: f.departure?.airport || "Unknown Departure",
+                        terminal: terminal,
+                        gate_id: gate
+                    }
+                },
+                
+                aircraft: { 
+                    type: aircraftCode, 
+                    capacity: `${maxCapacity} (Simulated)` 
+                },
+
+                payload_stats: {
+                    total_passengers: `${estimatedPax} (Simulated)`,
+                    estimated_groups: `${Math.ceil(estimatedPax / 2.4)} (Simulated)`,
+                    total_bags: `${Math.round(estimatedPax * (isDomestic ? 0.4 : 1.2))} (Simulated)`,
+                    priority_pax: `${Math.round(estimatedPax * 0.12)} (Simulated)`,
+                    prm_pax: `${Math.floor(Math.random() * 3)} (Simulated)`,
+                    service_multiplier: isDomestic ? 1.0 : 1.4,
+                    assigned_resources: { baggage_belt: belt }
+                }
+            };
+        });
+
+        const finalPayload = {
+            meta: { updated: new Date().toISOString(), airport: airportCode, count: formattedFlights.length },
+            flights: formattedFlights
+        };
+
+        fs.writeFileSync("active_flights.json", JSON.stringify(finalPayload, null, 2));
+        res.status(200).json(finalPayload);
+
+    } catch (error) {
+        console.error("Fetch Error:", error.message);
+        res.status(500).json({ error: "Failed to fetch active flights." });
+    }
+});
 // START
 app.listen(PORT, () => {
   console.log(`Server running on ${PORT}`);

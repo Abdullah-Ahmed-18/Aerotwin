@@ -1,0 +1,241 @@
+{
+  "meta": {
+    "updated": "2026-03-16T00:49:54.529Z",
+    "airport": "HBE",
+    "count": 8
+  },
+  "flights": [
+    {
+      "flight_id": "PC628",
+      "airline": "Pegasus",
+      "flight_type": "International",
+      "route": {
+        "source": "SAW",
+        "destination": "HBE",
+        "details": {
+          "origin_name": "Sabiha Gokcen",
+          "terminal": "T2",
+          "gate_id": "T2-G2 (Dummy)"
+        }
+      },
+      "aircraft": {
+        "type": "A320",
+        "capacity": "180 (Simulated)"
+      },
+      "payload_stats": {
+        "total_passengers": "147 (Simulated)",
+        "estimated_groups": "62 (Simulated)",
+        "total_bags": "176 (Simulated)",
+        "priority_pax": "18 (Simulated)",
+        "prm_pax": "1 (Simulated)",
+        "service_multiplier": 1.4,
+        "assigned_resources": {
+          "baggage_belt": "B4 (Dummy)"
+        }
+      }
+    },
+    {
+      "flight_id": "G9401",
+      "airline": "Air Arabia",
+      "flight_type": "International",
+      "route": {
+        "source": "AUH",
+        "destination": "HBE",
+        "details": {
+          "origin_name": "Abu Dhabi International",
+          "terminal": "T2",
+          "gate_id": "T2-G8 (Dummy)"
+        }
+      },
+      "aircraft": {
+        "type": "A321",
+        "capacity": "220 (Simulated)"
+      },
+      "payload_stats": {
+        "total_passengers": "200 (Simulated)",
+        "estimated_groups": "84 (Simulated)",
+        "total_bags": "240 (Simulated)",
+        "priority_pax": "24 (Simulated)",
+        "prm_pax": "0 (Simulated)",
+        "service_multiplier": 1.4,
+        "assigned_resources": {
+          "baggage_belt": "B2 (Dummy)"
+        }
+      }
+    },
+    {
+      "flight_id": "G9404",
+      "airline": "Air Arabia",
+      "flight_type": "International",
+      "route": {
+        "source": "AUH",
+        "destination": "HBE",
+        "details": {
+          "origin_name": "Abu Dhabi International",
+          "terminal": "T2",
+          "gate_id": "T2-G6 (Dummy)"
+        }
+      },
+      "aircraft": {
+        "type": "A321",
+        "capacity": "220 (Simulated)"
+      },
+      "payload_stats": {
+        "total_passengers": "171 (Simulated)",
+        "estimated_groups": "72 (Simulated)",
+        "total_bags": "205 (Simulated)",
+        "priority_pax": "21 (Simulated)",
+        "prm_pax": "1 (Simulated)",
+        "service_multiplier": 1.4,
+        "assigned_resources": {
+          "baggage_belt": "B1 (Dummy)"
+        }
+      }
+    },
+    {
+      "flight_id": "SM486",
+      "airline": "Air Cairo",
+      "flight_type": "International",
+      "route": {
+        "source": "MED",
+        "destination": "HBE",
+        "details": {
+          "origin_name": "Mohammad Bin Abdulaziz",
+          "terminal": "T2",
+          "gate_id": "T2-G9 (Dummy)"
+        }
+      },
+      "aircraft": {
+        "type": "A320",
+        "capacity": "180 (Simulated)"
+      },
+      "payload_stats": {
+        "total_passengers": "141 (Simulated)",
+        "estimated_groups": "59 (Simulated)",
+        "total_bags": "169 (Simulated)",
+        "priority_pax": "17 (Simulated)",
+        "prm_pax": "2 (Simulated)",
+        "service_multiplier": 1.4,
+        "assigned_resources": {
+          "baggage_belt": "B1 (Dummy)"
+        }
+      }
+    },
+    {
+      "flight_id": "TK696",
+      "airline": "Turkish Airlines",
+      "flight_type": "International",
+      "route": {
+        "source": "IST",
+        "destination": "HBE",
+        "details": {
+          "origin_name": "Istanbul Airport",
+          "terminal": "T2",
+          "gate_id": "T2-G3 (Dummy)"
+        }
+      },
+      "aircraft": {
+        "type": "A321",
+        "capacity": "220 (Simulated)"
+      },
+      "payload_stats": {
+        "total_passengers": "204 (Simulated)",
+        "estimated_groups": "85 (Simulated)",
+        "total_bags": "245 (Simulated)",
+        "priority_pax": "24 (Simulated)",
+        "prm_pax": "1 (Simulated)",
+        "service_multiplier": 1.4,
+        "assigned_resources": {
+          "baggage_belt": "B3 (Dummy)"
+        }
+      }
+    },
+    {
+      "flight_id": "TG7564",
+      "airline": "Thai Airways International",
+      "flight_type": "International",
+      "route": {
+        "source": "IST",
+        "destination": "HBE",
+        "details": {
+          "origin_name": "Istanbul Airport",
+          "terminal": "T2",
+          "gate_id": "T2-G12 (Dummy)"
+        }
+      },
+      "aircraft": {
+        "type": "A320",
+        "capacity": "180 (Simulated)"
+      },
+      "payload_stats": {
+        "total_passengers": "156 (Simulated)",
+        "estimated_groups": "65 (Simulated)",
+        "total_bags": "187 (Simulated)",
+        "priority_pax": "19 (Simulated)",
+        "prm_pax": "2 (Simulated)",
+        "service_multiplier": 1.4,
+        "assigned_resources": {
+          "baggage_belt": "B3 (Dummy)"
+        }
+      }
+    },
+    {
+      "flight_id": "MS9296",
+      "airline": "EgyptAir",
+      "flight_type": "International",
+      "route": {
+        "source": "IST",
+        "destination": "HBE",
+        "details": {
+          "origin_name": "Istanbul Airport",
+          "terminal": "T1",
+          "gate_id": "T1-G10 (Dummy)"
+        }
+      },
+      "aircraft": {
+        "type": "B738",
+        "capacity": "189 (Simulated)"
+      },
+      "payload_stats": {
+        "total_passengers": "143 (Simulated)",
+        "estimated_groups": "60 (Simulated)",
+        "total_bags": "172 (Simulated)",
+        "priority_pax": "17 (Simulated)",
+        "prm_pax": "2 (Simulated)",
+        "service_multiplier": 1.4,
+        "assigned_resources": {
+          "baggage_belt": "B4 (Dummy)"
+        }
+      }
+    },
+    {
+      "flight_id": "G9771",
+      "airline": "Air Arabia",
+      "flight_type": "International",
+      "route": {
+        "source": "SHJ",
+        "destination": "HBE",
+        "details": {
+          "origin_name": "Sharjah",
+          "terminal": "T2",
+          "gate_id": "T2-G11 (Dummy)"
+        }
+      },
+      "aircraft": {
+        "type": "A321",
+        "capacity": "220 (Simulated)"
+      },
+      "payload_stats": {
+        "total_passengers": "199 (Simulated)",
+        "estimated_groups": "83 (Simulated)",
+        "total_bags": "239 (Simulated)",
+        "priority_pax": "24 (Simulated)",
+        "prm_pax": "0 (Simulated)",
+        "service_multiplier": 1.4,
+        "assigned_resources": {
+          "baggage_belt": "B2 (Dummy)"
+        }
+      }
+    }
+  ]
+}

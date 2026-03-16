@@ -1,5 +1,5 @@
 'use client';
-
+import FlightSelector from './FlightSelector';
 import { Plus, ShieldHalf, Ticket, X, TicketsPlane, ShoppingBag, QrCode, BaggageClaim, BriefcaseConveyorBelt, ShieldUser, PlaneTakeoff, Send, Loader2 } from 'lucide-react';
 import CheckpointCard from './CheckpointCard';
 import { useState } from 'react';
@@ -29,8 +29,7 @@ interface SidebarProps {
     checkpoints: Checkpoint[];
     setCheckpoints: React.Dispatch<React.SetStateAction<Checkpoint[]>>;
 }
-// Notice the checkpoints = [] default value!
-// Notice the checkpoints = [] default value!
+
 export default function ConfigurationSidebar({ checkpoints = [], setCheckpoints }: SidebarProps) {
 
     const [showAddForm, setShowAddForm] = useState(false);
@@ -58,18 +57,16 @@ export default function ConfigurationSidebar({ checkpoints = [], setCheckpoints 
         try {
             // Format checkpoint data to match backend expectations
             const formattedData = checkpoints.map(cp => ({
-                id: cp.id,  // Use the actual component ID for mapping, not idCode
+                id: cp.id,
                 title: cp.title,
                 idCode: cp.idCode,
                 type: cp.type,
                 stations: cp.stations.map(station => {
-                    // Preserve full station structure, including tasks if present
                     const stationData: any = {
                         id: station.id,
                         name: station.name,
                     };
                     
-                    // Add settings fields if they exist
                     if (station.settings) {
                         stationData.staffing = parseInt(station.settings.staffing) || 1;
                         stationData.avgServiceTime = parseInt(station.settings.avgServiceTime) || 60;
@@ -106,7 +103,6 @@ export default function ConfigurationSidebar({ checkpoints = [], setCheckpoints 
                 const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, -5);
                 const filename = `AerotwinConfig_${timestamp}.json`;
                 
-                // Create blob and download
                 const jsonString = JSON.stringify(result.data, null, 2);
                 const blob = new Blob([jsonString], { type: 'application/json' });
                 const url = URL.createObjectURL(blob);
@@ -124,7 +120,6 @@ export default function ConfigurationSidebar({ checkpoints = [], setCheckpoints 
                 message: `✅ Successfully formatted and downloaded configuration! Checkpoints: ${checkpoints.length}`
             });
 
-            console.log('Formatted response:', result);
         } catch (error) {
             console.error('Format and send error:', error);
             const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
@@ -144,39 +139,6 @@ export default function ConfigurationSidebar({ checkpoints = [], setCheckpoints 
     };
 
     const handleUpdateCheckpoint = (id: string, updatedStations: { id: string; name: string; settings?: StationSettings }[]) => {
-        // INSIDE handleAddCheckpoint: 
-        // Assign icon AND a specific color based on checkpoint type
-        let icon;
-        let colorType = 'cyan'; // default
-
-        switch (newCheckpoint.type) {
-            case 'Security':
-                icon = ShieldHalf; colorType = 'amber'; break;
-            case 'Check-in /w Baggage Tagging':
-                icon = TicketsPlane; colorType = 'blue'; break;
-            case 'Digital Check-in':
-                icon = QrCode; colorType = 'cyan'; break;
-            case 'Self-Service Bag Drop':
-                icon = BaggageClaim; colorType = 'purple'; break;
-            case 'Baggage Retrieval':
-                icon = BriefcaseConveyorBelt; colorType = 'emerald'; break;
-            case 'Passport Check':
-                icon = ShieldUser; colorType = 'rose'; break;
-            case 'Boarding':
-                icon = PlaneTakeoff; colorType = 'sky'; break;
-            default:
-                icon = Ticket; colorType = 'slate';
-        }
-
-        const checkpoint: Checkpoint = {
-            id: `cp-${Date.now()}`,
-            title: newCheckpoint.title,
-            idCode: newCheckpoint.idCode,
-            type: newCheckpoint.type,
-            colorType: colorType as any, // Cast it so the interface accepts our new colors
-            icon: icon,
-            stations: []
-        };
         setCheckpoints(checkpoints.map(cp =>
             cp.id === id ? { ...cp, stations: updatedStations } : cp
         ));
@@ -220,7 +182,7 @@ export default function ConfigurationSidebar({ checkpoints = [], setCheckpoints 
             title: newCheckpoint.title,
             idCode: newCheckpoint.idCode,
             type: newCheckpoint.type,
-            colorType: colorType,
+            colorType: colorType as any,
             icon: icon,
             stations: []
         };
@@ -331,9 +293,16 @@ export default function ConfigurationSidebar({ checkpoints = [], setCheckpoints 
                 )}
             </div>
 
+            {/* ========================================= */}
+            {/* ✈️ NEW FLIGHT SELECTOR COMPONENT DROPPED HERE */}
+            {/* ========================================= */}
+            <div className="flex-shrink-0 mt-2 border-t pt-4 border-slate-200">
+                <FlightSelector />
+            </div>
+
             {/* Status Message */}
             {formatStatus.type && (
-                <div className={`px-3 py-2 rounded text-xs font-medium text-white flex-shrink-0 ${
+                <div className={`px-3 py-2 rounded text-xs font-medium text-white flex-shrink-0 mt-2 ${
                     formatStatus.type === 'success' ? 'bg-emerald-500' : 'bg-red-500'
                 }`}>
                     {formatStatus.message}
@@ -344,7 +313,7 @@ export default function ConfigurationSidebar({ checkpoints = [], setCheckpoints 
             <button
                 onClick={handleFormatAndSend}
                 disabled={isFormatting}
-                className="bg-gradient-to-r from-[#1ED5F4] to-[#00A8D8] text-slate-900 text-xs font-bold px-3 py-2 rounded flex items-center justify-center gap-2 w-full hover:opacity-90 transition-opacity shadow-sm disabled:opacity-50 disabled:cursor-not-allowed flex-shrink-0"
+                className="bg-gradient-to-r from-[#1ED5F4] to-[#00A8D8] text-slate-900 text-xs font-bold px-3 py-2 rounded flex items-center justify-center gap-2 w-full hover:opacity-90 transition-opacity shadow-sm disabled:opacity-50 disabled:cursor-not-allowed flex-shrink-0 mt-2"
             >
                 {isFormatting ? (
                     <>
