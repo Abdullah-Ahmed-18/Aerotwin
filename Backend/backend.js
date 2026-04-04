@@ -26,6 +26,29 @@ const AIRPORT_COORDINATES = {
     MED: { code: "MED", name: "Prince Mohammad Bin Abdulaziz Airport", coords: [24.5534, 39.7051] }
 };
 
+function isValidIata(code) {
+    return typeof code === "string" && /^[A-Z]{3}$/.test(code.trim().toUpperCase());
+}
+
+function isValidIcao(code) {
+    return typeof code === "string" && /^[A-Z]{4}$/.test(code.trim().toUpperCase());
+}
+
+function normalizeIata(code, fallback = "UNK") {
+    const normalized = String(code || "").trim().toUpperCase();
+    return isValidIata(normalized) ? normalized : fallback;
+}
+
+function normalizeIcao(code, fallback = "UNK") {
+    const normalized = String(code || "").trim().toUpperCase();
+    return isValidIcao(normalized) ? normalized : fallback;
+}
+
+function normalizeFlightCode(code) {
+    const normalized = String(code || "").trim().toUpperCase();
+    return /^[A-Z0-9]{3,8}$/.test(normalized) ? normalized : null;
+}
+
 // Load the key mapping configuration for transforming frontend data
 const keyMapping = require('./KeyMapping.json');
 
@@ -295,10 +318,21 @@ app.post('/api/format-aerotwin-data', (req, res) => {
 
 app.get('/api/fetch-active-flights', async (req, res) => {
     try {
-        const airportCode = req.query.airport || TARGET_AIRPORT;
+        const requestedAirport = String(req.query.airport || TARGET_AIRPORT).trim().toUpperCase();
         const flightStatus = req.query.status || 'active';
-        
-        const params = { access_key: API_KEY, arr_iata: airportCode };
+
+        const requestedIata = normalizeIata(requestedAirport, "");
+        const requestedIcao = normalizeIcao(requestedAirport, "");
+        const airportIata = requestedIata || TARGET_AIRPORT;
+        const airportIcao = requestedIcao || "UNK";
+
+        const params = { access_key: API_KEY };
+
+        if (requestedIcao) {
+            params.arr_icao = requestedIcao;
+        } else {
+            params.arr_iata = airportIata;
+        }
         
         // Only add flight_status filter if it's not 'all'
         if (flightStatus !== 'all') {
@@ -320,25 +354,37 @@ app.get('/api/fetch-active-flights', async (req, res) => {
             const loadFactor = (Math.random() * (0.20) + 0.75);
             const estimatedPax = Math.floor(maxCapacity * loadFactor);
 
-            const sourceCode = f.departure?.iata || "UNK";
-            const isDomestic = DOMESTIC_EGYPT_AIRPORTS.includes(sourceCode);
+            const sourceIata = normalizeIata(f.departure?.iata);
+            const sourceIcao = normalizeIcao(f.departure?.icao);
+            const destinationIata = normalizeIata(f.arrival?.iata, airportIata);
+            const destinationIcao = normalizeIcao(f.arrival?.icao, airportIcao);
+            const isDomestic = DOMESTIC_EGYPT_AIRPORTS.includes(sourceIata);
+            const flightType = isDomestic ? "Domestic" : "International";
 
             // --- OPERATIONAL LOGIC WITH DUMMY LABELS ---
-            const terminal = (f.airline.name.includes("EgyptAir")) ? "T1" : "T2";
+            const airlineName = f.airline?.name || "Unknown Airline";
+            const terminal = (airlineName.includes("EgyptAir")) ? "T1" : "T2";
             
             // Check if Gate/Belt exists in API, otherwise generate and label as Dummy
             const gate = f.arrival?.gate ? f.arrival.gate : `${terminal}-G${Math.floor(Math.random() * 12) + 1} (Dummy)`;
             const belt = f.arrival?.baggage ? f.arrival.baggage : `B${Math.floor(Math.random() * 4) + 1} (Dummy)`;
 
+            const flightIata = normalizeFlightCode(f.flight?.iata);
+            const flightIcao = normalizeFlightCode(f.flight?.icao);
+
             return {
-                flight_id: f.flight.iata || f.flight.icao,
-                airline: f.airline.name,
+                flight_id: flightIata || flightIcao || "UNKNOWN_FLIGHT",
+                flight_iata: flightIata,
+                flight_icao: flightIcao,
+                airline: airlineName,
                 flight_status: f.flight_status || "unknown",
-                flight_type: isDomestic ? "Domestic" : "International",
+                flight_type: flightType,
                 
                 route: {
-                    source: sourceCode,
-                    destination: airportCode,
+                    source: sourceIata,
+                    source_icao: sourceIcao,
+                    destination: destinationIata,
+                    destination_icao: destinationIcao,
                     details: {
                         origin_name: f.departure?.airport || "Unknown Departure",
                         terminal: terminal,
@@ -364,16 +410,51 @@ app.get('/api/fetch-active-flights', async (req, res) => {
         });
 
         const finalPayload = {
-            meta: { updated: new Date().toISOString(), airport: airportCode, count: formattedFlights.length },
+            meta: { 
+                updated: new Date().toISOString(), 
+                airport: airportIata,
+                airport_icao: airportIcao,
+                count: formattedFlights.length 
+            },
             flights: formattedFlights
         };
 
-        fs.writeFileSync("active_flights.json", JSON.stringify(finalPayload, null, 2));
         res.status(200).json(finalPayload);
 
     } catch (error) {
         console.error("Fetch Error:", error.message);
         res.status(500).json({ error: "Failed to fetch active flights." });
+    }
+});
+
+app.post('/api/save-active-flights', (req, res) => {
+    try {
+        const airport = String(req.body?.airport || TARGET_AIRPORT).trim().toUpperCase();
+        const incomingFlights = Array.isArray(req.body?.flights) ? req.body.flights : [];
+
+        if (incomingFlights.length === 0) {
+            return res.status(400).json({ error: 'No flights provided for export.' });
+        }
+
+        const airportIata = normalizeIata(airport, TARGET_AIRPORT);
+        const airportIcao = normalizeIcao(airport, "UNK");
+
+        const payload = {
+            meta: {
+                updated: new Date().toISOString(),
+                airport: airportIata,
+                airport_icao: airportIcao,
+                count: incomingFlights.length,
+                source: "frontend-export"
+            },
+            flights: incomingFlights
+        };
+
+        fs.writeFileSync("active_flights.json", JSON.stringify(payload, null, 2));
+        return res.status(200).json({ success: true, path: "active_flights.json", count: incomingFlights.length });
+    } catch (error) {
+        console.error("Save active flights error:", error.message);
+        return res.status(500).json({ error: 'Failed to save active flights JSON.' });
     }
 });
 

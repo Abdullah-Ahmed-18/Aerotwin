@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import dynamic from 'next/dynamic';
-import { Plane, Info, Globe, Activity, Navigation, ChevronDown, Users, Radar, Repeat, Crown, Clock, X, PieChart } from 'lucide-react';
+import { Plane, Info, Globe, Activity, Navigation, ChevronDown, Users, Radar, Repeat, Crown, Clock, X, PieChart, Save } from 'lucide-react';
 import FlightSelector from '@/components/FlightSelector';
 
 const FlightMap = dynamic(() => import('@/components/FlightMap'), {
@@ -65,6 +65,7 @@ const AIRPORT_NAMES: Record<string, string> = {
 };
 
 const DEFAULT_AIRCRAFT_MAX_CAP = 180;
+const DEFAULT_PERSONAS: Record<PersonaKey, number> = { p1: 0, p2: 0, p3: 0, p4: 70, p5: 0, p6: 20, p7: 10 };
 
 function parseSimulatedNumber(value: unknown, fallback = 0): number {
     if (typeof value === 'number' && Number.isFinite(value)) return value;
@@ -217,7 +218,7 @@ export default function ActiveFlightsPage() {
                 heading: (idx * 120) % 360,
                 passengers: passengerCount,
                 aircraft: aircraftType,
-                personas: { p1: 0, p2: 0, p3: 0, p4: 70, p5: 0, p6: 20, p7: 10 }
+                personas: { ...DEFAULT_PERSONAS }
             };
         });
 
@@ -301,6 +302,42 @@ export default function ActiveFlightsPage() {
             (Object.keys(p) as PersonaKey[]).forEach(k => p[k] = Math.round(p[k]));
             return { ...f, personas: p };
         }));
+    };
+
+    const handleExportActiveFlightsJson = async () => {
+        if (fetchedFlights.length === 0 || flights.length === 0) {
+            alert('No imported flights available to export.');
+            return;
+        }
+
+        const personasByFlightId = new Map(flights.map((flight) => [flight.id, flight.personas]));
+        const flightsWithPersonas = fetchedFlights.map((flight) => ({
+            ...flight,
+            personas: personasByFlightId.get(flight.flight_id) || { ...DEFAULT_PERSONAS }
+        }));
+
+        try {
+            const response = await fetch('http://localhost:5000/api/save-active-flights', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    airport: selectedAirportCode,
+                    flights: flightsWithPersonas
+                })
+            });
+
+            const data = await response.json();
+            if (!response.ok) {
+                throw new Error(data?.error || 'Export failed.');
+            }
+
+            alert(`Saved active_flights.json with ${data.count} flights.`);
+        } catch (error) {
+            console.error('Export active flights error:', error);
+            alert('Failed to save active_flights.json.');
+        }
     };
 
     useEffect(() => {
@@ -492,6 +529,18 @@ export default function ActiveFlightsPage() {
                         {/* ========================================== */}
                         <div className="mt-6 pt-6 border-t border-slate-200">
                             <FlightSelector onFlightsFetched={handleFlightsFetched} onAirportChange={setSelectedAirportCode} />
+                            <button
+                                onClick={handleExportActiveFlightsJson}
+                                disabled={fetchedFlights.length === 0 || flights.length === 0}
+                                className={`w-full mt-3 py-2.5 rounded-lg text-xs font-black transition-all flex items-center justify-center gap-2 border ${
+                                    fetchedFlights.length === 0 || flights.length === 0
+                                        ? 'bg-slate-100 border-slate-200 text-slate-400 cursor-not-allowed'
+                                        : 'bg-emerald-500 hover:bg-emerald-600 border-emerald-500 text-white shadow-sm'
+                                }`}
+                            >
+                                <Save size={14} />
+                                Export active_flights.json (with Personas)
+                            </button>
                         </div>
                     </div>
                 </div>

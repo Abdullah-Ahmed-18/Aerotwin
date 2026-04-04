@@ -1,86 +1,32 @@
 {
   "meta": {
-    "updated": "2026-03-16T01:48:00.821Z",
-    "airport": "CAI",
-    "count": 100
+    "updated": "2026-04-04T12:46:09.473Z",
+    "airport": "HBE",
+    "airport_icao": "UNK",
+    "count": 36,
+    "source": "frontend-export"
   },
   "flights": [
     {
-      "flight_id": "B5811",
-      "airline": "BBN Airlines",
-      "flight_status": "scheduled",
+      "flight_id": "E5522",
+      "flight_iata": "E5522",
+      "flight_icao": "RBG522",
+      "airline": "Air Arabia Egypt",
+      "flight_status": "active",
       "flight_type": "International",
       "route": {
-        "source": "IST",
-        "destination": "CAI",
+        "source": "AMM",
+        "source_icao": "OJAI",
+        "destination": "HBE",
+        "destination_icao": "HEAX",
         "details": {
-          "origin_name": "Istanbul Airport",
+          "origin_name": "Queen Alia International",
           "terminal": "T2",
-          "gate_id": "T2-G8 (Dummy)"
+          "gate_id": "T2-G4 (Dummy)"
         }
       },
       "aircraft": {
-        "type": "A320 (Dummy)",
-        "capacity": "180 (Simulated)"
-      },
-      "payload_stats": {
-        "total_passengers": "140 (Simulated)",
-        "estimated_groups": "59 (Simulated)",
-        "total_bags": "168 (Simulated)",
-        "priority_pax": "17 (Simulated)",
-        "prm_pax": "1 (Simulated)",
-        "service_multiplier": 1.4,
-        "assigned_resources": {
-          "baggage_belt": "B3 (Dummy)"
-        }
-      }
-    },
-    {
-      "flight_id": "EK921",
-      "airline": "Emirates",
-      "flight_status": "cancelled",
-      "flight_type": "International",
-      "route": {
-        "source": "DXB",
-        "destination": "CAI",
-        "details": {
-          "origin_name": "Dubai",
-          "terminal": "T2",
-          "gate_id": "T2-G5 (Dummy)"
-        }
-      },
-      "aircraft": {
-        "type": "A320 (Dummy)",
-        "capacity": "180 (Simulated)"
-      },
-      "payload_stats": {
-        "total_passengers": "157 (Simulated)",
-        "estimated_groups": "66 (Simulated)",
-        "total_bags": "188 (Simulated)",
-        "priority_pax": "19 (Simulated)",
-        "prm_pax": "1 (Simulated)",
-        "service_multiplier": 1.4,
-        "assigned_resources": {
-          "baggage_belt": "B3 (Dummy)"
-        }
-      }
-    },
-    {
-      "flight_id": "F3605",
-      "airline": "Flyadeal",
-      "flight_status": "scheduled",
-      "flight_type": "International",
-      "route": {
-        "source": "RUH",
-        "destination": "CAI",
-        "details": {
-          "origin_name": "King Khaled International",
-          "terminal": "T2",
-          "gate_id": "T2-G12 (Dummy)"
-        }
-      },
-      "aircraft": {
-        "type": "A320 (Dummy)",
+        "type": "A320",
         "capacity": "180 (Simulated)"
       },
       "payload_stats": {
@@ -88,1315 +34,38 @@
         "estimated_groups": "70 (Simulated)",
         "total_bags": "199 (Simulated)",
         "priority_pax": "20 (Simulated)",
-        "prm_pax": "1 (Simulated)",
-        "service_multiplier": 1.4,
-        "assigned_resources": {
-          "baggage_belt": "B3 (Dummy)"
-        }
-      }
-    },
-    {
-      "flight_id": "SV4039",
-      "airline": "Saudia",
-      "flight_status": "scheduled",
-      "flight_type": "International",
-      "route": {
-        "source": "RUH",
-        "destination": "CAI",
-        "details": {
-          "origin_name": "King Khaled International",
-          "terminal": "T2",
-          "gate_id": "T2-G12 (Dummy)"
-        }
-      },
-      "aircraft": {
-        "type": "A333 (Dummy)",
-        "capacity": "300 (Simulated)"
-      },
-      "payload_stats": {
-        "total_passengers": "253 (Simulated)",
-        "estimated_groups": "106 (Simulated)",
-        "total_bags": "304 (Simulated)",
-        "priority_pax": "30 (Simulated)",
-        "prm_pax": "0 (Simulated)",
-        "service_multiplier": 1.4,
-        "assigned_resources": {
-          "baggage_belt": "B3 (Dummy)"
-        }
-      }
-    },
-    {
-      "flight_id": "XY269",
-      "airline": "flynas",
-      "flight_status": "scheduled",
-      "flight_type": "International",
-      "route": {
-        "source": "RUH",
-        "destination": "CAI",
-        "details": {
-          "origin_name": "King Khaled International",
-          "terminal": "T2",
-          "gate_id": "T2-G12 (Dummy)"
-        }
-      },
-      "aircraft": {
-        "type": "A320 (Dummy)",
-        "capacity": "180 (Simulated)"
-      },
-      "payload_stats": {
-        "total_passengers": "157 (Simulated)",
-        "estimated_groups": "66 (Simulated)",
-        "total_bags": "188 (Simulated)",
-        "priority_pax": "19 (Simulated)",
-        "prm_pax": "1 (Simulated)",
-        "service_multiplier": 1.4,
-        "assigned_resources": {
-          "baggage_belt": "B4 (Dummy)"
-        }
-      }
-    },
-    {
-      "flight_id": "NB461",
-      "airline": "Berniq Airways",
-      "flight_status": "scheduled",
-      "flight_type": "International",
-      "route": {
-        "source": "MJI",
-        "destination": "CAI",
-        "details": {
-          "origin_name": "Mitiga",
-          "terminal": "T2",
-          "gate_id": "T2-G8 (Dummy)"
-        }
-      },
-      "aircraft": {
-        "type": "A320 (Dummy)",
-        "capacity": "180 (Simulated)"
-      },
-      "payload_stats": {
-        "total_passengers": "143 (Simulated)",
-        "estimated_groups": "60 (Simulated)",
-        "total_bags": "172 (Simulated)",
-        "priority_pax": "17 (Simulated)",
-        "prm_pax": "0 (Simulated)",
-        "service_multiplier": 1.4,
-        "assigned_resources": {
-          "baggage_belt": "B4 (Dummy)"
-        }
-      }
-    },
-    {
-      "flight_id": "SM61",
-      "airline": "Air Cairo",
-      "flight_status": "scheduled",
-      "flight_type": "Domestic",
-      "route": {
-        "source": "LXR",
-        "destination": "CAI",
-        "details": {
-          "origin_name": "Luxor",
-          "terminal": "T2",
-          "gate_id": "T2-G8 (Dummy)"
-        }
-      },
-      "aircraft": {
-        "type": "A320 (Dummy)",
-        "capacity": "180 (Simulated)"
-      },
-      "payload_stats": {
-        "total_passengers": "135 (Simulated)",
-        "estimated_groups": "57 (Simulated)",
-        "total_bags": "54 (Simulated)",
-        "priority_pax": "16 (Simulated)",
         "prm_pax": "2 (Simulated)",
-        "service_multiplier": 1,
-        "assigned_resources": {
-          "baggage_belt": "B1 (Dummy)"
-        }
-      }
-    },
-    {
-      "flight_id": "NP72",
-      "airline": "Nile Air",
-      "flight_status": "scheduled",
-      "flight_type": "Domestic",
-      "route": {
-        "source": "LXR",
-        "destination": "CAI",
-        "details": {
-          "origin_name": "Luxor",
-          "terminal": "T2",
-          "gate_id": "T2-G1 (Dummy)"
-        }
-      },
-      "aircraft": {
-        "type": "A320 (Dummy)",
-        "capacity": "180 (Simulated)"
-      },
-      "payload_stats": {
-        "total_passengers": "167 (Simulated)",
-        "estimated_groups": "70 (Simulated)",
-        "total_bags": "67 (Simulated)",
-        "priority_pax": "20 (Simulated)",
-        "prm_pax": "0 (Simulated)",
-        "service_multiplier": 1,
+        "service_multiplier": 1.4,
         "assigned_resources": {
           "baggage_belt": "B2 (Dummy)"
         }
+      },
+      "personas": {
+        "p1": 0,
+        "p2": 0,
+        "p3": 0,
+        "p4": 70,
+        "p5": 0,
+        "p6": 20,
+        "p7": 10
       }
     },
     {
-      "flight_id": "SM476",
-      "airline": "Air Cairo",
-      "flight_status": "scheduled",
-      "flight_type": "International",
-      "route": {
-        "source": "JED",
-        "destination": "CAI",
-        "details": {
-          "origin_name": "King Abdulaziz International",
-          "terminal": "T2",
-          "gate_id": "T2-G12 (Dummy)"
-        }
-      },
-      "aircraft": {
-        "type": "A320 (Dummy)",
-        "capacity": "180 (Simulated)"
-      },
-      "payload_stats": {
-        "total_passengers": "165 (Simulated)",
-        "estimated_groups": "69 (Simulated)",
-        "total_bags": "198 (Simulated)",
-        "priority_pax": "20 (Simulated)",
-        "prm_pax": "1 (Simulated)",
-        "service_multiplier": 1.4,
-        "assigned_resources": {
-          "baggage_belt": "B1 (Dummy)"
-        }
-      }
-    },
-    {
-      "flight_id": "G9362",
-      "airline": "Air Arabia",
+      "flight_id": "J93723",
+      "flight_iata": "J93723",
+      "flight_icao": "JZR3723",
+      "airline": "Jazeera Airways",
       "flight_status": "active",
       "flight_type": "International",
       "route": {
-        "source": "JED",
-        "destination": "CAI",
+        "source": "DMM",
+        "source_icao": "OEDF",
+        "destination": "HBE",
+        "destination_icao": "HEAX",
         "details": {
-          "origin_name": "King Abdulaziz International",
-          "terminal": "T2",
-          "gate_id": "T2-G6 (Dummy)"
-        }
-      },
-      "aircraft": {
-        "type": "A320 (Dummy)",
-        "capacity": "180 (Simulated)"
-      },
-      "payload_stats": {
-        "total_passengers": "145 (Simulated)",
-        "estimated_groups": "61 (Simulated)",
-        "total_bags": "174 (Simulated)",
-        "priority_pax": "17 (Simulated)",
-        "prm_pax": "1 (Simulated)",
-        "service_multiplier": 1.4,
-        "assigned_resources": {
-          "baggage_belt": "B1 (Dummy)"
-        }
-      }
-    },
-    {
-      "flight_id": "NP82",
-      "airline": "Nile Air",
-      "flight_status": "scheduled",
-      "flight_type": "Domestic",
-      "route": {
-        "source": "ASW",
-        "destination": "CAI",
-        "details": {
-          "origin_name": "Aswan",
-          "terminal": "T2",
-          "gate_id": "T2-G2 (Dummy)"
-        }
-      },
-      "aircraft": {
-        "type": "A320 (Dummy)",
-        "capacity": "180 (Simulated)"
-      },
-      "payload_stats": {
-        "total_passengers": "147 (Simulated)",
-        "estimated_groups": "62 (Simulated)",
-        "total_bags": "59 (Simulated)",
-        "priority_pax": "18 (Simulated)",
-        "prm_pax": "1 (Simulated)",
-        "service_multiplier": 1,
-        "assigned_resources": {
-          "baggage_belt": "B3 (Dummy)"
-        }
-      }
-    },
-    {
-      "flight_id": "AH4038",
-      "airline": "Air Algerie",
-      "flight_status": "scheduled",
-      "flight_type": "International",
-      "route": {
-        "source": "ALG",
-        "destination": "CAI",
-        "details": {
-          "origin_name": "Houari Boumediene",
-          "terminal": "T2",
-          "gate_id": "T2-G11 (Dummy)"
-        }
-      },
-      "aircraft": {
-        "type": "A320 (Dummy)",
-        "capacity": "180 (Simulated)"
-      },
-      "payload_stats": {
-        "total_passengers": "167 (Simulated)",
-        "estimated_groups": "70 (Simulated)",
-        "total_bags": "200 (Simulated)",
-        "priority_pax": "20 (Simulated)",
-        "prm_pax": "2 (Simulated)",
-        "service_multiplier": 1.4,
-        "assigned_resources": {
-          "baggage_belt": "B2 (Dummy)"
-        }
-      }
-    },
-    {
-      "flight_id": "SQ6042",
-      "airline": "Singapore Airlines",
-      "flight_status": "cancelled",
-      "flight_type": "International",
-      "route": {
-        "source": "DXB",
-        "destination": "CAI",
-        "details": {
-          "origin_name": "Dubai",
-          "terminal": "T2",
-          "gate_id": "T2-G2 (Dummy)"
-        }
-      },
-      "aircraft": {
-        "type": "A320 (Dummy)",
-        "capacity": "180 (Simulated)"
-      },
-      "payload_stats": {
-        "total_passengers": "170 (Simulated)",
-        "estimated_groups": "71 (Simulated)",
-        "total_bags": "204 (Simulated)",
-        "priority_pax": "20 (Simulated)",
-        "prm_pax": "1 (Simulated)",
-        "service_multiplier": 1.4,
-        "assigned_resources": {
-          "baggage_belt": "B2 (Dummy)"
-        }
-      }
-    },
-    {
-      "flight_id": "QF8927",
-      "airline": "Qantas",
-      "flight_status": "scheduled",
-      "flight_type": "International",
-      "route": {
-        "source": "DXB",
-        "destination": "CAI",
-        "details": {
-          "origin_name": "Dubai",
-          "terminal": "T2",
-          "gate_id": "T2-G5 (Dummy)"
-        }
-      },
-      "aircraft": {
-        "type": "A320 (Dummy)",
-        "capacity": "180 (Simulated)"
-      },
-      "payload_stats": {
-        "total_passengers": "168 (Simulated)",
-        "estimated_groups": "70 (Simulated)",
-        "total_bags": "202 (Simulated)",
-        "priority_pax": "20 (Simulated)",
-        "prm_pax": "1 (Simulated)",
-        "service_multiplier": 1.4,
-        "assigned_resources": {
-          "baggage_belt": "B4 (Dummy)"
-        }
-      }
-    },
-    {
-      "flight_id": "MK9928",
-      "airline": "Air Mauritius",
-      "flight_status": "scheduled",
-      "flight_type": "International",
-      "route": {
-        "source": "DXB",
-        "destination": "CAI",
-        "details": {
-          "origin_name": "Dubai",
-          "terminal": "T2",
-          "gate_id": "T2-G7 (Dummy)"
-        }
-      },
-      "aircraft": {
-        "type": "A320 (Dummy)",
-        "capacity": "180 (Simulated)"
-      },
-      "payload_stats": {
-        "total_passengers": "157 (Simulated)",
-        "estimated_groups": "66 (Simulated)",
-        "total_bags": "188 (Simulated)",
-        "priority_pax": "19 (Simulated)",
-        "prm_pax": "2 (Simulated)",
-        "service_multiplier": 1.4,
-        "assigned_resources": {
-          "baggage_belt": "B3 (Dummy)"
-        }
-      }
-    },
-    {
-      "flight_id": "CZ7872",
-      "airline": "China Southern Airlines",
-      "flight_status": "scheduled",
-      "flight_type": "International",
-      "route": {
-        "source": "DXB",
-        "destination": "CAI",
-        "details": {
-          "origin_name": "Dubai",
-          "terminal": "T2",
-          "gate_id": "T2-G10 (Dummy)"
-        }
-      },
-      "aircraft": {
-        "type": "A320 (Dummy)",
-        "capacity": "180 (Simulated)"
-      },
-      "payload_stats": {
-        "total_passengers": "165 (Simulated)",
-        "estimated_groups": "69 (Simulated)",
-        "total_bags": "198 (Simulated)",
-        "priority_pax": "20 (Simulated)",
-        "prm_pax": "2 (Simulated)",
-        "service_multiplier": 1.4,
-        "assigned_resources": {
-          "baggage_belt": "B4 (Dummy)"
-        }
-      }
-    },
-    {
-      "flight_id": "NP74",
-      "airline": "Nile Air",
-      "flight_status": "scheduled",
-      "flight_type": "Domestic",
-      "route": {
-        "source": "LXR",
-        "destination": "CAI",
-        "details": {
-          "origin_name": "Luxor",
-          "terminal": "T2",
-          "gate_id": "T2-G6 (Dummy)"
-        }
-      },
-      "aircraft": {
-        "type": "A320 (Dummy)",
-        "capacity": "180 (Simulated)"
-      },
-      "payload_stats": {
-        "total_passengers": "167 (Simulated)",
-        "estimated_groups": "70 (Simulated)",
-        "total_bags": "67 (Simulated)",
-        "priority_pax": "20 (Simulated)",
-        "prm_pax": "0 (Simulated)",
-        "service_multiplier": 1,
-        "assigned_resources": {
-          "baggage_belt": "B4 (Dummy)"
-        }
-      }
-    },
-    {
-      "flight_id": "MS265",
-      "airline": "EgyptAir",
-      "flight_status": "scheduled",
-      "flight_type": "Domestic",
-      "route": {
-        "source": "LXR",
-        "destination": "CAI",
-        "details": {
-          "origin_name": "Luxor",
-          "terminal": "T1",
-          "gate_id": "T1-G1 (Dummy)"
-        }
-      },
-      "aircraft": {
-        "type": "A320 (Dummy)",
-        "capacity": "180 (Simulated)"
-      },
-      "payload_stats": {
-        "total_passengers": "155 (Simulated)",
-        "estimated_groups": "65 (Simulated)",
-        "total_bags": "62 (Simulated)",
-        "priority_pax": "19 (Simulated)",
-        "prm_pax": "0 (Simulated)",
-        "service_multiplier": 1,
-        "assigned_resources": {
-          "baggage_belt": "B2 (Dummy)"
-        }
-      }
-    },
-    {
-      "flight_id": "SM21",
-      "airline": "Air Cairo",
-      "flight_status": "scheduled",
-      "flight_type": "Domestic",
-      "route": {
-        "source": "HRG",
-        "destination": "CAI",
-        "details": {
-          "origin_name": "Hurghada",
-          "terminal": "T2",
-          "gate_id": "T2-G7 (Dummy)"
-        }
-      },
-      "aircraft": {
-        "type": "A320 (Dummy)",
-        "capacity": "180 (Simulated)"
-      },
-      "payload_stats": {
-        "total_passengers": "158 (Simulated)",
-        "estimated_groups": "66 (Simulated)",
-        "total_bags": "63 (Simulated)",
-        "priority_pax": "19 (Simulated)",
-        "prm_pax": "2 (Simulated)",
-        "service_multiplier": 1,
-        "assigned_resources": {
-          "baggage_belt": "B3 (Dummy)"
-        }
-      }
-    },
-    {
-      "flight_id": "MS45",
-      "airline": "EgyptAir",
-      "flight_status": "scheduled",
-      "flight_type": "Domestic",
-      "route": {
-        "source": "HRG",
-        "destination": "CAI",
-        "details": {
-          "origin_name": "Hurghada",
-          "terminal": "T1",
-          "gate_id": "T1-G11 (Dummy)"
-        }
-      },
-      "aircraft": {
-        "type": "B738 (Dummy)",
-        "capacity": "189 (Simulated)"
-      },
-      "payload_stats": {
-        "total_passengers": "152 (Simulated)",
-        "estimated_groups": "64 (Simulated)",
-        "total_bags": "61 (Simulated)",
-        "priority_pax": "18 (Simulated)",
-        "prm_pax": "1 (Simulated)",
-        "service_multiplier": 1,
-        "assigned_resources": {
-          "baggage_belt": "B2 (Dummy)"
-        }
-      }
-    },
-    {
-      "flight_id": "OS7144",
-      "airline": "Austrian",
-      "flight_status": "scheduled",
-      "flight_type": "Domestic",
-      "route": {
-        "source": "HRG",
-        "destination": "CAI",
-        "details": {
-          "origin_name": "Hurghada",
-          "terminal": "T2",
-          "gate_id": "T2-G7 (Dummy)"
-        }
-      },
-      "aircraft": {
-        "type": "A320 (Dummy)",
-        "capacity": "180 (Simulated)"
-      },
-      "payload_stats": {
-        "total_passengers": "167 (Simulated)",
-        "estimated_groups": "70 (Simulated)",
-        "total_bags": "67 (Simulated)",
-        "priority_pax": "20 (Simulated)",
-        "prm_pax": "0 (Simulated)",
-        "service_multiplier": 1,
-        "assigned_resources": {
-          "baggage_belt": "B4 (Dummy)"
-        }
-      }
-    },
-    {
-      "flight_id": "WY5490",
-      "airline": "Oman Air",
-      "flight_status": "scheduled",
-      "flight_type": "Domestic",
-      "route": {
-        "source": "HRG",
-        "destination": "CAI",
-        "details": {
-          "origin_name": "Hurghada",
+          "origin_name": "King Fahd International Airport",
           "terminal": "T2",
           "gate_id": "T2-G12 (Dummy)"
-        }
-      },
-      "aircraft": {
-        "type": "A320 (Dummy)",
-        "capacity": "180 (Simulated)"
-      },
-      "payload_stats": {
-        "total_passengers": "145 (Simulated)",
-        "estimated_groups": "61 (Simulated)",
-        "total_bags": "58 (Simulated)",
-        "priority_pax": "17 (Simulated)",
-        "prm_pax": "0 (Simulated)",
-        "service_multiplier": 1,
-        "assigned_resources": {
-          "baggage_belt": "B2 (Dummy)"
-        }
-      }
-    },
-    {
-      "flight_id": "SM8045",
-      "airline": "Air Cairo",
-      "flight_status": "scheduled",
-      "flight_type": "Domestic",
-      "route": {
-        "source": "HRG",
-        "destination": "CAI",
-        "details": {
-          "origin_name": "Hurghada",
-          "terminal": "T2",
-          "gate_id": "T2-G8 (Dummy)"
-        }
-      },
-      "aircraft": {
-        "type": "A320 (Dummy)",
-        "capacity": "180 (Simulated)"
-      },
-      "payload_stats": {
-        "total_passengers": "169 (Simulated)",
-        "estimated_groups": "71 (Simulated)",
-        "total_bags": "68 (Simulated)",
-        "priority_pax": "20 (Simulated)",
-        "prm_pax": "2 (Simulated)",
-        "service_multiplier": 1,
-        "assigned_resources": {
-          "baggage_belt": "B1 (Dummy)"
-        }
-      }
-    },
-    {
-      "flight_id": "LH7179",
-      "airline": "Lufthansa",
-      "flight_status": "scheduled",
-      "flight_type": "Domestic",
-      "route": {
-        "source": "HRG",
-        "destination": "CAI",
-        "details": {
-          "origin_name": "Hurghada",
-          "terminal": "T2",
-          "gate_id": "T2-G10 (Dummy)"
-        }
-      },
-      "aircraft": {
-        "type": "A320 (Dummy)",
-        "capacity": "180 (Simulated)"
-      },
-      "payload_stats": {
-        "total_passengers": "151 (Simulated)",
-        "estimated_groups": "63 (Simulated)",
-        "total_bags": "60 (Simulated)",
-        "priority_pax": "18 (Simulated)",
-        "prm_pax": "0 (Simulated)",
-        "service_multiplier": 1,
-        "assigned_resources": {
-          "baggage_belt": "B1 (Dummy)"
-        }
-      }
-    },
-    {
-      "flight_id": "EY4998",
-      "airline": "Etihad Airways",
-      "flight_status": "scheduled",
-      "flight_type": "Domestic",
-      "route": {
-        "source": "HRG",
-        "destination": "CAI",
-        "details": {
-          "origin_name": "Hurghada",
-          "terminal": "T2",
-          "gate_id": "T2-G5 (Dummy)"
-        }
-      },
-      "aircraft": {
-        "type": "A320 (Dummy)",
-        "capacity": "180 (Simulated)"
-      },
-      "payload_stats": {
-        "total_passengers": "152 (Simulated)",
-        "estimated_groups": "64 (Simulated)",
-        "total_bags": "61 (Simulated)",
-        "priority_pax": "18 (Simulated)",
-        "prm_pax": "1 (Simulated)",
-        "service_multiplier": 1,
-        "assigned_resources": {
-          "baggage_belt": "B2 (Dummy)"
-        }
-      }
-    },
-    {
-      "flight_id": "AI7668",
-      "airline": "Air India",
-      "flight_status": "scheduled",
-      "flight_type": "Domestic",
-      "route": {
-        "source": "HRG",
-        "destination": "CAI",
-        "details": {
-          "origin_name": "Hurghada",
-          "terminal": "T2",
-          "gate_id": "T2-G4 (Dummy)"
-        }
-      },
-      "aircraft": {
-        "type": "A320 (Dummy)",
-        "capacity": "180 (Simulated)"
-      },
-      "payload_stats": {
-        "total_passengers": "139 (Simulated)",
-        "estimated_groups": "58 (Simulated)",
-        "total_bags": "56 (Simulated)",
-        "priority_pax": "17 (Simulated)",
-        "prm_pax": "1 (Simulated)",
-        "service_multiplier": 1,
-        "assigned_resources": {
-          "baggage_belt": "B3 (Dummy)"
-        }
-      }
-    },
-    {
-      "flight_id": "AC2870",
-      "airline": "Air Canada",
-      "flight_status": "scheduled",
-      "flight_type": "Domestic",
-      "route": {
-        "source": "HRG",
-        "destination": "CAI",
-        "details": {
-          "origin_name": "Hurghada",
-          "terminal": "T2",
-          "gate_id": "T2-G8 (Dummy)"
-        }
-      },
-      "aircraft": {
-        "type": "A320 (Dummy)",
-        "capacity": "180 (Simulated)"
-      },
-      "payload_stats": {
-        "total_passengers": "170 (Simulated)",
-        "estimated_groups": "71 (Simulated)",
-        "total_bags": "68 (Simulated)",
-        "priority_pax": "20 (Simulated)",
-        "prm_pax": "2 (Simulated)",
-        "service_multiplier": 1,
-        "assigned_resources": {
-          "baggage_belt": "B3 (Dummy)"
-        }
-      }
-    },
-    {
-      "flight_id": "SM1105",
-      "airline": "Air Cairo",
-      "flight_status": "scheduled",
-      "flight_type": "Domestic",
-      "route": {
-        "source": "HRG",
-        "destination": "CAI",
-        "details": {
-          "origin_name": "Hurghada",
-          "terminal": "T2",
-          "gate_id": "T2-G6 (Dummy)"
-        }
-      },
-      "aircraft": {
-        "type": "A320 (Dummy)",
-        "capacity": "180 (Simulated)"
-      },
-      "payload_stats": {
-        "total_passengers": "152 (Simulated)",
-        "estimated_groups": "64 (Simulated)",
-        "total_bags": "61 (Simulated)",
-        "priority_pax": "18 (Simulated)",
-        "prm_pax": "2 (Simulated)",
-        "service_multiplier": 1,
-        "assigned_resources": {
-          "baggage_belt": "B3 (Dummy)"
-        }
-      }
-    },
-    {
-      "flight_id": "SM33",
-      "airline": "Air Cairo",
-      "flight_status": "scheduled",
-      "flight_type": "Domestic",
-      "route": {
-        "source": "HRG",
-        "destination": "CAI",
-        "details": {
-          "origin_name": "Hurghada",
-          "terminal": "T2",
-          "gate_id": "T2-G6 (Dummy)"
-        }
-      },
-      "aircraft": {
-        "type": "A320 (Dummy)",
-        "capacity": "180 (Simulated)"
-      },
-      "payload_stats": {
-        "total_passengers": "135 (Simulated)",
-        "estimated_groups": "57 (Simulated)",
-        "total_bags": "54 (Simulated)",
-        "priority_pax": "16 (Simulated)",
-        "prm_pax": "1 (Simulated)",
-        "service_multiplier": 1,
-        "assigned_resources": {
-          "baggage_belt": "B2 (Dummy)"
-        }
-      }
-    },
-    {
-      "flight_id": "MS720",
-      "airline": "EgyptAir",
-      "flight_status": "cancelled",
-      "flight_type": "International",
-      "route": {
-        "source": "AMM",
-        "destination": "CAI",
-        "details": {
-          "origin_name": "Queen Alia International",
-          "terminal": "T1",
-          "gate_id": "T1-G7 (Dummy)"
-        }
-      },
-      "aircraft": {
-        "type": "B738 (Dummy)",
-        "capacity": "189 (Simulated)"
-      },
-      "payload_stats": {
-        "total_passengers": "152 (Simulated)",
-        "estimated_groups": "64 (Simulated)",
-        "total_bags": "182 (Simulated)",
-        "priority_pax": "18 (Simulated)",
-        "prm_pax": "1 (Simulated)",
-        "service_multiplier": 1.4,
-        "assigned_resources": {
-          "baggage_belt": "B3 (Dummy)"
-        }
-      }
-    },
-    {
-      "flight_id": "AC2852",
-      "airline": "Air Canada",
-      "flight_status": "cancelled",
-      "flight_type": "International",
-      "route": {
-        "source": "AMM",
-        "destination": "CAI",
-        "details": {
-          "origin_name": "Queen Alia International",
-          "terminal": "T2",
-          "gate_id": "T2-G11 (Dummy)"
-        }
-      },
-      "aircraft": {
-        "type": "A320 (Dummy)",
-        "capacity": "180 (Simulated)"
-      },
-      "payload_stats": {
-        "total_passengers": "135 (Simulated)",
-        "estimated_groups": "57 (Simulated)",
-        "total_bags": "162 (Simulated)",
-        "priority_pax": "16 (Simulated)",
-        "prm_pax": "0 (Simulated)",
-        "service_multiplier": 1.4,
-        "assigned_resources": {
-          "baggage_belt": "B3 (Dummy)"
-        }
-      }
-    },
-    {
-      "flight_id": "HV5221",
-      "airline": "Transavia",
-      "flight_status": "scheduled",
-      "flight_type": "International",
-      "route": {
-        "source": "AMS",
-        "destination": "CAI",
-        "details": {
-          "origin_name": "Schiphol",
-          "terminal": "T2",
-          "gate_id": "T2-G7 (Dummy)"
-        }
-      },
-      "aircraft": {
-        "type": "A320 (Dummy)",
-        "capacity": "180 (Simulated)"
-      },
-      "payload_stats": {
-        "total_passengers": "138 (Simulated)",
-        "estimated_groups": "58 (Simulated)",
-        "total_bags": "166 (Simulated)",
-        "priority_pax": "17 (Simulated)",
-        "prm_pax": "0 (Simulated)",
-        "service_multiplier": 1.4,
-        "assigned_resources": {
-          "baggage_belt": "B2 (Dummy)"
-        }
-      }
-    },
-    {
-      "flight_id": "XY577",
-      "airline": "flynas",
-      "flight_status": "scheduled",
-      "flight_type": "International",
-      "route": {
-        "source": "JED",
-        "destination": "CAI",
-        "details": {
-          "origin_name": "King Abdulaziz International",
-          "terminal": "T2",
-          "gate_id": "T2-G1 (Dummy)"
-        }
-      },
-      "aircraft": {
-        "type": "A320 (Dummy)",
-        "capacity": "180 (Simulated)"
-      },
-      "payload_stats": {
-        "total_passengers": "138 (Simulated)",
-        "estimated_groups": "58 (Simulated)",
-        "total_bags": "166 (Simulated)",
-        "priority_pax": "17 (Simulated)",
-        "prm_pax": "1 (Simulated)",
-        "service_multiplier": 1.4,
-        "assigned_resources": {
-          "baggage_belt": "B2 (Dummy)"
-        }
-      }
-    },
-    {
-      "flight_id": "E5328",
-      "airline": "Air Arabia Egypt",
-      "flight_status": "scheduled",
-      "flight_type": "International",
-      "route": {
-        "source": "JED",
-        "destination": "CAI",
-        "details": {
-          "origin_name": "King Abdulaziz International",
-          "terminal": "T2",
-          "gate_id": "T2-G10 (Dummy)"
-        }
-      },
-      "aircraft": {
-        "type": "A320 (Dummy)",
-        "capacity": "180 (Simulated)"
-      },
-      "payload_stats": {
-        "total_passengers": "152 (Simulated)",
-        "estimated_groups": "64 (Simulated)",
-        "total_bags": "182 (Simulated)",
-        "priority_pax": "18 (Simulated)",
-        "prm_pax": "0 (Simulated)",
-        "service_multiplier": 1.4,
-        "assigned_resources": {
-          "baggage_belt": "B2 (Dummy)"
-        }
-      }
-    },
-    {
-      "flight_id": "F3755",
-      "airline": "Flyadeal",
-      "flight_status": "scheduled",
-      "flight_type": "International",
-      "route": {
-        "source": "JED",
-        "destination": "CAI",
-        "details": {
-          "origin_name": "King Abdulaziz International",
-          "terminal": "T2",
-          "gate_id": "T2-G9 (Dummy)"
-        }
-      },
-      "aircraft": {
-        "type": "A320 (Dummy)",
-        "capacity": "180 (Simulated)"
-      },
-      "payload_stats": {
-        "total_passengers": "136 (Simulated)",
-        "estimated_groups": "57 (Simulated)",
-        "total_bags": "163 (Simulated)",
-        "priority_pax": "16 (Simulated)",
-        "prm_pax": "0 (Simulated)",
-        "service_multiplier": 1.4,
-        "assigned_resources": {
-          "baggage_belt": "B1 (Dummy)"
-        }
-      }
-    },
-    {
-      "flight_id": "SV6893",
-      "airline": "Saudia",
-      "flight_status": "scheduled",
-      "flight_type": "International",
-      "route": {
-        "source": "JED",
-        "destination": "CAI",
-        "details": {
-          "origin_name": "King Abdulaziz International",
-          "terminal": "T2",
-          "gate_id": "T2-G4 (Dummy)"
-        }
-      },
-      "aircraft": {
-        "type": "A333 (Dummy)",
-        "capacity": "300 (Simulated)"
-      },
-      "payload_stats": {
-        "total_passengers": "271 (Simulated)",
-        "estimated_groups": "113 (Simulated)",
-        "total_bags": "325 (Simulated)",
-        "priority_pax": "33 (Simulated)",
-        "prm_pax": "1 (Simulated)",
-        "service_multiplier": 1.4,
-        "assigned_resources": {
-          "baggage_belt": "B1 (Dummy)"
-        }
-      }
-    },
-    {
-      "flight_id": "SM130",
-      "airline": "Air Cairo",
-      "flight_status": "scheduled",
-      "flight_type": "Domestic",
-      "route": {
-        "source": "ASW",
-        "destination": "CAI",
-        "details": {
-          "origin_name": "Aswan",
-          "terminal": "T2",
-          "gate_id": "T2-G2 (Dummy)"
-        }
-      },
-      "aircraft": {
-        "type": "A320 (Dummy)",
-        "capacity": "180 (Simulated)"
-      },
-      "payload_stats": {
-        "total_passengers": "156 (Simulated)",
-        "estimated_groups": "65 (Simulated)",
-        "total_bags": "62 (Simulated)",
-        "priority_pax": "19 (Simulated)",
-        "prm_pax": "0 (Simulated)",
-        "service_multiplier": 1,
-        "assigned_resources": {
-          "baggage_belt": "B2 (Dummy)"
-        }
-      }
-    },
-    {
-      "flight_id": "SM3",
-      "airline": "Air Cairo",
-      "flight_status": "scheduled",
-      "flight_type": "Domestic",
-      "route": {
-        "source": "SSH",
-        "destination": "CAI",
-        "details": {
-          "origin_name": "Sharm el-Sheikh International Airport",
-          "terminal": "T2",
-          "gate_id": "T2-G12 (Dummy)"
-        }
-      },
-      "aircraft": {
-        "type": "A320 (Dummy)",
-        "capacity": "180 (Simulated)"
-      },
-      "payload_stats": {
-        "total_passengers": "145 (Simulated)",
-        "estimated_groups": "61 (Simulated)",
-        "total_bags": "58 (Simulated)",
-        "priority_pax": "17 (Simulated)",
-        "prm_pax": "0 (Simulated)",
-        "service_multiplier": 1,
-        "assigned_resources": {
-          "baggage_belt": "B2 (Dummy)"
-        }
-      }
-    },
-    {
-      "flight_id": "MS902",
-      "airline": "EgyptAir",
-      "flight_status": "cancelled",
-      "flight_type": "International",
-      "route": {
-        "source": "DXB",
-        "destination": "CAI",
-        "details": {
-          "origin_name": "Dubai",
-          "terminal": "T1",
-          "gate_id": "T1-G6 (Dummy)"
-        }
-      },
-      "aircraft": {
-        "type": "B738 (Dummy)",
-        "capacity": "189 (Simulated)"
-      },
-      "payload_stats": {
-        "total_passengers": "143 (Simulated)",
-        "estimated_groups": "60 (Simulated)",
-        "total_bags": "172 (Simulated)",
-        "priority_pax": "17 (Simulated)",
-        "prm_pax": "1 (Simulated)",
-        "service_multiplier": 1.4,
-        "assigned_resources": {
-          "baggage_belt": "B1 (Dummy)"
-        }
-      }
-    },
-    {
-      "flight_id": "IA101",
-      "airline": "Iraqi Airways",
-      "flight_status": "scheduled",
-      "flight_type": "International",
-      "route": {
-        "source": "BGW",
-        "destination": "CAI",
-        "details": {
-          "origin_name": "Baghdad International",
-          "terminal": "T2",
-          "gate_id": "T2-G6 (Dummy)"
-        }
-      },
-      "aircraft": {
-        "type": "A320 (Dummy)",
-        "capacity": "180 (Simulated)"
-      },
-      "payload_stats": {
-        "total_passengers": "155 (Simulated)",
-        "estimated_groups": "65 (Simulated)",
-        "total_bags": "186 (Simulated)",
-        "priority_pax": "19 (Simulated)",
-        "prm_pax": "2 (Simulated)",
-        "service_multiplier": 1.4,
-        "assigned_resources": {
-          "baggage_belt": "B4 (Dummy)"
-        }
-      }
-    },
-    {
-      "flight_id": "SU400",
-      "airline": "Aeroflot",
-      "flight_status": "scheduled",
-      "flight_type": "International",
-      "route": {
-        "source": "SVO",
-        "destination": "CAI",
-        "details": {
-          "origin_name": "Sheremetyevo International",
-          "terminal": "T2",
-          "gate_id": "T2-G6 (Dummy)"
-        }
-      },
-      "aircraft": {
-        "type": "A320 (Dummy)",
-        "capacity": "180 (Simulated)"
-      },
-      "payload_stats": {
-        "total_passengers": "157 (Simulated)",
-        "estimated_groups": "66 (Simulated)",
-        "total_bags": "188 (Simulated)",
-        "priority_pax": "19 (Simulated)",
-        "prm_pax": "1 (Simulated)",
-        "service_multiplier": 1.4,
-        "assigned_resources": {
-          "baggage_belt": "B2 (Dummy)"
-        }
-      }
-    },
-    {
-      "flight_id": "SV6891",
-      "airline": "Saudia",
-      "flight_status": "scheduled",
-      "flight_type": "International",
-      "route": {
-        "source": "JED",
-        "destination": "CAI",
-        "details": {
-          "origin_name": "King Abdulaziz International",
-          "terminal": "T2",
-          "gate_id": "T2-G12 (Dummy)"
-        }
-      },
-      "aircraft": {
-        "type": "A333 (Dummy)",
-        "capacity": "300 (Simulated)"
-      },
-      "payload_stats": {
-        "total_passengers": "242 (Simulated)",
-        "estimated_groups": "101 (Simulated)",
-        "total_bags": "290 (Simulated)",
-        "priority_pax": "29 (Simulated)",
-        "prm_pax": "0 (Simulated)",
-        "service_multiplier": 1.4,
-        "assigned_resources": {
-          "baggage_belt": "B1 (Dummy)"
-        }
-      }
-    },
-    {
-      "flight_id": "XY793",
-      "airline": "flynas",
-      "flight_status": "scheduled",
-      "flight_type": "International",
-      "route": {
-        "source": "MED",
-        "destination": "CAI",
-        "details": {
-          "origin_name": "Mohammad Bin Abdulaziz",
-          "terminal": "T2",
-          "gate_id": "T2-G12 (Dummy)"
-        }
-      },
-      "aircraft": {
-        "type": "A320 (Dummy)",
-        "capacity": "180 (Simulated)"
-      },
-      "payload_stats": {
-        "total_passengers": "170 (Simulated)",
-        "estimated_groups": "71 (Simulated)",
-        "total_bags": "204 (Simulated)",
-        "priority_pax": "20 (Simulated)",
-        "prm_pax": "1 (Simulated)",
-        "service_multiplier": 1.4,
-        "assigned_resources": {
-          "baggage_belt": "B3 (Dummy)"
-        }
-      }
-    },
-    {
-      "flight_id": "VY8522",
-      "airline": "Vueling",
-      "flight_status": "scheduled",
-      "flight_type": "International",
-      "route": {
-        "source": "ORY",
-        "destination": "CAI",
-        "details": {
-          "origin_name": "Orly",
-          "terminal": "T2",
-          "gate_id": "T2-G3 (Dummy)"
-        }
-      },
-      "aircraft": {
-        "type": "A320 (Dummy)",
-        "capacity": "180 (Simulated)"
-      },
-      "payload_stats": {
-        "total_passengers": "137 (Simulated)",
-        "estimated_groups": "58 (Simulated)",
-        "total_bags": "164 (Simulated)",
-        "priority_pax": "16 (Simulated)",
-        "prm_pax": "2 (Simulated)",
-        "service_multiplier": 1.4,
-        "assigned_resources": {
-          "baggage_belt": "B2 (Dummy)"
-        }
-      }
-    },
-    {
-      "flight_id": "GEC",
-      "airline": "Lufthansa Cargo",
-      "flight_status": "scheduled",
-      "flight_type": "International",
-      "route": {
-        "source": "FRA",
-        "destination": "CAI",
-        "details": {
-          "origin_name": "Frankfurt International Airport",
-          "terminal": "T2",
-          "gate_id": "T2-G8 (Dummy)"
-        }
-      },
-      "aircraft": {
-        "type": "A320 (Dummy)",
-        "capacity": "180 (Simulated)"
-      },
-      "payload_stats": {
-        "total_passengers": "144 (Simulated)",
-        "estimated_groups": "60 (Simulated)",
-        "total_bags": "173 (Simulated)",
-        "priority_pax": "17 (Simulated)",
-        "prm_pax": "1 (Simulated)",
-        "service_multiplier": 1.4,
-        "assigned_resources": {
-          "baggage_belt": "B2 (Dummy)"
-        }
-      }
-    },
-    {
-      "flight_id": "XY273",
-      "airline": "flynas",
-      "flight_status": "scheduled",
-      "flight_type": "International",
-      "route": {
-        "source": "RUH",
-        "destination": "CAI",
-        "details": {
-          "origin_name": "King Khaled International",
-          "terminal": "T2",
-          "gate_id": "T2-G9 (Dummy)"
-        }
-      },
-      "aircraft": {
-        "type": "A320 (Dummy)",
-        "capacity": "180 (Simulated)"
-      },
-      "payload_stats": {
-        "total_passengers": "144 (Simulated)",
-        "estimated_groups": "60 (Simulated)",
-        "total_bags": "173 (Simulated)",
-        "priority_pax": "17 (Simulated)",
-        "prm_pax": "2 (Simulated)",
-        "service_multiplier": 1.4,
-        "assigned_resources": {
-          "baggage_belt": "B3 (Dummy)"
-        }
-      }
-    },
-    {
-      "flight_id": "NP152",
-      "airline": "Nile Air",
-      "flight_status": "scheduled",
-      "flight_type": "International",
-      "route": {
-        "source": "RUH",
-        "destination": "CAI",
-        "details": {
-          "origin_name": "King Khaled International",
-          "terminal": "T2",
-          "gate_id": "T2-G1 (Dummy)"
         }
       },
       "aircraft": {
@@ -1413,25 +82,253 @@
         "assigned_resources": {
           "baggage_belt": "B2 (Dummy)"
         }
+      },
+      "personas": {
+        "p1": 0,
+        "p2": 0,
+        "p3": 0,
+        "p4": 70,
+        "p5": 0,
+        "p6": 20,
+        "p7": 10
       }
     },
     {
-      "flight_id": "MS974",
-      "airline": "EgyptAir",
+      "flight_id": "G9594",
+      "flight_iata": "G9594",
+      "flight_icao": "ABY594",
+      "airline": "Air Arabia",
       "flight_status": "scheduled",
       "flight_type": "International",
       "route": {
-        "source": "DEL",
-        "destination": "CAI",
+        "source": "SHJ",
+        "source_icao": "OMSJ",
+        "destination": "HBE",
+        "destination_icao": "HEAX",
         "details": {
-          "origin_name": "Indira Gandhi International",
-          "terminal": "T1",
-          "gate_id": "T1-G12 (Dummy)"
+          "origin_name": "Sharjah",
+          "terminal": "T2",
+          "gate_id": "T2-G1 (Dummy)"
         }
       },
       "aircraft": {
-        "type": "B738 (Dummy)",
-        "capacity": "189 (Simulated)"
+        "type": "A320 (Dummy)",
+        "capacity": "180 (Simulated)"
+      },
+      "payload_stats": {
+        "total_passengers": "146 (Simulated)",
+        "estimated_groups": "61 (Simulated)",
+        "total_bags": "175 (Simulated)",
+        "priority_pax": "18 (Simulated)",
+        "prm_pax": "1 (Simulated)",
+        "service_multiplier": 1.4,
+        "assigned_resources": {
+          "baggage_belt": "B4 (Dummy)"
+        }
+      },
+      "personas": {
+        "p1": 0,
+        "p2": 0,
+        "p3": 0,
+        "p4": 70,
+        "p5": 0,
+        "p6": 20,
+        "p7": 10
+      }
+    },
+    {
+      "flight_id": "SV333",
+      "flight_iata": "SV333",
+      "flight_icao": "SVA333",
+      "airline": "Saudia",
+      "flight_status": "scheduled",
+      "flight_type": "International",
+      "route": {
+        "source": "RUH",
+        "source_icao": "OERK",
+        "destination": "HBE",
+        "destination_icao": "HEAX",
+        "details": {
+          "origin_name": "King Khaled International",
+          "terminal": "T2",
+          "gate_id": "T2-G3 (Dummy)"
+        }
+      },
+      "aircraft": {
+        "type": "A333 (Dummy)",
+        "capacity": "300 (Simulated)"
+      },
+      "payload_stats": {
+        "total_passengers": "252 (Simulated)",
+        "estimated_groups": "105 (Simulated)",
+        "total_bags": "302 (Simulated)",
+        "priority_pax": "30 (Simulated)",
+        "prm_pax": "0 (Simulated)",
+        "service_multiplier": 1.4,
+        "assigned_resources": {
+          "baggage_belt": "B1 (Dummy)"
+        }
+      },
+      "personas": {
+        "p1": 0,
+        "p2": 0,
+        "p3": 0,
+        "p4": 70,
+        "p5": 0,
+        "p6": 20,
+        "p7": 10
+      }
+    },
+    {
+      "flight_id": "KL3937",
+      "flight_iata": "KL3937",
+      "flight_icao": "KLM3937",
+      "airline": "KLM",
+      "flight_status": "scheduled",
+      "flight_type": "International",
+      "route": {
+        "source": "RUH",
+        "source_icao": "OERK",
+        "destination": "HBE",
+        "destination_icao": "HEAX",
+        "details": {
+          "origin_name": "King Khaled International",
+          "terminal": "T2",
+          "gate_id": "T2-G2 (Dummy)"
+        }
+      },
+      "aircraft": {
+        "type": "A320 (Dummy)",
+        "capacity": "180 (Simulated)"
+      },
+      "payload_stats": {
+        "total_passengers": "152 (Simulated)",
+        "estimated_groups": "64 (Simulated)",
+        "total_bags": "182 (Simulated)",
+        "priority_pax": "18 (Simulated)",
+        "prm_pax": "2 (Simulated)",
+        "service_multiplier": 1.4,
+        "assigned_resources": {
+          "baggage_belt": "B4 (Dummy)"
+        }
+      },
+      "personas": {
+        "p1": 0,
+        "p2": 0,
+        "p3": 0,
+        "p4": 70,
+        "p5": 0,
+        "p6": 20,
+        "p7": 10
+      }
+    },
+    {
+      "flight_id": "EY3393",
+      "flight_iata": "EY3393",
+      "flight_icao": "ETD3393",
+      "airline": "Etihad Airways",
+      "flight_status": "scheduled",
+      "flight_type": "International",
+      "route": {
+        "source": "RUH",
+        "source_icao": "OERK",
+        "destination": "HBE",
+        "destination_icao": "HEAX",
+        "details": {
+          "origin_name": "King Khaled International",
+          "terminal": "T2",
+          "gate_id": "T2-G7 (Dummy)"
+        }
+      },
+      "aircraft": {
+        "type": "A320 (Dummy)",
+        "capacity": "180 (Simulated)"
+      },
+      "payload_stats": {
+        "total_passengers": "169 (Simulated)",
+        "estimated_groups": "71 (Simulated)",
+        "total_bags": "203 (Simulated)",
+        "priority_pax": "20 (Simulated)",
+        "prm_pax": "2 (Simulated)",
+        "service_multiplier": 1.4,
+        "assigned_resources": {
+          "baggage_belt": "B4 (Dummy)"
+        }
+      },
+      "personas": {
+        "p1": 0,
+        "p2": 0,
+        "p3": 0,
+        "p4": 70,
+        "p5": 0,
+        "p6": 20,
+        "p7": 10
+      }
+    },
+    {
+      "flight_id": "EY3389",
+      "flight_iata": "EY3389",
+      "flight_icao": "ETD3389",
+      "airline": "Etihad Airways",
+      "flight_status": "scheduled",
+      "flight_type": "International",
+      "route": {
+        "source": "JED",
+        "source_icao": "OEJN",
+        "destination": "HBE",
+        "destination_icao": "HEAX",
+        "details": {
+          "origin_name": "King Abdulaziz International",
+          "terminal": "T2",
+          "gate_id": "T2-G3 (Dummy)"
+        }
+      },
+      "aircraft": {
+        "type": "A320 (Dummy)",
+        "capacity": "180 (Simulated)"
+      },
+      "payload_stats": {
+        "total_passengers": "148 (Simulated)",
+        "estimated_groups": "62 (Simulated)",
+        "total_bags": "178 (Simulated)",
+        "priority_pax": "18 (Simulated)",
+        "prm_pax": "2 (Simulated)",
+        "service_multiplier": 1.4,
+        "assigned_resources": {
+          "baggage_belt": "B2 (Dummy)"
+        }
+      },
+      "personas": {
+        "p1": 0,
+        "p2": 0,
+        "p3": 0,
+        "p4": 70,
+        "p5": 0,
+        "p6": 20,
+        "p7": 10
+      }
+    },
+    {
+      "flight_id": "G9326",
+      "flight_iata": "G9326",
+      "flight_icao": "ABY326",
+      "airline": "Air Arabia",
+      "flight_status": "active",
+      "flight_type": "International",
+      "route": {
+        "source": "JED",
+        "source_icao": "OEJN",
+        "destination": "HBE",
+        "destination_icao": "HEAX",
+        "details": {
+          "origin_name": "King Abdulaziz International",
+          "terminal": "T2",
+          "gate_id": "T2-G3 (Dummy)"
+        }
+      },
+      "aircraft": {
+        "type": "A320 (Dummy)",
+        "capacity": "180 (Simulated)"
       },
       "payload_stats": {
         "total_passengers": "153 (Simulated)",
@@ -1443,440 +340,76 @@
         "assigned_resources": {
           "baggage_belt": "B3 (Dummy)"
         }
+      },
+      "personas": {
+        "p1": 0,
+        "p2": 0,
+        "p3": 0,
+        "p4": 70,
+        "p5": 0,
+        "p6": 20,
+        "p7": 10
       }
     },
     {
-      "flight_id": "SM51",
-      "airline": "Air Cairo",
-      "flight_status": "scheduled",
-      "flight_type": "Domestic",
+      "flight_id": "FZ175",
+      "flight_iata": "FZ175",
+      "flight_icao": "FDB175",
+      "airline": "flydubai",
+      "flight_status": "cancelled",
+      "flight_type": "International",
       "route": {
-        "source": "LXR",
-        "destination": "CAI",
+        "source": "DXB",
+        "source_icao": "OMDB",
+        "destination": "HBE",
+        "destination_icao": "HEAX",
         "details": {
-          "origin_name": "Luxor",
-          "terminal": "T2",
-          "gate_id": "T2-G8 (Dummy)"
-        }
-      },
-      "aircraft": {
-        "type": "A320 (Dummy)",
-        "capacity": "180 (Simulated)"
-      },
-      "payload_stats": {
-        "total_passengers": "146 (Simulated)",
-        "estimated_groups": "61 (Simulated)",
-        "total_bags": "58 (Simulated)",
-        "priority_pax": "18 (Simulated)",
-        "prm_pax": "0 (Simulated)",
-        "service_multiplier": 1,
-        "assigned_resources": {
-          "baggage_belt": "B2 (Dummy)"
-        }
-      }
-    },
-    {
-      "flight_id": "NE21",
-      "airline": "Nesma Airlines",
-      "flight_status": "scheduled",
-      "flight_type": "Domestic",
-      "route": {
-        "source": "LXR",
-        "destination": "CAI",
-        "details": {
-          "origin_name": "Luxor",
-          "terminal": "T2",
-          "gate_id": "T2-G9 (Dummy)"
-        }
-      },
-      "aircraft": {
-        "type": "A320 (Dummy)",
-        "capacity": "180 (Simulated)"
-      },
-      "payload_stats": {
-        "total_passengers": "146 (Simulated)",
-        "estimated_groups": "61 (Simulated)",
-        "total_bags": "58 (Simulated)",
-        "priority_pax": "18 (Simulated)",
-        "prm_pax": "2 (Simulated)",
-        "service_multiplier": 1,
-        "assigned_resources": {
-          "baggage_belt": "B1 (Dummy)"
-        }
-      }
-    },
-    {
-      "flight_id": "MS63",
-      "airline": "EgyptAir",
-      "flight_status": "scheduled",
-      "flight_type": "Domestic",
-      "route": {
-        "source": "LXR",
-        "destination": "CAI",
-        "details": {
-          "origin_name": "Luxor",
-          "terminal": "T1",
-          "gate_id": "T1-G11 (Dummy)"
-        }
-      },
-      "aircraft": {
-        "type": "A320 (Dummy)",
-        "capacity": "180 (Simulated)"
-      },
-      "payload_stats": {
-        "total_passengers": "150 (Simulated)",
-        "estimated_groups": "63 (Simulated)",
-        "total_bags": "60 (Simulated)",
-        "priority_pax": "18 (Simulated)",
-        "prm_pax": "2 (Simulated)",
-        "service_multiplier": 1,
-        "assigned_resources": {
-          "baggage_belt": "B4 (Dummy)"
-        }
-      }
-    },
-    {
-      "flight_id": "OS7146",
-      "airline": "Austrian",
-      "flight_status": "scheduled",
-      "flight_type": "Domestic",
-      "route": {
-        "source": "LXR",
-        "destination": "CAI",
-        "details": {
-          "origin_name": "Luxor",
-          "terminal": "T2",
-          "gate_id": "T2-G8 (Dummy)"
-        }
-      },
-      "aircraft": {
-        "type": "A320 (Dummy)",
-        "capacity": "180 (Simulated)"
-      },
-      "payload_stats": {
-        "total_passengers": "140 (Simulated)",
-        "estimated_groups": "59 (Simulated)",
-        "total_bags": "56 (Simulated)",
-        "priority_pax": "17 (Simulated)",
-        "prm_pax": "2 (Simulated)",
-        "service_multiplier": 1,
-        "assigned_resources": {
-          "baggage_belt": "B2 (Dummy)"
-        }
-      }
-    },
-    {
-      "flight_id": "SM8063",
-      "airline": "Air Cairo",
-      "flight_status": "scheduled",
-      "flight_type": "Domestic",
-      "route": {
-        "source": "LXR",
-        "destination": "CAI",
-        "details": {
-          "origin_name": "Luxor",
+          "origin_name": "Dubai",
           "terminal": "T2",
           "gate_id": "T2-G7 (Dummy)"
         }
       },
       "aircraft": {
-        "type": "A320 (Dummy)",
-        "capacity": "180 (Simulated)"
-      },
-      "payload_stats": {
-        "total_passengers": "167 (Simulated)",
-        "estimated_groups": "70 (Simulated)",
-        "total_bags": "67 (Simulated)",
-        "priority_pax": "20 (Simulated)",
-        "prm_pax": "0 (Simulated)",
-        "service_multiplier": 1,
-        "assigned_resources": {
-          "baggage_belt": "B4 (Dummy)"
-        }
-      }
-    },
-    {
-      "flight_id": "EY4909",
-      "airline": "Etihad Airways",
-      "flight_status": "scheduled",
-      "flight_type": "Domestic",
-      "route": {
-        "source": "LXR",
-        "destination": "CAI",
-        "details": {
-          "origin_name": "Luxor",
-          "terminal": "T2",
-          "gate_id": "T2-G7 (Dummy)"
-        }
-      },
-      "aircraft": {
-        "type": "A320 (Dummy)",
-        "capacity": "180 (Simulated)"
-      },
-      "payload_stats": {
-        "total_passengers": "157 (Simulated)",
-        "estimated_groups": "66 (Simulated)",
-        "total_bags": "63 (Simulated)",
-        "priority_pax": "19 (Simulated)",
-        "prm_pax": "1 (Simulated)",
-        "service_multiplier": 1,
-        "assigned_resources": {
-          "baggage_belt": "B2 (Dummy)"
-        }
-      }
-    },
-    {
-      "flight_id": "AI7652",
-      "airline": "Air India",
-      "flight_status": "scheduled",
-      "flight_type": "Domestic",
-      "route": {
-        "source": "LXR",
-        "destination": "CAI",
-        "details": {
-          "origin_name": "Luxor",
-          "terminal": "T2",
-          "gate_id": "T2-G7 (Dummy)"
-        }
-      },
-      "aircraft": {
-        "type": "A320 (Dummy)",
-        "capacity": "180 (Simulated)"
-      },
-      "payload_stats": {
-        "total_passengers": "139 (Simulated)",
-        "estimated_groups": "58 (Simulated)",
-        "total_bags": "56 (Simulated)",
-        "priority_pax": "17 (Simulated)",
-        "prm_pax": "0 (Simulated)",
-        "service_multiplier": 1,
-        "assigned_resources": {
-          "baggage_belt": "B1 (Dummy)"
-        }
-      }
-    },
-    {
-      "flight_id": "AC2890",
-      "airline": "Air Canada",
-      "flight_status": "scheduled",
-      "flight_type": "Domestic",
-      "route": {
-        "source": "LXR",
-        "destination": "CAI",
-        "details": {
-          "origin_name": "Luxor",
-          "terminal": "T2",
-          "gate_id": "T2-G10 (Dummy)"
-        }
-      },
-      "aircraft": {
-        "type": "A320 (Dummy)",
-        "capacity": "180 (Simulated)"
-      },
-      "payload_stats": {
-        "total_passengers": "140 (Simulated)",
-        "estimated_groups": "59 (Simulated)",
-        "total_bags": "56 (Simulated)",
-        "priority_pax": "17 (Simulated)",
-        "prm_pax": "0 (Simulated)",
-        "service_multiplier": 1,
-        "assigned_resources": {
-          "baggage_belt": "B4 (Dummy)"
-        }
-      }
-    },
-    {
-      "flight_id": "MS65",
-      "airline": "EgyptAir",
-      "flight_status": "scheduled",
-      "flight_type": "Domestic",
-      "route": {
-        "source": "LXR",
-        "destination": "CAI",
-        "details": {
-          "origin_name": "Luxor",
-          "terminal": "T1",
-          "gate_id": "T1-G2 (Dummy)"
-        }
-      },
-      "aircraft": {
-        "type": "A320 (Dummy)",
-        "capacity": "180 (Simulated)"
-      },
-      "payload_stats": {
-        "total_passengers": "164 (Simulated)",
-        "estimated_groups": "69 (Simulated)",
-        "total_bags": "66 (Simulated)",
-        "priority_pax": "20 (Simulated)",
-        "prm_pax": "2 (Simulated)",
-        "service_multiplier": 1,
-        "assigned_resources": {
-          "baggage_belt": "B3 (Dummy)"
-        }
-      }
-    },
-    {
-      "flight_id": "SM8065",
-      "airline": "Air Cairo",
-      "flight_status": "scheduled",
-      "flight_type": "Domestic",
-      "route": {
-        "source": "LXR",
-        "destination": "CAI",
-        "details": {
-          "origin_name": "Luxor",
-          "terminal": "T2",
-          "gate_id": "T2-G1 (Dummy)"
-        }
-      },
-      "aircraft": {
-        "type": "A320 (Dummy)",
-        "capacity": "180 (Simulated)"
-      },
-      "payload_stats": {
-        "total_passengers": "153 (Simulated)",
-        "estimated_groups": "64 (Simulated)",
-        "total_bags": "61 (Simulated)",
-        "priority_pax": "18 (Simulated)",
-        "prm_pax": "2 (Simulated)",
-        "service_multiplier": 1,
-        "assigned_resources": {
-          "baggage_belt": "B2 (Dummy)"
-        }
-      }
-    },
-    {
-      "flight_id": "EY4913",
-      "airline": "Etihad Airways",
-      "flight_status": "scheduled",
-      "flight_type": "Domestic",
-      "route": {
-        "source": "LXR",
-        "destination": "CAI",
-        "details": {
-          "origin_name": "Luxor",
-          "terminal": "T2",
-          "gate_id": "T2-G8 (Dummy)"
-        }
-      },
-      "aircraft": {
-        "type": "A320 (Dummy)",
-        "capacity": "180 (Simulated)"
+        "type": "B38M (Dummy)",
+        "capacity": "189 (Simulated)"
       },
       "payload_stats": {
         "total_passengers": "163 (Simulated)",
         "estimated_groups": "68 (Simulated)",
-        "total_bags": "65 (Simulated)",
-        "priority_pax": "20 (Simulated)",
-        "prm_pax": "2 (Simulated)",
-        "service_multiplier": 1,
-        "assigned_resources": {
-          "baggage_belt": "B4 (Dummy)"
-        }
-      }
-    },
-    {
-      "flight_id": "SM59",
-      "airline": "Air Cairo",
-      "flight_status": "scheduled",
-      "flight_type": "Domestic",
-      "route": {
-        "source": "LXR",
-        "destination": "CAI",
-        "details": {
-          "origin_name": "Luxor",
-          "terminal": "T2",
-          "gate_id": "T2-G5 (Dummy)"
-        }
-      },
-      "aircraft": {
-        "type": "A320 (Dummy)",
-        "capacity": "180 (Simulated)"
-      },
-      "payload_stats": {
-        "total_passengers": "161 (Simulated)",
-        "estimated_groups": "68 (Simulated)",
-        "total_bags": "64 (Simulated)",
-        "priority_pax": "19 (Simulated)",
-        "prm_pax": "1 (Simulated)",
-        "service_multiplier": 1,
-        "assigned_resources": {
-          "baggage_belt": "B2 (Dummy)"
-        }
-      }
-    },
-    {
-      "flight_id": "SM73",
-      "airline": "Air Cairo",
-      "flight_status": "scheduled",
-      "flight_type": "Domestic",
-      "route": {
-        "source": "LXR",
-        "destination": "CAI",
-        "details": {
-          "origin_name": "Luxor",
-          "terminal": "T2",
-          "gate_id": "T2-G10 (Dummy)"
-        }
-      },
-      "aircraft": {
-        "type": "A320 (Dummy)",
-        "capacity": "180 (Simulated)"
-      },
-      "payload_stats": {
-        "total_passengers": "168 (Simulated)",
-        "estimated_groups": "70 (Simulated)",
-        "total_bags": "67 (Simulated)",
+        "total_bags": "196 (Simulated)",
         "priority_pax": "20 (Simulated)",
         "prm_pax": "1 (Simulated)",
-        "service_multiplier": 1,
-        "assigned_resources": {
-          "baggage_belt": "B2 (Dummy)"
-        }
-      }
-    },
-    {
-      "flight_id": "MS263",
-      "airline": "EgyptAir",
-      "flight_status": "scheduled",
-      "flight_type": "Domestic",
-      "route": {
-        "source": "LXR",
-        "destination": "CAI",
-        "details": {
-          "origin_name": "Luxor",
-          "terminal": "T1",
-          "gate_id": "T1-G7 (Dummy)"
-        }
-      },
-      "aircraft": {
-        "type": "B738 (Dummy)",
-        "capacity": "189 (Simulated)"
-      },
-      "payload_stats": {
-        "total_passengers": "168 (Simulated)",
-        "estimated_groups": "70 (Simulated)",
-        "total_bags": "67 (Simulated)",
-        "priority_pax": "20 (Simulated)",
-        "prm_pax": "0 (Simulated)",
-        "service_multiplier": 1,
+        "service_multiplier": 1.4,
         "assigned_resources": {
           "baggage_belt": "B3 (Dummy)"
         }
+      },
+      "personas": {
+        "p1": 0,
+        "p2": 0,
+        "p3": 0,
+        "p4": 70,
+        "p5": 0,
+        "p6": 20,
+        "p7": 10
       }
     },
     {
-      "flight_id": "SV301",
+      "flight_id": "SV411",
+      "flight_iata": "SV411",
+      "flight_icao": "SVA411",
       "airline": "Saudia",
       "flight_status": "scheduled",
       "flight_type": "International",
       "route": {
         "source": "JED",
-        "destination": "CAI",
+        "source_icao": "OEJN",
+        "destination": "HBE",
+        "destination_icao": "HEAX",
         "details": {
           "origin_name": "King Abdulaziz International",
           "terminal": "T2",
-          "gate_id": "T2-G9 (Dummy)"
+          "gate_id": "T2-G12 (Dummy)"
         }
       },
       "aircraft": {
@@ -1884,299 +417,42 @@
         "capacity": "300 (Simulated)"
       },
       "payload_stats": {
-        "total_passengers": "254 (Simulated)",
-        "estimated_groups": "106 (Simulated)",
-        "total_bags": "305 (Simulated)",
-        "priority_pax": "30 (Simulated)",
-        "prm_pax": "1 (Simulated)",
+        "total_passengers": "229 (Simulated)",
+        "estimated_groups": "96 (Simulated)",
+        "total_bags": "275 (Simulated)",
+        "priority_pax": "27 (Simulated)",
+        "prm_pax": "2 (Simulated)",
         "service_multiplier": 1.4,
         "assigned_resources": {
-          "baggage_belt": "B1 (Dummy)"
+          "baggage_belt": "B2 (Dummy)"
         }
+      },
+      "personas": {
+        "p1": 0,
+        "p2": 0,
+        "p3": 0,
+        "p4": 70,
+        "p5": 0,
+        "p6": 20,
+        "p7": 10
       }
     },
     {
-      "flight_id": "MH4722",
-      "airline": "Malaysia Airlines",
+      "flight_id": "MS656",
+      "flight_iata": "MS656",
+      "flight_icao": "MSR656",
+      "airline": "EgyptAir",
       "flight_status": "scheduled",
       "flight_type": "International",
       "route": {
         "source": "JED",
-        "destination": "CAI",
+        "source_icao": "OEJN",
+        "destination": "HBE",
+        "destination_icao": "HEAX",
         "details": {
           "origin_name": "King Abdulaziz International",
-          "terminal": "T2",
-          "gate_id": "T2-G6 (Dummy)"
-        }
-      },
-      "aircraft": {
-        "type": "A320 (Dummy)",
-        "capacity": "180 (Simulated)"
-      },
-      "payload_stats": {
-        "total_passengers": "141 (Simulated)",
-        "estimated_groups": "59 (Simulated)",
-        "total_bags": "169 (Simulated)",
-        "priority_pax": "17 (Simulated)",
-        "prm_pax": "1 (Simulated)",
-        "service_multiplier": 1.4,
-        "assigned_resources": {
-          "baggage_belt": "B3 (Dummy)"
-        }
-      }
-    },
-    {
-      "flight_id": "MS83",
-      "airline": "EgyptAir",
-      "flight_status": "scheduled",
-      "flight_type": "Domestic",
-      "route": {
-        "source": "ASW",
-        "destination": "CAI",
-        "details": {
-          "origin_name": "Aswan",
           "terminal": "T1",
-          "gate_id": "T1-G6 (Dummy)"
-        }
-      },
-      "aircraft": {
-        "type": "A320 (Dummy)",
-        "capacity": "180 (Simulated)"
-      },
-      "payload_stats": {
-        "total_passengers": "164 (Simulated)",
-        "estimated_groups": "69 (Simulated)",
-        "total_bags": "66 (Simulated)",
-        "priority_pax": "20 (Simulated)",
-        "prm_pax": "2 (Simulated)",
-        "service_multiplier": 1,
-        "assigned_resources": {
-          "baggage_belt": "B4 (Dummy)"
-        }
-      }
-    },
-    {
-      "flight_id": "WY5453",
-      "airline": "Oman Air",
-      "flight_status": "scheduled",
-      "flight_type": "Domestic",
-      "route": {
-        "source": "ASW",
-        "destination": "CAI",
-        "details": {
-          "origin_name": "Aswan",
-          "terminal": "T2",
-          "gate_id": "T2-G6 (Dummy)"
-        }
-      },
-      "aircraft": {
-        "type": "A320 (Dummy)",
-        "capacity": "180 (Simulated)"
-      },
-      "payload_stats": {
-        "total_passengers": "167 (Simulated)",
-        "estimated_groups": "70 (Simulated)",
-        "total_bags": "67 (Simulated)",
-        "priority_pax": "20 (Simulated)",
-        "prm_pax": "1 (Simulated)",
-        "service_multiplier": 1,
-        "assigned_resources": {
-          "baggage_belt": "B2 (Dummy)"
-        }
-      }
-    },
-    {
-      "flight_id": "OS7142",
-      "airline": "Austrian",
-      "flight_status": "scheduled",
-      "flight_type": "Domestic",
-      "route": {
-        "source": "ASW",
-        "destination": "CAI",
-        "details": {
-          "origin_name": "Aswan",
-          "terminal": "T2",
-          "gate_id": "T2-G12 (Dummy)"
-        }
-      },
-      "aircraft": {
-        "type": "A320 (Dummy)",
-        "capacity": "180 (Simulated)"
-      },
-      "payload_stats": {
-        "total_passengers": "164 (Simulated)",
-        "estimated_groups": "69 (Simulated)",
-        "total_bags": "66 (Simulated)",
-        "priority_pax": "20 (Simulated)",
-        "prm_pax": "1 (Simulated)",
-        "service_multiplier": 1,
-        "assigned_resources": {
-          "baggage_belt": "B3 (Dummy)"
-        }
-      }
-    },
-    {
-      "flight_id": "AI7674",
-      "airline": "Air India",
-      "flight_status": "scheduled",
-      "flight_type": "Domestic",
-      "route": {
-        "source": "ASW",
-        "destination": "CAI",
-        "details": {
-          "origin_name": "Aswan",
-          "terminal": "T2",
-          "gate_id": "T2-G6 (Dummy)"
-        }
-      },
-      "aircraft": {
-        "type": "A320 (Dummy)",
-        "capacity": "180 (Simulated)"
-      },
-      "payload_stats": {
-        "total_passengers": "138 (Simulated)",
-        "estimated_groups": "58 (Simulated)",
-        "total_bags": "55 (Simulated)",
-        "priority_pax": "17 (Simulated)",
-        "prm_pax": "2 (Simulated)",
-        "service_multiplier": 1,
-        "assigned_resources": {
-          "baggage_belt": "B3 (Dummy)"
-        }
-      }
-    },
-    {
-      "flight_id": "SM8083",
-      "airline": "Air Cairo",
-      "flight_status": "scheduled",
-      "flight_type": "Domestic",
-      "route": {
-        "source": "ASW",
-        "destination": "CAI",
-        "details": {
-          "origin_name": "Aswan",
-          "terminal": "T2",
-          "gate_id": "T2-G9 (Dummy)"
-        }
-      },
-      "aircraft": {
-        "type": "A320 (Dummy)",
-        "capacity": "180 (Simulated)"
-      },
-      "payload_stats": {
-        "total_passengers": "145 (Simulated)",
-        "estimated_groups": "61 (Simulated)",
-        "total_bags": "58 (Simulated)",
-        "priority_pax": "17 (Simulated)",
-        "prm_pax": "1 (Simulated)",
-        "service_multiplier": 1,
-        "assigned_resources": {
-          "baggage_belt": "B3 (Dummy)"
-        }
-      }
-    },
-    {
-      "flight_id": "EY4959",
-      "airline": "Etihad Airways",
-      "flight_status": "scheduled",
-      "flight_type": "Domestic",
-      "route": {
-        "source": "ASW",
-        "destination": "CAI",
-        "details": {
-          "origin_name": "Aswan",
-          "terminal": "T2",
-          "gate_id": "T2-G12 (Dummy)"
-        }
-      },
-      "aircraft": {
-        "type": "A320 (Dummy)",
-        "capacity": "180 (Simulated)"
-      },
-      "payload_stats": {
-        "total_passengers": "145 (Simulated)",
-        "estimated_groups": "61 (Simulated)",
-        "total_bags": "58 (Simulated)",
-        "priority_pax": "17 (Simulated)",
-        "prm_pax": "1 (Simulated)",
-        "service_multiplier": 1,
-        "assigned_resources": {
-          "baggage_belt": "B1 (Dummy)"
-        }
-      }
-    },
-    {
-      "flight_id": "AC2887",
-      "airline": "Air Canada",
-      "flight_status": "scheduled",
-      "flight_type": "Domestic",
-      "route": {
-        "source": "ASW",
-        "destination": "CAI",
-        "details": {
-          "origin_name": "Aswan",
-          "terminal": "T2",
-          "gate_id": "T2-G9 (Dummy)"
-        }
-      },
-      "aircraft": {
-        "type": "A320 (Dummy)",
-        "capacity": "180 (Simulated)"
-      },
-      "payload_stats": {
-        "total_passengers": "147 (Simulated)",
-        "estimated_groups": "62 (Simulated)",
-        "total_bags": "59 (Simulated)",
-        "priority_pax": "18 (Simulated)",
-        "prm_pax": "1 (Simulated)",
-        "service_multiplier": 1,
-        "assigned_resources": {
-          "baggage_belt": "B4 (Dummy)"
-        }
-      }
-    },
-    {
-      "flight_id": "J9731",
-      "airline": "Jazeera Airways",
-      "flight_status": "scheduled",
-      "flight_type": "International",
-      "route": {
-        "source": "AQI",
-        "destination": "CAI",
-        "details": {
-          "origin_name": "Qaisumah",
-          "terminal": "T2",
-          "gate_id": "T2-G2 (Dummy)"
-        }
-      },
-      "aircraft": {
-        "type": "A320 (Dummy)",
-        "capacity": "180 (Simulated)"
-      },
-      "payload_stats": {
-        "total_passengers": "140 (Simulated)",
-        "estimated_groups": "59 (Simulated)",
-        "total_bags": "168 (Simulated)",
-        "priority_pax": "17 (Simulated)",
-        "prm_pax": "0 (Simulated)",
-        "service_multiplier": 1.4,
-        "assigned_resources": {
-          "baggage_belt": "B3 (Dummy)"
-        }
-      }
-    },
-    {
-      "flight_id": "MS23",
-      "airline": "EgyptAir",
-      "flight_status": "scheduled",
-      "flight_type": "Domestic",
-      "route": {
-        "source": "SSH",
-        "destination": "CAI",
-        "details": {
-          "origin_name": "Sharm el-Sheikh International Airport",
-          "terminal": "T1",
-          "gate_id": "T1-G5 (Dummy)"
+          "gate_id": "T1-G12 (Dummy)"
         }
       },
       "aircraft": {
@@ -2184,149 +460,128 @@
         "capacity": "189 (Simulated)"
       },
       "payload_stats": {
-        "total_passengers": "164 (Simulated)",
-        "estimated_groups": "69 (Simulated)",
-        "total_bags": "66 (Simulated)",
-        "priority_pax": "20 (Simulated)",
+        "total_passengers": "176 (Simulated)",
+        "estimated_groups": "74 (Simulated)",
+        "total_bags": "211 (Simulated)",
+        "priority_pax": "21 (Simulated)",
         "prm_pax": "0 (Simulated)",
-        "service_multiplier": 1,
+        "service_multiplier": 1.4,
+        "assigned_resources": {
+          "baggage_belt": "B4 (Dummy)"
+        }
+      },
+      "personas": {
+        "p1": 0,
+        "p2": 0,
+        "p3": 0,
+        "p4": 70,
+        "p5": 0,
+        "p6": 20,
+        "p7": 10
+      }
+    },
+    {
+      "flight_id": "UNKNOWN_FLIGHT",
+      "flight_iata": null,
+      "flight_icao": null,
+      "airline": "empty",
+      "flight_status": "scheduled",
+      "flight_type": "International",
+      "route": {
+        "source": "BEN",
+        "source_icao": "HLLB",
+        "destination": "HBE",
+        "destination_icao": "HEAX",
+        "details": {
+          "origin_name": "Benina International",
+          "terminal": "T2",
+          "gate_id": "T2-G4 (Dummy)"
+        }
+      },
+      "aircraft": {
+        "type": "A320 (Dummy)",
+        "capacity": "180 (Simulated)"
+      },
+      "payload_stats": {
+        "total_passengers": "149 (Simulated)",
+        "estimated_groups": "63 (Simulated)",
+        "total_bags": "179 (Simulated)",
+        "priority_pax": "18 (Simulated)",
+        "prm_pax": "2 (Simulated)",
+        "service_multiplier": 1.4,
         "assigned_resources": {
           "baggage_belt": "B1 (Dummy)"
         }
+      },
+      "personas": {
+        "p1": 0,
+        "p2": 0,
+        "p3": 0,
+        "p4": 70,
+        "p5": 0,
+        "p6": 20,
+        "p7": 10
       }
     },
     {
-      "flight_id": "SA7180",
-      "airline": "South African Airways",
+      "flight_id": "3L401",
+      "flight_iata": "3L401",
+      "flight_icao": "ADY401",
+      "airline": "Air Arabia Abu Dhabi",
       "flight_status": "scheduled",
-      "flight_type": "Domestic",
+      "flight_type": "International",
       "route": {
-        "source": "SSH",
-        "destination": "CAI",
+        "source": "AUH",
+        "source_icao": "OMAA",
+        "destination": "HBE",
+        "destination_icao": "HEAX",
         "details": {
-          "origin_name": "Sharm el-Sheikh International Airport",
+          "origin_name": "Abu Dhabi International",
           "terminal": "T2",
-          "gate_id": "T2-G8 (Dummy)"
+          "gate_id": "T2-G11 (Dummy)"
         }
       },
       "aircraft": {
-        "type": "A320 (Dummy)",
+        "type": "A320",
         "capacity": "180 (Simulated)"
       },
       "payload_stats": {
-        "total_passengers": "146 (Simulated)",
-        "estimated_groups": "61 (Simulated)",
-        "total_bags": "58 (Simulated)",
+        "total_passengers": "152 (Simulated)",
+        "estimated_groups": "64 (Simulated)",
+        "total_bags": "182 (Simulated)",
         "priority_pax": "18 (Simulated)",
-        "prm_pax": "0 (Simulated)",
-        "service_multiplier": 1,
+        "prm_pax": "1 (Simulated)",
+        "service_multiplier": 1.4,
         "assigned_resources": {
-          "baggage_belt": "B2 (Dummy)"
+          "baggage_belt": "B1 (Dummy)"
         }
+      },
+      "personas": {
+        "p1": 0,
+        "p2": 0,
+        "p3": 0,
+        "p4": 70,
+        "p5": 0,
+        "p6": 20,
+        "p7": 10
       }
     },
     {
-      "flight_id": "WY5463",
-      "airline": "Oman Air",
+      "flight_id": "8U428",
+      "flight_iata": "8U428",
+      "flight_icao": "AAW428",
+      "airline": "Afriqiyah Airways",
       "flight_status": "scheduled",
-      "flight_type": "Domestic",
+      "flight_type": "International",
       "route": {
-        "source": "SSH",
-        "destination": "CAI",
+        "source": "SEB",
+        "source_icao": "HLLS",
+        "destination": "HBE",
+        "destination_icao": "HEAX",
         "details": {
-          "origin_name": "Sharm el-Sheikh International Airport",
-          "terminal": "T2",
-          "gate_id": "T2-G5 (Dummy)"
-        }
-      },
-      "aircraft": {
-        "type": "A320 (Dummy)",
-        "capacity": "180 (Simulated)"
-      },
-      "payload_stats": {
-        "total_passengers": "169 (Simulated)",
-        "estimated_groups": "71 (Simulated)",
-        "total_bags": "68 (Simulated)",
-        "priority_pax": "20 (Simulated)",
-        "prm_pax": "2 (Simulated)",
-        "service_multiplier": 1,
-        "assigned_resources": {
-          "baggage_belt": "B4 (Dummy)"
-        }
-      }
-    },
-    {
-      "flight_id": "SM8023",
-      "airline": "Air Cairo",
-      "flight_status": "scheduled",
-      "flight_type": "Domestic",
-      "route": {
-        "source": "SSH",
-        "destination": "CAI",
-        "details": {
-          "origin_name": "Sharm el-Sheikh International Airport",
-          "terminal": "T2",
-          "gate_id": "T2-G3 (Dummy)"
-        }
-      },
-      "aircraft": {
-        "type": "A320 (Dummy)",
-        "capacity": "180 (Simulated)"
-      },
-      "payload_stats": {
-        "total_passengers": "145 (Simulated)",
-        "estimated_groups": "61 (Simulated)",
-        "total_bags": "58 (Simulated)",
-        "priority_pax": "17 (Simulated)",
-        "prm_pax": "0 (Simulated)",
-        "service_multiplier": 1,
-        "assigned_resources": {
-          "baggage_belt": "B3 (Dummy)"
-        }
-      }
-    },
-    {
-      "flight_id": "EY4993",
-      "airline": "Etihad Airways",
-      "flight_status": "scheduled",
-      "flight_type": "Domestic",
-      "route": {
-        "source": "SSH",
-        "destination": "CAI",
-        "details": {
-          "origin_name": "Sharm el-Sheikh International Airport",
+          "origin_name": "Sebha",
           "terminal": "T2",
           "gate_id": "T2-G8 (Dummy)"
-        }
-      },
-      "aircraft": {
-        "type": "A320 (Dummy)",
-        "capacity": "180 (Simulated)"
-      },
-      "payload_stats": {
-        "total_passengers": "135 (Simulated)",
-        "estimated_groups": "57 (Simulated)",
-        "total_bags": "54 (Simulated)",
-        "priority_pax": "16 (Simulated)",
-        "prm_pax": "2 (Simulated)",
-        "service_multiplier": 1,
-        "assigned_resources": {
-          "baggage_belt": "B4 (Dummy)"
-        }
-      }
-    },
-    {
-      "flight_id": "AI7656",
-      "airline": "Air India",
-      "flight_status": "scheduled",
-      "flight_type": "Domestic",
-      "route": {
-        "source": "SSH",
-        "destination": "CAI",
-        "details": {
-          "origin_name": "Sharm el-Sheikh International Airport",
-          "terminal": "T2",
-          "gate_id": "T2-G10 (Dummy)"
         }
       },
       "aircraft": {
@@ -2336,27 +591,83 @@
       "payload_stats": {
         "total_passengers": "170 (Simulated)",
         "estimated_groups": "71 (Simulated)",
-        "total_bags": "68 (Simulated)",
+        "total_bags": "204 (Simulated)",
         "priority_pax": "20 (Simulated)",
-        "prm_pax": "1 (Simulated)",
-        "service_multiplier": 1,
+        "prm_pax": "0 (Simulated)",
+        "service_multiplier": 1.4,
         "assigned_resources": {
           "baggage_belt": "B2 (Dummy)"
         }
+      },
+      "personas": {
+        "p1": 0,
+        "p2": 0,
+        "p3": 0,
+        "p4": 70,
+        "p5": 0,
+        "p6": 20,
+        "p7": 10
       }
     },
     {
-      "flight_id": "AC2886",
-      "airline": "Air Canada",
+      "flight_id": "E5326",
+      "flight_iata": "E5326",
+      "flight_icao": "RBG326",
+      "airline": "Air Arabia Egypt",
       "flight_status": "scheduled",
-      "flight_type": "Domestic",
+      "flight_type": "International",
       "route": {
-        "source": "SSH",
-        "destination": "CAI",
+        "source": "JED",
+        "source_icao": "OEJN",
+        "destination": "HBE",
+        "destination_icao": "HEAX",
         "details": {
-          "origin_name": "Sharm el-Sheikh International Airport",
+          "origin_name": "King Abdulaziz International",
           "terminal": "T2",
-          "gate_id": "T2-G2 (Dummy)"
+          "gate_id": "T2-G11 (Dummy)"
+        }
+      },
+      "aircraft": {
+        "type": "A320",
+        "capacity": "180 (Simulated)"
+      },
+      "payload_stats": {
+        "total_passengers": "166 (Simulated)",
+        "estimated_groups": "70 (Simulated)",
+        "total_bags": "199 (Simulated)",
+        "priority_pax": "20 (Simulated)",
+        "prm_pax": "1 (Simulated)",
+        "service_multiplier": 1.4,
+        "assigned_resources": {
+          "baggage_belt": "B4 (Dummy)"
+        }
+      },
+      "personas": {
+        "p1": 0,
+        "p2": 0,
+        "p3": 0,
+        "p4": 70,
+        "p5": 0,
+        "p6": 20,
+        "p7": 10
+      }
+    },
+    {
+      "flight_id": "G9336",
+      "flight_iata": "G9336",
+      "flight_icao": "ABY336",
+      "airline": "Air Arabia",
+      "flight_status": "unknown",
+      "flight_type": "International",
+      "route": {
+        "source": "RUH",
+        "source_icao": "OERK",
+        "destination": "HBE",
+        "destination_icao": "HEAX",
+        "details": {
+          "origin_name": "King Khaled International",
+          "terminal": "T2",
+          "gate_id": "T2-G5 (Dummy)"
         }
       },
       "aircraft": {
@@ -2364,29 +675,214 @@
         "capacity": "180 (Simulated)"
       },
       "payload_stats": {
-        "total_passengers": "159 (Simulated)",
-        "estimated_groups": "67 (Simulated)",
-        "total_bags": "64 (Simulated)",
-        "priority_pax": "19 (Simulated)",
-        "prm_pax": "0 (Simulated)",
-        "service_multiplier": 1,
+        "total_passengers": "144 (Simulated)",
+        "estimated_groups": "60 (Simulated)",
+        "total_bags": "173 (Simulated)",
+        "priority_pax": "17 (Simulated)",
+        "prm_pax": "1 (Simulated)",
+        "service_multiplier": 1.4,
         "assigned_resources": {
-          "baggage_belt": "B4 (Dummy)"
+          "baggage_belt": "B2 (Dummy)"
         }
+      },
+      "personas": {
+        "p1": 0,
+        "p2": 0,
+        "p3": 0,
+        "p4": 70,
+        "p5": 0,
+        "p6": 20,
+        "p7": 10
       }
     },
     {
-      "flight_id": "XY263",
-      "airline": "flynas",
+      "flight_id": "SM452",
+      "flight_iata": "SM452",
+      "flight_icao": "MSC452",
+      "airline": "Air Cairo",
       "flight_status": "scheduled",
       "flight_type": "International",
       "route": {
-        "source": "RUH",
-        "destination": "CAI",
+        "source": "JED",
+        "source_icao": "OEJN",
+        "destination": "HBE",
+        "destination_icao": "HEAX",
         "details": {
-          "origin_name": "King Khaled International",
+          "origin_name": "King Abdulaziz International",
+          "terminal": "T2",
+          "gate_id": "T2-G1 (Dummy)"
+        }
+      },
+      "aircraft": {
+        "type": "A320 (Dummy)",
+        "capacity": "180 (Simulated)"
+      },
+      "payload_stats": {
+        "total_passengers": "145 (Simulated)",
+        "estimated_groups": "61 (Simulated)",
+        "total_bags": "174 (Simulated)",
+        "priority_pax": "17 (Simulated)",
+        "prm_pax": "0 (Simulated)",
+        "service_multiplier": 1.4,
+        "assigned_resources": {
+          "baggage_belt": "B2 (Dummy)"
+        }
+      },
+      "personas": {
+        "p1": 0,
+        "p2": 0,
+        "p3": 0,
+        "p4": 70,
+        "p5": 0,
+        "p6": 20,
+        "p7": 10
+      }
+    },
+    {
+      "flight_id": "SV331",
+      "flight_iata": "SV331",
+      "flight_icao": "SVA331",
+      "airline": "Saudia",
+      "flight_status": "scheduled",
+      "flight_type": "International",
+      "route": {
+        "source": "JED",
+        "source_icao": "OEJN",
+        "destination": "HBE",
+        "destination_icao": "HEAX",
+        "details": {
+          "origin_name": "King Abdulaziz International",
+          "terminal": "T2",
+          "gate_id": "T2-G5 (Dummy)"
+        }
+      },
+      "aircraft": {
+        "type": "A333 (Dummy)",
+        "capacity": "300 (Simulated)"
+      },
+      "payload_stats": {
+        "total_passengers": "282 (Simulated)",
+        "estimated_groups": "118 (Simulated)",
+        "total_bags": "338 (Simulated)",
+        "priority_pax": "34 (Simulated)",
+        "prm_pax": "0 (Simulated)",
+        "service_multiplier": 1.4,
+        "assigned_resources": {
+          "baggage_belt": "B2 (Dummy)"
+        }
+      },
+      "personas": {
+        "p1": 0,
+        "p2": 0,
+        "p3": 0,
+        "p4": 70,
+        "p5": 0,
+        "p6": 20,
+        "p7": 10
+      }
+    },
+    {
+      "flight_id": "EY3388",
+      "flight_iata": "EY3388",
+      "flight_icao": "ETD3388",
+      "airline": "Etihad Airways",
+      "flight_status": "scheduled",
+      "flight_type": "International",
+      "route": {
+        "source": "JED",
+        "source_icao": "OEJN",
+        "destination": "HBE",
+        "destination_icao": "HEAX",
+        "details": {
+          "origin_name": "King Abdulaziz International",
+          "terminal": "T2",
+          "gate_id": "T2-G10 (Dummy)"
+        }
+      },
+      "aircraft": {
+        "type": "A320 (Dummy)",
+        "capacity": "180 (Simulated)"
+      },
+      "payload_stats": {
+        "total_passengers": "151 (Simulated)",
+        "estimated_groups": "63 (Simulated)",
+        "total_bags": "181 (Simulated)",
+        "priority_pax": "18 (Simulated)",
+        "prm_pax": "1 (Simulated)",
+        "service_multiplier": 1.4,
+        "assigned_resources": {
+          "baggage_belt": "B1 (Dummy)"
+        }
+      },
+      "personas": {
+        "p1": 0,
+        "p2": 0,
+        "p3": 0,
+        "p4": 70,
+        "p5": 0,
+        "p6": 20,
+        "p7": 10
+      }
+    },
+    {
+      "flight_id": "SV6670",
+      "flight_iata": "SV6670",
+      "flight_icao": "SVA6670",
+      "airline": "Saudia",
+      "flight_status": "unknown",
+      "flight_type": "International",
+      "route": {
+        "source": "JED",
+        "source_icao": "OEJN",
+        "destination": "HBE",
+        "destination_icao": "HEAX",
+        "details": {
+          "origin_name": "King Abdulaziz International",
           "terminal": "T2",
           "gate_id": "T2-G11 (Dummy)"
+        }
+      },
+      "aircraft": {
+        "type": "A333 (Dummy)",
+        "capacity": "300 (Simulated)"
+      },
+      "payload_stats": {
+        "total_passengers": "257 (Simulated)",
+        "estimated_groups": "108 (Simulated)",
+        "total_bags": "308 (Simulated)",
+        "priority_pax": "31 (Simulated)",
+        "prm_pax": "1 (Simulated)",
+        "service_multiplier": 1.4,
+        "assigned_resources": {
+          "baggage_belt": "B1 (Dummy)"
+        }
+      },
+      "personas": {
+        "p1": 0,
+        "p2": 0,
+        "p3": 0,
+        "p4": 70,
+        "p5": 0,
+        "p6": 20,
+        "p7": 10
+      }
+    },
+    {
+      "flight_id": "F3773",
+      "flight_iata": "F3773",
+      "flight_icao": "FAD773",
+      "airline": "Flyadeal",
+      "flight_status": "unknown",
+      "flight_type": "International",
+      "route": {
+        "source": "JED",
+        "source_icao": "OEJN",
+        "destination": "HBE",
+        "destination_icao": "HEAX",
+        "details": {
+          "origin_name": "King Abdulaziz International",
+          "terminal": "T2",
+          "gate_id": "T2-G10 (Dummy)"
         }
       },
       "aircraft": {
@@ -2398,203 +894,208 @@
         "estimated_groups": "60 (Simulated)",
         "total_bags": "172 (Simulated)",
         "priority_pax": "17 (Simulated)",
-        "prm_pax": "0 (Simulated)",
-        "service_multiplier": 1.4,
-        "assigned_resources": {
-          "baggage_belt": "B2 (Dummy)"
-        }
-      }
-    },
-    {
-      "flight_id": "SV311",
-      "airline": "Saudia",
-      "flight_status": "scheduled",
-      "flight_type": "International",
-      "route": {
-        "source": "RUH",
-        "destination": "CAI",
-        "details": {
-          "origin_name": "King Khaled International",
-          "terminal": "T2",
-          "gate_id": "T2-G11 (Dummy)"
-        }
-      },
-      "aircraft": {
-        "type": "A333 (Dummy)",
-        "capacity": "300 (Simulated)"
-      },
-      "payload_stats": {
-        "total_passengers": "237 (Simulated)",
-        "estimated_groups": "99 (Simulated)",
-        "total_bags": "284 (Simulated)",
-        "priority_pax": "28 (Simulated)",
         "prm_pax": "1 (Simulated)",
         "service_multiplier": 1.4,
         "assigned_resources": {
-          "baggage_belt": "B2 (Dummy)"
+          "baggage_belt": "B4 (Dummy)"
         }
+      },
+      "personas": {
+        "p1": 0,
+        "p2": 0,
+        "p3": 0,
+        "p4": 70,
+        "p5": 0,
+        "p6": 20,
+        "p7": 10
       }
     },
     {
-      "flight_id": "MH4793",
-      "airline": "Malaysia Airlines",
+      "flight_id": "E5336",
+      "flight_iata": "E5336",
+      "flight_icao": "RBG336",
+      "airline": "Air Arabia Egypt",
       "flight_status": "scheduled",
       "flight_type": "International",
       "route": {
         "source": "RUH",
-        "destination": "CAI",
+        "source_icao": "OERK",
+        "destination": "HBE",
+        "destination_icao": "HEBA",
         "details": {
           "origin_name": "King Khaled International",
           "terminal": "T2",
-          "gate_id": "T2-G2 (Dummy)"
+          "gate_id": "T2-G3 (Dummy)"
         }
       },
       "aircraft": {
-        "type": "A320 (Dummy)",
+        "type": "A320",
         "capacity": "180 (Simulated)"
       },
       "payload_stats": {
-        "total_passengers": "160 (Simulated)",
-        "estimated_groups": "67 (Simulated)",
-        "total_bags": "192 (Simulated)",
-        "priority_pax": "19 (Simulated)",
-        "prm_pax": "0 (Simulated)",
-        "service_multiplier": 1.4,
-        "assigned_resources": {
-          "baggage_belt": "B3 (Dummy)"
-        }
-      }
-    },
-    {
-      "flight_id": "KL3935",
-      "airline": "KLM",
-      "flight_status": "scheduled",
-      "flight_type": "International",
-      "route": {
-        "source": "RUH",
-        "destination": "CAI",
-        "details": {
-          "origin_name": "King Khaled International",
-          "terminal": "T2",
-          "gate_id": "T2-G8 (Dummy)"
-        }
-      },
-      "aircraft": {
-        "type": "A320 (Dummy)",
-        "capacity": "180 (Simulated)"
-      },
-      "payload_stats": {
-        "total_passengers": "141 (Simulated)",
-        "estimated_groups": "59 (Simulated)",
-        "total_bags": "169 (Simulated)",
-        "priority_pax": "17 (Simulated)",
-        "prm_pax": "2 (Simulated)",
-        "service_multiplier": 1.4,
-        "assigned_resources": {
-          "baggage_belt": "B3 (Dummy)"
-        }
-      }
-    },
-    {
-      "flight_id": "WY2407",
-      "airline": "Oman Air",
-      "flight_status": "scheduled",
-      "flight_type": "International",
-      "route": {
-        "source": "MCT",
-        "destination": "CAI",
-        "details": {
-          "origin_name": "Seeb",
-          "terminal": "T2",
-          "gate_id": "T2-G12 (Dummy)"
-        }
-      },
-      "aircraft": {
-        "type": "A320 (Dummy)",
-        "capacity": "180 (Simulated)"
-      },
-      "payload_stats": {
-        "total_passengers": "149 (Simulated)",
-        "estimated_groups": "63 (Simulated)",
-        "total_bags": "179 (Simulated)",
-        "priority_pax": "18 (Simulated)",
-        "prm_pax": "2 (Simulated)",
-        "service_multiplier": 1.4,
-        "assigned_resources": {
-          "baggage_belt": "B2 (Dummy)"
-        }
-      }
-    },
-    {
-      "flight_id": "RJ501",
-      "airline": "Royal Jordanian",
-      "flight_status": "scheduled",
-      "flight_type": "International",
-      "route": {
-        "source": "AMM",
-        "destination": "CAI",
-        "details": {
-          "origin_name": "Queen Alia International",
-          "terminal": "T2",
-          "gate_id": "T2-G6 (Dummy)"
-        }
-      },
-      "aircraft": {
-        "type": "A320 (Dummy)",
-        "capacity": "180 (Simulated)"
-      },
-      "payload_stats": {
-        "total_passengers": "149 (Simulated)",
-        "estimated_groups": "63 (Simulated)",
-        "total_bags": "179 (Simulated)",
-        "priority_pax": "18 (Simulated)",
-        "prm_pax": "0 (Simulated)",
-        "service_multiplier": 1.4,
-        "assigned_resources": {
-          "baggage_belt": "B3 (Dummy)"
-        }
-      }
-    },
-    {
-      "flight_id": "AT5630",
-      "airline": "Royal Air Maroc",
-      "flight_status": "scheduled",
-      "flight_type": "International",
-      "route": {
-        "source": "AMM",
-        "destination": "CAI",
-        "details": {
-          "origin_name": "Queen Alia International",
-          "terminal": "T2",
-          "gate_id": "T2-G11 (Dummy)"
-        }
-      },
-      "aircraft": {
-        "type": "A320 (Dummy)",
-        "capacity": "180 (Simulated)"
-      },
-      "payload_stats": {
-        "total_passengers": "162 (Simulated)",
-        "estimated_groups": "68 (Simulated)",
-        "total_bags": "194 (Simulated)",
-        "priority_pax": "19 (Simulated)",
+        "total_passengers": "165 (Simulated)",
+        "estimated_groups": "69 (Simulated)",
+        "total_bags": "198 (Simulated)",
+        "priority_pax": "20 (Simulated)",
         "prm_pax": "1 (Simulated)",
         "service_multiplier": 1.4,
         "assigned_resources": {
           "baggage_belt": "B1 (Dummy)"
         }
+      },
+      "personas": {
+        "p1": 0,
+        "p2": 0,
+        "p3": 0,
+        "p4": 70,
+        "p5": 0,
+        "p6": 20,
+        "p7": 10
       }
     },
     {
-      "flight_id": "EK927",
-      "airline": "Emirates",
+      "flight_id": "TG7564",
+      "flight_iata": "TG7564",
+      "flight_icao": "THA7564",
+      "airline": "Thai Airways International",
       "flight_status": "scheduled",
       "flight_type": "International",
       "route": {
-        "source": "DXB",
-        "destination": "CAI",
+        "source": "IST",
+        "source_icao": "LTFM",
+        "destination": "HBE",
+        "destination_icao": "HEAX",
         "details": {
-          "origin_name": "Dubai",
+          "origin_name": "Istanbul Airport",
+          "terminal": "T2",
+          "gate_id": "T2-G4 (Dummy)"
+        }
+      },
+      "aircraft": {
+        "type": "A320 (Dummy)",
+        "capacity": "180 (Simulated)"
+      },
+      "payload_stats": {
+        "total_passengers": "140 (Simulated)",
+        "estimated_groups": "59 (Simulated)",
+        "total_bags": "168 (Simulated)",
+        "priority_pax": "17 (Simulated)",
+        "prm_pax": "1 (Simulated)",
+        "service_multiplier": 1.4,
+        "assigned_resources": {
+          "baggage_belt": "B4 (Dummy)"
+        }
+      },
+      "personas": {
+        "p1": 0,
+        "p2": 0,
+        "p3": 0,
+        "p4": 70,
+        "p5": 0,
+        "p6": 20,
+        "p7": 10
+      }
+    },
+    {
+      "flight_id": "MS9296",
+      "flight_iata": "MS9296",
+      "flight_icao": "MSR9296",
+      "airline": "EgyptAir",
+      "flight_status": "scheduled",
+      "flight_type": "International",
+      "route": {
+        "source": "IST",
+        "source_icao": "LTFM",
+        "destination": "HBE",
+        "destination_icao": "HEAX",
+        "details": {
+          "origin_name": "Istanbul Airport",
+          "terminal": "T1",
+          "gate_id": "T1-G8 (Dummy)"
+        }
+      },
+      "aircraft": {
+        "type": "B738 (Dummy)",
+        "capacity": "189 (Simulated)"
+      },
+      "payload_stats": {
+        "total_passengers": "156 (Simulated)",
+        "estimated_groups": "65 (Simulated)",
+        "total_bags": "187 (Simulated)",
+        "priority_pax": "19 (Simulated)",
+        "prm_pax": "2 (Simulated)",
+        "service_multiplier": 1.4,
+        "assigned_resources": {
+          "baggage_belt": "B2 (Dummy)"
+        }
+      },
+      "personas": {
+        "p1": 0,
+        "p2": 0,
+        "p3": 0,
+        "p4": 70,
+        "p5": 0,
+        "p6": 20,
+        "p7": 10
+      }
+    },
+    {
+      "flight_id": "UZ130",
+      "flight_iata": "UZ130",
+      "flight_icao": "BRQ130",
+      "airline": "Buraq Air",
+      "flight_status": "scheduled",
+      "flight_type": "International",
+      "route": {
+        "source": "BEN",
+        "source_icao": "HLLB",
+        "destination": "HBE",
+        "destination_icao": "HEAX",
+        "details": {
+          "origin_name": "Benina International",
+          "terminal": "T2",
+          "gate_id": "T2-G9 (Dummy)"
+        }
+      },
+      "aircraft": {
+        "type": "A320 (Dummy)",
+        "capacity": "180 (Simulated)"
+      },
+      "payload_stats": {
+        "total_passengers": "153 (Simulated)",
+        "estimated_groups": "64 (Simulated)",
+        "total_bags": "184 (Simulated)",
+        "priority_pax": "18 (Simulated)",
+        "prm_pax": "0 (Simulated)",
+        "service_multiplier": 1.4,
+        "assigned_resources": {
+          "baggage_belt": "B1 (Dummy)"
+        }
+      },
+      "personas": {
+        "p1": 0,
+        "p2": 0,
+        "p3": 0,
+        "p4": 70,
+        "p5": 0,
+        "p6": 20,
+        "p7": 10
+      }
+    },
+    {
+      "flight_id": "TK696",
+      "flight_iata": "TK696",
+      "flight_icao": "THY696",
+      "airline": "Turkish Airlines",
+      "flight_status": "scheduled",
+      "flight_type": "International",
+      "route": {
+        "source": "IST",
+        "source_icao": "LTFM",
+        "destination": "HBE",
+        "destination_icao": "HEAX",
+        "details": {
+          "origin_name": "Istanbul Airport",
           "terminal": "T2",
           "gate_id": "T2-G3 (Dummy)"
         }
@@ -2608,25 +1109,38 @@
         "estimated_groups": "70 (Simulated)",
         "total_bags": "200 (Simulated)",
         "priority_pax": "20 (Simulated)",
-        "prm_pax": "2 (Simulated)",
+        "prm_pax": "1 (Simulated)",
         "service_multiplier": 1.4,
         "assigned_resources": {
           "baggage_belt": "B1 (Dummy)"
         }
+      },
+      "personas": {
+        "p1": 0,
+        "p2": 0,
+        "p3": 0,
+        "p4": 70,
+        "p5": 0,
+        "p6": 20,
+        "p7": 10
       }
     },
     {
-      "flight_id": "NE153",
-      "airline": "Nesma Airlines",
-      "flight_status": "scheduled",
+      "flight_id": "G9522",
+      "flight_iata": "G9522",
+      "flight_icao": "ABY522",
+      "airline": "Air Arabia",
+      "flight_status": "active",
       "flight_type": "International",
       "route": {
-        "source": "DMM",
-        "destination": "CAI",
+        "source": "AMM",
+        "source_icao": "OJAI",
+        "destination": "HBE",
+        "destination_icao": "HEAX",
         "details": {
-          "origin_name": "King Fahd International Airport",
+          "origin_name": "Queen Alia International",
           "terminal": "T2",
-          "gate_id": "T2-G9 (Dummy)"
+          "gate_id": "T2-G5 (Dummy)"
         }
       },
       "aircraft": {
@@ -2634,29 +1148,85 @@
         "capacity": "180 (Simulated)"
       },
       "payload_stats": {
-        "total_passengers": "139 (Simulated)",
-        "estimated_groups": "58 (Simulated)",
-        "total_bags": "167 (Simulated)",
-        "priority_pax": "17 (Simulated)",
-        "prm_pax": "2 (Simulated)",
+        "total_passengers": "152 (Simulated)",
+        "estimated_groups": "64 (Simulated)",
+        "total_bags": "182 (Simulated)",
+        "priority_pax": "18 (Simulated)",
+        "prm_pax": "0 (Simulated)",
         "service_multiplier": 1.4,
         "assigned_resources": {
           "baggage_belt": "B3 (Dummy)"
         }
+      },
+      "personas": {
+        "p1": 0,
+        "p2": 0,
+        "p3": 0,
+        "p4": 70,
+        "p5": 0,
+        "p6": 20,
+        "p7": 10
       }
     },
     {
-      "flight_id": "NP228",
-      "airline": "Nile Air",
-      "flight_status": "scheduled",
+      "flight_id": "PC628",
+      "flight_iata": "PC628",
+      "flight_icao": "PGT628",
+      "airline": "Pegasus",
+      "flight_status": "active",
       "flight_type": "International",
       "route": {
-        "source": "JED",
-        "destination": "CAI",
+        "source": "SAW",
+        "source_icao": "LTFJ",
+        "destination": "HBE",
+        "destination_icao": "HEAX",
         "details": {
-          "origin_name": "King Abdulaziz International",
+          "origin_name": "Sabiha Gokcen",
           "terminal": "T2",
-          "gate_id": "T2-G6 (Dummy)"
+          "gate_id": "T2-G3 (Dummy)"
+        }
+      },
+      "aircraft": {
+        "type": "A320 (Dummy)",
+        "capacity": "180 (Simulated)"
+      },
+      "payload_stats": {
+        "total_passengers": "141 (Simulated)",
+        "estimated_groups": "59 (Simulated)",
+        "total_bags": "169 (Simulated)",
+        "priority_pax": "17 (Simulated)",
+        "prm_pax": "1 (Simulated)",
+        "service_multiplier": 1.4,
+        "assigned_resources": {
+          "baggage_belt": "B4 (Dummy)"
+        }
+      },
+      "personas": {
+        "p1": 0,
+        "p2": 0,
+        "p3": 0,
+        "p4": 70,
+        "p5": 0,
+        "p6": 20,
+        "p7": 10
+      }
+    },
+    {
+      "flight_id": "G9401",
+      "flight_iata": "G9401",
+      "flight_icao": "ABY401",
+      "airline": "Air Arabia",
+      "flight_status": "active",
+      "flight_type": "International",
+      "route": {
+        "source": "AUH",
+        "source_icao": "OMAA",
+        "destination": "HBE",
+        "destination_icao": "HEAX",
+        "details": {
+          "origin_name": "Abu Dhabi International",
+          "terminal": "T2",
+          "gate_id": "T2-G10 (Dummy)"
         }
       },
       "aircraft": {
@@ -2673,16 +1243,201 @@
         "assigned_resources": {
           "baggage_belt": "B3 (Dummy)"
         }
+      },
+      "personas": {
+        "p1": 0,
+        "p2": 0,
+        "p3": 0,
+        "p4": 70,
+        "p5": 0,
+        "p6": 20,
+        "p7": 10
       }
     },
     {
-      "flight_id": "F3753",
-      "airline": "Flyadeal",
+      "flight_id": "G9338",
+      "flight_iata": "G9338",
+      "flight_icao": "ABY338",
+      "airline": "Air Arabia",
+      "flight_status": "active",
+      "flight_type": "International",
+      "route": {
+        "source": "RUH",
+        "source_icao": "OERK",
+        "destination": "HBE",
+        "destination_icao": "HEAX",
+        "details": {
+          "origin_name": "King Khaled International",
+          "terminal": "T2",
+          "gate_id": "T2-G9 (Dummy)"
+        }
+      },
+      "aircraft": {
+        "type": "A320 (Dummy)",
+        "capacity": "180 (Simulated)"
+      },
+      "payload_stats": {
+        "total_passengers": "146 (Simulated)",
+        "estimated_groups": "61 (Simulated)",
+        "total_bags": "175 (Simulated)",
+        "priority_pax": "18 (Simulated)",
+        "prm_pax": "1 (Simulated)",
+        "service_multiplier": 1.4,
+        "assigned_resources": {
+          "baggage_belt": "B4 (Dummy)"
+        }
+      },
+      "personas": {
+        "p1": 0,
+        "p2": 0,
+        "p3": 0,
+        "p4": 70,
+        "p5": 0,
+        "p6": 20,
+        "p7": 10
+      }
+    },
+    {
+      "flight_id": "SM212",
+      "flight_iata": "SM212",
+      "flight_icao": "MSC212",
+      "airline": "Air Cairo",
+      "flight_status": "active",
+      "flight_type": "International",
+      "route": {
+        "source": "AMM",
+        "source_icao": "OJAI",
+        "destination": "HBE",
+        "destination_icao": "HEAX",
+        "details": {
+          "origin_name": "Queen Alia International",
+          "terminal": "T2",
+          "gate_id": "T2-G6 (Dummy)"
+        }
+      },
+      "aircraft": {
+        "type": "A320 (Dummy)",
+        "capacity": "180 (Simulated)"
+      },
+      "payload_stats": {
+        "total_passengers": "148 (Simulated)",
+        "estimated_groups": "62 (Simulated)",
+        "total_bags": "178 (Simulated)",
+        "priority_pax": "18 (Simulated)",
+        "prm_pax": "0 (Simulated)",
+        "service_multiplier": 1.4,
+        "assigned_resources": {
+          "baggage_belt": "B4 (Dummy)"
+        }
+      },
+      "personas": {
+        "p1": 0,
+        "p2": 0,
+        "p3": 0,
+        "p4": 70,
+        "p5": 0,
+        "p6": 20,
+        "p7": 10
+      }
+    },
+    {
+      "flight_id": "E5338",
+      "flight_iata": "E5338",
+      "flight_icao": "RBG338",
+      "airline": "Air Arabia Egypt",
+      "flight_status": "scheduled",
+      "flight_type": "International",
+      "route": {
+        "source": "RUH",
+        "source_icao": "OERK",
+        "destination": "HBE",
+        "destination_icao": "HEAX",
+        "details": {
+          "origin_name": "King Khaled International",
+          "terminal": "T2",
+          "gate_id": "T2-G4 (Dummy)"
+        }
+      },
+      "aircraft": {
+        "type": "A320",
+        "capacity": "180 (Simulated)"
+      },
+      "payload_stats": {
+        "total_passengers": "141 (Simulated)",
+        "estimated_groups": "59 (Simulated)",
+        "total_bags": "169 (Simulated)",
+        "priority_pax": "17 (Simulated)",
+        "prm_pax": "2 (Simulated)",
+        "service_multiplier": 1.4,
+        "assigned_resources": {
+          "baggage_belt": "B2 (Dummy)"
+        }
+      },
+      "personas": {
+        "p1": 0,
+        "p2": 0,
+        "p3": 0,
+        "p4": 70,
+        "p5": 0,
+        "p6": 20,
+        "p7": 10
+      }
+    },
+    {
+      "flight_id": "MS680",
+      "flight_iata": "MS680",
+      "flight_icao": "MSR680",
+      "airline": "EgyptAir",
+      "flight_status": "active",
+      "flight_type": "International",
+      "route": {
+        "source": "MED",
+        "source_icao": "OEMA",
+        "destination": "HBE",
+        "destination_icao": "HEAX",
+        "details": {
+          "origin_name": "Mohammad Bin Abdulaziz",
+          "terminal": "T1",
+          "gate_id": "T1-G9 (Dummy)"
+        }
+      },
+      "aircraft": {
+        "type": "A320 (Dummy)",
+        "capacity": "180 (Simulated)"
+      },
+      "payload_stats": {
+        "total_passengers": "146 (Simulated)",
+        "estimated_groups": "61 (Simulated)",
+        "total_bags": "175 (Simulated)",
+        "priority_pax": "18 (Simulated)",
+        "prm_pax": "1 (Simulated)",
+        "service_multiplier": 1.4,
+        "assigned_resources": {
+          "baggage_belt": "B3 (Dummy)"
+        }
+      },
+      "personas": {
+        "p1": 0,
+        "p2": 0,
+        "p3": 0,
+        "p4": 70,
+        "p5": 0,
+        "p6": 20,
+        "p7": 10
+      }
+    },
+    {
+      "flight_id": "G9322",
+      "flight_iata": "G9322",
+      "flight_icao": "ABY322",
+      "airline": "Air Arabia",
       "flight_status": "scheduled",
       "flight_type": "International",
       "route": {
         "source": "JED",
-        "destination": "CAI",
+        "source_icao": "OEJN",
+        "destination": "HBE",
+        "destination_icao": "HEAX",
         "details": {
           "origin_name": "King Abdulaziz International",
           "terminal": "T2",
@@ -2694,149 +1449,42 @@
         "capacity": "180 (Simulated)"
       },
       "payload_stats": {
-        "total_passengers": "139 (Simulated)",
-        "estimated_groups": "58 (Simulated)",
-        "total_bags": "167 (Simulated)",
-        "priority_pax": "17 (Simulated)",
-        "prm_pax": "2 (Simulated)",
-        "service_multiplier": 1.4,
-        "assigned_resources": {
-          "baggage_belt": "B2 (Dummy)"
-        }
-      }
-    },
-    {
-      "flight_id": "EY713",
-      "airline": "Etihad Airways",
-      "flight_status": "scheduled",
-      "flight_type": "International",
-      "route": {
-        "source": "AUH",
-        "destination": "CAI",
-        "details": {
-          "origin_name": "Abu Dhabi International",
-          "terminal": "T2",
-          "gate_id": "T2-G2 (Dummy)"
-        }
-      },
-      "aircraft": {
-        "type": "A320 (Dummy)",
-        "capacity": "180 (Simulated)"
-      },
-      "payload_stats": {
-        "total_passengers": "136 (Simulated)",
-        "estimated_groups": "57 (Simulated)",
-        "total_bags": "163 (Simulated)",
-        "priority_pax": "16 (Simulated)",
-        "prm_pax": "0 (Simulated)",
-        "service_multiplier": 1.4,
-        "assigned_resources": {
-          "baggage_belt": "B4 (Dummy)"
-        }
-      }
-    },
-    {
-      "flight_id": "G9420",
-      "airline": "Air Arabia",
-      "flight_status": "active",
-      "flight_type": "International",
-      "route": {
-        "source": "AUH",
-        "destination": "CAI",
-        "details": {
-          "origin_name": "Abu Dhabi International",
-          "terminal": "T2",
-          "gate_id": "T2-G11 (Dummy)"
-        }
-      },
-      "aircraft": {
-        "type": "A320 (Dummy)",
-        "capacity": "180 (Simulated)"
-      },
-      "payload_stats": {
-        "total_passengers": "165 (Simulated)",
-        "estimated_groups": "69 (Simulated)",
-        "total_bags": "198 (Simulated)",
-        "priority_pax": "20 (Simulated)",
-        "prm_pax": "0 (Simulated)",
-        "service_multiplier": 1.4,
-        "assigned_resources": {
-          "baggage_belt": "B4 (Dummy)"
-        }
-      }
-    },
-    {
-      "flight_id": "TK690",
-      "airline": "Turkish Airlines",
-      "flight_status": "scheduled",
-      "flight_type": "International",
-      "route": {
-        "source": "IST",
-        "destination": "CAI",
-        "details": {
-          "origin_name": "Istanbul Airport",
-          "terminal": "T2",
-          "gate_id": "T2-G7 (Dummy)"
-        }
-      },
-      "aircraft": {
-        "type": "A320 (Dummy)",
-        "capacity": "180 (Simulated)"
-      },
-      "payload_stats": {
-        "total_passengers": "170 (Simulated)",
-        "estimated_groups": "71 (Simulated)",
-        "total_bags": "204 (Simulated)",
-        "priority_pax": "20 (Simulated)",
-        "prm_pax": "2 (Simulated)",
-        "service_multiplier": 1.4,
-        "assigned_resources": {
-          "baggage_belt": "B4 (Dummy)"
-        }
-      }
-    },
-    {
-      "flight_id": "MS9292",
-      "airline": "EgyptAir",
-      "flight_status": "scheduled",
-      "flight_type": "International",
-      "route": {
-        "source": "IST",
-        "destination": "CAI",
-        "details": {
-          "origin_name": "Istanbul Airport",
-          "terminal": "T1",
-          "gate_id": "T1-G1 (Dummy)"
-        }
-      },
-      "aircraft": {
-        "type": "B738 (Dummy)",
-        "capacity": "189 (Simulated)"
-      },
-      "payload_stats": {
-        "total_passengers": "151 (Simulated)",
-        "estimated_groups": "63 (Simulated)",
-        "total_bags": "181 (Simulated)",
+        "total_passengers": "154 (Simulated)",
+        "estimated_groups": "65 (Simulated)",
+        "total_bags": "185 (Simulated)",
         "priority_pax": "18 (Simulated)",
         "prm_pax": "1 (Simulated)",
         "service_multiplier": 1.4,
         "assigned_resources": {
           "baggage_belt": "B2 (Dummy)"
         }
+      },
+      "personas": {
+        "p1": 0,
+        "p2": 0,
+        "p3": 0,
+        "p4": 70,
+        "p5": 0,
+        "p6": 20,
+        "p7": 10
       }
     },
     {
-      "flight_id": "SM442",
-      "airline": "Air Cairo",
+      "flight_id": "TK6930",
+      "flight_iata": "TK6930",
+      "flight_icao": "THY6930",
+      "airline": "Turkish Airlines",
       "flight_status": "scheduled",
       "flight_type": "International",
       "route": {
-        "source": "YNB",
-        "destination": "CAI",
+        "source": "IST",
+        "source_icao": "LTFM",
+        "destination": "HBE",
+        "destination_icao": "HEAX",
         "details": {
-          "origin_name": "Yanbu",
+          "origin_name": "Istanbul Airport",
           "terminal": "T2",
-          "gate_id": "T2-G1 (Dummy)"
+          "gate_id": "T2-G5 (Dummy)"
         }
       },
       "aircraft": {
@@ -2844,165 +1492,67 @@
         "capacity": "180 (Simulated)"
       },
       "payload_stats": {
-        "total_passengers": "169 (Simulated)",
-        "estimated_groups": "71 (Simulated)",
-        "total_bags": "203 (Simulated)",
-        "priority_pax": "20 (Simulated)",
-        "prm_pax": "1 (Simulated)",
-        "service_multiplier": 1.4,
-        "assigned_resources": {
-          "baggage_belt": "B4 (Dummy)"
-        }
-      }
-    },
-    {
-      "flight_id": "EW1156",
-      "airline": "Eurowings",
-      "flight_status": "scheduled",
-      "flight_type": "International",
-      "route": {
-        "source": "CGN",
-        "destination": "CAI",
-        "details": {
-          "origin_name": "Cologne/bonn",
-          "terminal": "T2",
-          "gate_id": "T2-G11 (Dummy)"
-        }
-      },
-      "aircraft": {
-        "type": "A320 (Dummy)",
-        "capacity": "180 (Simulated)"
-      },
-      "payload_stats": {
-        "total_passengers": "145 (Simulated)",
-        "estimated_groups": "61 (Simulated)",
-        "total_bags": "174 (Simulated)",
+        "total_passengers": "144 (Simulated)",
+        "estimated_groups": "60 (Simulated)",
+        "total_bags": "173 (Simulated)",
         "priority_pax": "17 (Simulated)",
         "prm_pax": "1 (Simulated)",
-        "service_multiplier": 1.4,
-        "assigned_resources": {
-          "baggage_belt": "B3 (Dummy)"
-        }
-      }
-    },
-    {
-      "flight_id": "SM8938",
-      "airline": "Air Cairo",
-      "flight_status": "active",
-      "flight_type": "International",
-      "route": {
-        "source": "DOH",
-        "destination": "CAI",
-        "details": {
-          "origin_name": "Doha International",
-          "terminal": "T2",
-          "gate_id": "T2-G8 (Dummy)"
-        }
-      },
-      "aircraft": {
-        "type": "A320 (Dummy)",
-        "capacity": "180 (Simulated)"
-      },
-      "payload_stats": {
-        "total_passengers": "170 (Simulated)",
-        "estimated_groups": "71 (Simulated)",
-        "total_bags": "204 (Simulated)",
-        "priority_pax": "20 (Simulated)",
-        "prm_pax": "1 (Simulated)",
-        "service_multiplier": 1.4,
-        "assigned_resources": {
-          "baggage_belt": "B3 (Dummy)"
-        }
-      }
-    },
-    {
-      "flight_id": "AC2901",
-      "airline": "Air Canada",
-      "flight_status": "active",
-      "flight_type": "International",
-      "route": {
-        "source": "DOH",
-        "destination": "CAI",
-        "details": {
-          "origin_name": "Doha International",
-          "terminal": "T2",
-          "gate_id": "T2-G6 (Dummy)"
-        }
-      },
-      "aircraft": {
-        "type": "A320 (Dummy)",
-        "capacity": "180 (Simulated)"
-      },
-      "payload_stats": {
-        "total_passengers": "138 (Simulated)",
-        "estimated_groups": "58 (Simulated)",
-        "total_bags": "166 (Simulated)",
-        "priority_pax": "17 (Simulated)",
-        "prm_pax": "2 (Simulated)",
-        "service_multiplier": 1.4,
-        "assigned_resources": {
-          "baggage_belt": "B2 (Dummy)"
-        }
-      }
-    },
-    {
-      "flight_id": "3U3863",
-      "airline": "Sichuan Airlines",
-      "flight_status": "active",
-      "flight_type": "International",
-      "route": {
-        "source": "TFU",
-        "destination": "CAI",
-        "details": {
-          "origin_name": "Chengdu Tianfu International Airport",
-          "terminal": "T2",
-          "gate_id": "T2-G9 (Dummy)"
-        }
-      },
-      "aircraft": {
-        "type": "A333",
-        "capacity": "300 (Simulated)"
-      },
-      "payload_stats": {
-        "total_passengers": "283 (Simulated)",
-        "estimated_groups": "118 (Simulated)",
-        "total_bags": "340 (Simulated)",
-        "priority_pax": "34 (Simulated)",
-        "prm_pax": "2 (Simulated)",
         "service_multiplier": 1.4,
         "assigned_resources": {
           "baggage_belt": "B1 (Dummy)"
         }
+      },
+      "personas": {
+        "p1": 0,
+        "p2": 0,
+        "p3": 0,
+        "p4": 70,
+        "p5": 0,
+        "p6": 20,
+        "p7": 10
       }
     },
     {
-      "flight_id": "NP174",
-      "airline": "Nile Air",
+      "flight_id": "E5322",
+      "flight_iata": "E5322",
+      "flight_icao": "RBG322",
+      "airline": "Air Arabia Egypt",
       "flight_status": "scheduled",
       "flight_type": "International",
       "route": {
-        "source": "SHJ",
-        "destination": "CAI",
+        "source": "JED",
+        "source_icao": "OEJN",
+        "destination": "HBE",
+        "destination_icao": "HEAX",
         "details": {
-          "origin_name": "Sharjah",
+          "origin_name": "King Abdulaziz International",
           "terminal": "T2",
-          "gate_id": "T2-G8 (Dummy)"
+          "gate_id": "T2-G4 (Dummy)"
         }
       },
       "aircraft": {
-        "type": "A320 (Dummy)",
+        "type": "A320",
         "capacity": "180 (Simulated)"
       },
       "payload_stats": {
-        "total_passengers": "141 (Simulated)",
-        "estimated_groups": "59 (Simulated)",
-        "total_bags": "169 (Simulated)",
+        "total_passengers": "144 (Simulated)",
+        "estimated_groups": "60 (Simulated)",
+        "total_bags": "173 (Simulated)",
         "priority_pax": "17 (Simulated)",
-        "prm_pax": "0 (Simulated)",
+        "prm_pax": "2 (Simulated)",
         "service_multiplier": 1.4,
         "assigned_resources": {
-          "baggage_belt": "B2 (Dummy)"
+          "baggage_belt": "B3 (Dummy)"
         }
+      },
+      "personas": {
+        "p1": 0,
+        "p2": 0,
+        "p3": 0,
+        "p4": 70,
+        "p5": 0,
+        "p6": 20,
+        "p7": 10
       }
     }
   ]
