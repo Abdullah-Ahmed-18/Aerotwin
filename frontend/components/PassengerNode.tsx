@@ -1,5 +1,5 @@
 import { Handle, Position } from '@xyflow/react';
-import { ShieldHalf, Ticket, TicketsPlane, QrCode, BaggageClaim, BriefcaseConveyorBelt, ShieldUser, PlaneTakeoff } from 'lucide-react';
+import { ShieldHalf, Ticket, TicketsPlane, QrCode, BaggageClaim, BriefcaseConveyorBelt, ShieldUser, PlaneTakeoff, Armchair } from 'lucide-react';
 
 // React Flow passes data through a specific 'data' object
 export default function PassengerNode({ data }: { data: any }) {
@@ -7,6 +7,12 @@ export default function PassengerNode({ data }: { data: any }) {
 
     const getNodeStyle = (nodeType: string) => {
         switch (nodeType) {
+            case 'Arrival Terminal':
+            case 'Arriving Terminal':
+                return { border: 'border-cyan-500', text: 'text-cyan-600', icon: Armchair, glow: 'shadow-[0_0_20px_rgba(6,182,212,0.4)] hover:shadow-[0_0_30px_rgba(6,182,212,0.6)]' };
+            case 'Departing Terminal':
+            case 'Departure Terminal':
+                return { border: 'border-indigo-500', text: 'text-indigo-600', icon: Armchair, glow: 'shadow-[0_0_20px_rgba(99,102,241,0.4)] hover:shadow-[0_0_30px_rgba(99,102,241,0.6)]' };
             case 'Security':
                 return { border: 'border-amber-500', text: 'text-amber-500', icon: ShieldHalf, glow: 'shadow-[0_0_20px_rgba(245,158,11,0.4)] hover:shadow-[0_0_30px_rgba(245,158,11,0.6)]' };
             case 'Check-in /w Baggage Tagging':

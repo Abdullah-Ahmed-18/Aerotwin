@@ -172,3 +172,12 @@ body {
 .pigeon-attribution {
   display: none !important;
 }
+
+/* Improve React Flow touch behavior on tablets/mobile (iPad emulation and Safari). */
+.react-flow-touch-area,
+.react-flow-touch-area .react-flow,
+.react-flow-touch-area .react-flow__renderer,
+.react-flow-touch-area .react-flow__pane,
+.react-flow-touch-area .react-flow__viewport {
+  touch-action: none;
+}

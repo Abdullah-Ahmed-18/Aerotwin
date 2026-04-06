@@ -1,7 +1,7 @@
 'use client';
-import { Plus, ShieldHalf, Ticket, X, TicketsPlane, ShoppingBag, QrCode, BaggageClaim, BriefcaseConveyorBelt, ShieldUser, PlaneTakeoff, Send, Loader2 } from 'lucide-react';
+import { Plus, ShieldHalf, Ticket, X, TicketsPlane, ShoppingBag, QrCode, BaggageClaim, BriefcaseConveyorBelt, ShieldUser, PlaneTakeoff, Armchair, Send, Loader2 } from 'lucide-react';
 import CheckpointCard from './CheckpointCard';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 
 // Make sure your interfaces are exported so page.tsx can use them
 export interface StationSettings {
@@ -21,6 +21,7 @@ export interface Checkpoint {
     colorType: 'security' | 'checkin';
     icon: React.ElementType;
     stations: { id: string; name: string; settings?: StationSettings }[];
+    seatCapacity?: string;
     nextCheckpointIds?: string[];
 }
 
@@ -39,6 +40,187 @@ export default function ConfigurationSidebar({ checkpoints = [], setCheckpoints 
     });
     const [isFormatting, setIsFormatting] = useState(false);
     const [formatStatus, setFormatStatus] = useState<{ type: 'success' | 'error' | null; message: string }>({ type: null, message: '' });
+    const [showImportConfirmModal, setShowImportConfirmModal] = useState(false);
+    const [pendingImportCheckpoints, setPendingImportCheckpoints] = useState<Checkpoint[] | null>(null);
+    const [pendingImportCounts, setPendingImportCounts] = useState<{ current: number; incoming: number } | null>(null);
+    const importInputRef = useRef<HTMLInputElement | null>(null);
+
+    const getIconForType = (type: string) => {
+        switch (type) {
+            case 'Arrival Terminal': return Armchair;
+            case 'Departing Terminal': return Armchair;
+            case 'Security': return ShieldHalf;
+            case 'Check-in /w Baggage Tagging': return TicketsPlane;
+            case 'Digital Check-in': return QrCode;
+            case 'Self-Service Bag Drop': return BaggageClaim;
+            case 'Baggage Retrieval': return BriefcaseConveyorBelt;
+            case 'Passport Check': return ShieldUser;
+            case 'Boarding': return PlaneTakeoff;
+            default: return Ticket;
+        }
+    };
+
+    const getColorTypeForCheckpoint = (type: string): 'security' | 'checkin' => {
+        const securityTypes = ['Security', 'Passport Check'];
+        return securityTypes.includes(type) ? 'security' : 'checkin';
+    };
+
+    const parseExperienceLabel = (rawExperience: unknown): string => {
+        const numeric = typeof rawExperience === 'number'
+            ? rawExperience
+            : parseFloat(String(rawExperience ?? '1'));
+
+        if (!Number.isFinite(numeric)) {
+            return 'Experienced';
+        }
+
+        if (numeric >= 1.1) {
+            return 'Veteran';
+        }
+
+        if (numeric <= 0.9) {
+            return 'In Training';
+        }
+
+        return 'Experienced';
+    };
+
+    const handleImportClick = () => {
+        importInputRef.current?.click();
+    };
+
+    const applyImportedCheckpoints = (imported: Checkpoint[]) => {
+        setCheckpoints(imported);
+        setFormatStatus({
+            type: 'success',
+            message: `Successfully imported configuration with ${imported.length} checkpoints`
+        });
+    };
+
+    const handleConfirmImport = () => {
+        if (!pendingImportCheckpoints) {
+            setShowImportConfirmModal(false);
+            return;
+        }
+
+        applyImportedCheckpoints(pendingImportCheckpoints);
+        setPendingImportCheckpoints(null);
+        setPendingImportCounts(null);
+        setShowImportConfirmModal(false);
+    };
+
+    const handleCancelImport = () => {
+        setPendingImportCheckpoints(null);
+        setPendingImportCounts(null);
+        setShowImportConfirmModal(false);
+        setFormatStatus({
+            type: 'error',
+            message: 'Import canceled. Existing configuration was kept.'
+        });
+    };
+
+    const handleImportConfiguration = async (event: React.ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files?.[0];
+        if (!file) {
+            return;
+        }
+
+        try {
+            const text = await file.text();
+            const parsed = JSON.parse(text);
+
+            const checkpointSource = Array.isArray(parsed)
+                ? parsed
+                : Array.isArray(parsed?.Checkpoints)
+                    ? parsed.Checkpoints
+                    : null;
+
+            if (!checkpointSource) {
+                throw new Error('Invalid file format. Expected an Aerotwin config JSON with a Checkpoints array.');
+            }
+
+            const importedCheckpoints: Checkpoint[] = checkpointSource.map((cp: any, index: number) => {
+                const checkpointType = String(cp.Checkpoint_Type || cp.type || 'Security');
+                const idCode = String(cp.Checkpoint_ID || cp.idCode || `CP-${index + 1}`);
+                const uiId = `cp-import-${Date.now()}-${index}`;
+                const isTerminalType = checkpointType === 'Arrival Terminal' || checkpointType === 'Departing Terminal';
+                const stations = Array.isArray(cp.Stations)
+                    ? cp.Stations.map((station: any, stationIndex: number) => ({
+                        id: String(station.Station_ID || station.id || `ST-${stationIndex + 1}`),
+                        name: String(station.Station_ID || station.name || `Station ${stationIndex + 1}`),
+                        settings: {
+                            staffing: String(station.Staffing_No ?? station.staffing ?? ''),
+                            avgServiceTime: String(station.Avg_Service_Time ?? station.avgServiceTime ?? ''),
+                            maxQueue: String(station.Max_Queue_Cap ?? station.maxQueue ?? ''),
+                            experience: parseExperienceLabel(station.Efficiency_Factor ?? station.experience),
+                            allowedClass: Array.isArray(station.Allowed_Class || station.allowedClass)
+                                ? (station.Allowed_Class || station.allowedClass)
+                                : ['All Classes'],
+                            hasXRayScanner: Number(station.Feature_Val ?? station.hasXRayScanner ?? 0) === 1
+                        }
+                    }))
+                    : [];
+
+                return {
+                    id: uiId,
+                    title: String(cp.title || cp.Checkpoint_ID || `${checkpointType} ${index + 1}`),
+                    idCode,
+                    type: checkpointType,
+                    colorType: getColorTypeForCheckpoint(checkpointType),
+                    icon: getIconForType(checkpointType),
+                    stations,
+                    seatCapacity: isTerminalType
+                        ? String(
+                            cp.Seat_Capacity
+                            ?? cp.seatCapacity
+                            ?? cp.Stations?.[0]?.Max_Queue_Cap
+                            ?? cp.Stations?.[0]?.maxQueue
+                            ?? ''
+                        )
+                        : undefined,
+                    nextCheckpointIds: []
+                };
+            });
+
+            const idCodeToUiId = new Map(importedCheckpoints.map(cp => [cp.idCode, cp.id]));
+
+            const checkpointsWithLinks = importedCheckpoints.map((cp, index) => {
+                const sourceCheckpoint = checkpointSource[index];
+                const nextAnchors = sourceCheckpoint?.Next_Anchor;
+                const mappedNextCheckpointIds = Array.isArray(nextAnchors)
+                    ? nextAnchors
+                        .map((nextId: string) => idCodeToUiId.get(nextId))
+                        .filter((id: string | undefined): id is string => Boolean(id))
+                    : [];
+
+                return {
+                    ...cp,
+                    nextCheckpointIds: mappedNextCheckpointIds.length > 0 ? mappedNextCheckpointIds : undefined
+                };
+            });
+
+            if (checkpoints.length > 0) {
+                setPendingImportCheckpoints(checkpointsWithLinks);
+                setPendingImportCounts({
+                    current: checkpoints.length,
+                    incoming: checkpointsWithLinks.length
+                });
+                setShowImportConfirmModal(true);
+                setFormatStatus({ type: null, message: '' });
+                return;
+            }
+
+            applyImportedCheckpoints(checkpointsWithLinks);
+        } catch (error) {
+            const message = error instanceof Error ? error.message : 'Failed to import configuration';
+            setFormatStatus({
+                type: 'error',
+                message
+            });
+        } finally {
+            event.target.value = '';
+        }
+    };
 
     const handleDeleteCheckpoint = (id: string) => {
         setCheckpoints(checkpoints.filter(cp => cp.id !== id));
@@ -55,30 +237,57 @@ export default function ConfigurationSidebar({ checkpoints = [], setCheckpoints 
 
         try {
             // Format checkpoint data to match backend expectations
-            const formattedData = checkpoints.map(cp => ({
-                id: cp.id,
-                title: cp.title,
-                idCode: cp.idCode,
-                type: cp.type,
-                stations: cp.stations.map(station => {
-                    const stationData: any = {
-                        id: station.id,
-                        name: station.name,
+            const formattedData = checkpoints.map(cp => {
+                const isTerminalType = cp.type === 'Arrival Terminal' || cp.type === 'Departing Terminal';
+
+                if (isTerminalType) {
+                    const seatCount = parseInt(cp.seatCapacity || '', 10) || 0;
+                    return {
+                        id: cp.id,
+                        title: cp.title,
+                        idCode: cp.idCode,
+                        type: cp.type,
+                        stations: [
+                            {
+                                id: 'SEAT-CAPACITY',
+                                name: 'Seat Capacity',
+                                staffing: 0,
+                                avgServiceTime: 0,
+                                maxQueue: seatCount,
+                                experience: 1.0,
+                                allowedClass: ['All Classes'],
+                                hasXRayScanner: 0
+                            }
+                        ],
+                        nextCheckpointIds: cp.nextCheckpointIds || []
                     };
-                    
-                    if (station.settings) {
-                        stationData.staffing = parseInt(station.settings.staffing) || 1;
-                        stationData.avgServiceTime = parseInt(station.settings.avgServiceTime) || 60;
-                        stationData.maxQueue = parseInt(station.settings.maxQueue) || 30;
-                        stationData.experience = parseFloat(station.settings.experience) || 1.0;
-                        stationData.allowedClass = station.settings.allowedClass;
-                        stationData.hasXRayScanner = station.settings.hasXRayScanner ? 1 : 0;
-                    }
-                    
-                    return stationData;
-                }),
-                nextCheckpointIds: cp.nextCheckpointIds || []
-            }));
+                }
+
+                return {
+                    id: cp.id,
+                    title: cp.title,
+                    idCode: cp.idCode,
+                    type: cp.type,
+                    stations: cp.stations.map(station => {
+                        const stationData: any = {
+                            id: station.id,
+                            name: station.name,
+                        };
+
+                        if (station.settings) {
+                            stationData.staffing = parseInt(station.settings.staffing) || 1;
+                            stationData.avgServiceTime = parseInt(station.settings.avgServiceTime) || 60;
+                            stationData.maxQueue = parseInt(station.settings.maxQueue) || 30;
+                            stationData.experience = parseFloat(station.settings.experience) || 1.0;
+                            stationData.allowedClass = station.settings.allowedClass;
+                            stationData.hasXRayScanner = station.settings.hasXRayScanner ? 1 : 0;
+                        }
+
+                        return stationData;
+                    }),
+                    nextCheckpointIds: cp.nextCheckpointIds || []
+                };
+            });
 
             console.log('Sending formatted data:', formattedData);
 
@@ -143,6 +352,19 @@ export default function ConfigurationSidebar({ checkpoints = [], setCheckpoints 
         ));
     };
 
+    const handleUpdateCheckpointMeta = (id: string, updates: Partial<Pick<Checkpoint, 'type' | 'seatCapacity'>>) => {
+        setCheckpoints(checkpoints.map(cp =>
+            cp.id === id
+                ? {
+                    ...cp,
+                    ...updates,
+                    icon: updates.type ? getIconForType(updates.type) : cp.icon,
+                    colorType: updates.type ? getColorTypeForCheckpoint(updates.type) : cp.colorType
+                }
+                : cp
+        ));
+    };
+
     const handleAddCheckpoint = () => {
         if (!newCheckpoint.title || !newCheckpoint.idCode) {
             alert('Please fill in all required fields');
@@ -161,20 +383,8 @@ export default function ConfigurationSidebar({ checkpoints = [], setCheckpoints 
             return;
         }
 
-        const securityTypes = ['Security', 'Passport Check'];
-        const colorType = securityTypes.includes(newCheckpoint.type) ? 'security' : 'checkin';
-
-        let icon;
-        switch (newCheckpoint.type) {
-            case 'Security': icon = ShieldHalf; break;
-            case 'Check-in /w Baggage Tagging': icon = TicketsPlane; break;
-            case 'Digital Check-in': icon = QrCode; break;
-            case 'Self-Service Bag Drop': icon = BaggageClaim; break;
-            case 'Baggage Retrieval': icon = BriefcaseConveyorBelt; break;
-            case 'Passport Check': icon = ShieldUser; break;
-            case 'Boarding': icon = PlaneTakeoff; break;
-            default: icon = Ticket;
-        }
+        const colorType = getColorTypeForCheckpoint(newCheckpoint.type);
+        const icon = getIconForType(newCheckpoint.type);
 
         const checkpoint: Checkpoint = {
             id: `cp-${Date.now()}`,
@@ -183,7 +393,8 @@ export default function ConfigurationSidebar({ checkpoints = [], setCheckpoints 
             type: newCheckpoint.type,
             colorType: colorType as any,
             icon: icon,
-            stations: []
+            stations: [],
+            seatCapacity: newCheckpoint.type === 'Arrival Terminal' || newCheckpoint.type === 'Departing Terminal' ? '' : undefined
         };
 
         setCheckpoints([...checkpoints, checkpoint]);
@@ -191,6 +402,7 @@ export default function ConfigurationSidebar({ checkpoints = [], setCheckpoints 
     };
 
     return (
+        <>
         <div className="flex flex-col w-full h-full gap-2 overflow-hidden">
             <div className="flex-shrink-0">
                 <h1 className="text-[#1E293B] text-xl font-bold leading-tight">
@@ -202,13 +414,28 @@ export default function ConfigurationSidebar({ checkpoints = [], setCheckpoints 
             </div>
 
             {!showAddForm && (
-                <button
-                    onClick={() => setShowAddForm(true)}
-                    className="bg-[#1ED5F4] text-slate-900 text-xs font-bold px-3 py-1.5 rounded flex items-center gap-1.5 w-max hover:bg-[#1ac1de] transition-colors shadow-sm flex-shrink-0"
-                >
-                    <Plus size={14} strokeWidth={3} />
-                    Add Checkpoint
-                </button>
+                <div className="flex items-center gap-2 flex-wrap">
+                    <button
+                        onClick={() => setShowAddForm(true)}
+                        className="bg-[#1ED5F4] text-slate-900 text-xs font-bold px-3 py-1.5 rounded flex items-center gap-1.5 w-max hover:bg-[#1ac1de] transition-colors shadow-sm flex-shrink-0"
+                    >
+                        <Plus size={14} strokeWidth={3} />
+                        Add Checkpoint
+                    </button>
+                    <button
+                        onClick={handleImportClick}
+                        className="bg-white border border-slate-300 text-slate-700 text-xs font-bold px-3 py-1.5 rounded flex items-center gap-1.5 w-max hover:bg-slate-50 transition-colors shadow-sm flex-shrink-0"
+                    >
+                        Import Configuration
+                    </button>
+                    <input
+                        ref={importInputRef}
+                        type="file"
+                        accept="application/json,.json"
+                        className="hidden"
+                        onChange={handleImportConfiguration}
+                    />
+                </div>
             )}
 
             {showAddForm && (
@@ -248,6 +475,8 @@ export default function ConfigurationSidebar({ checkpoints = [], setCheckpoints 
                             onChange={(e) => setNewCheckpoint({ ...newCheckpoint, type: e.target.value })}
                             className="bg-slate-100 border border-slate-200 rounded px-2 h-7 text-xs text-slate-700 outline-none focus:border-[#1ED5F4]"
                         >
+                            <option value="Arrival Terminal">Arrival Terminal</option>
+                            <option value="Departing Terminal">Departing Terminal</option>
                             <option value="Security">Security</option>
                             <option value="Check-in /w Baggage Tagging">Check-in /w Baggage Tagging</option>
                             <option value="Digital Check-in">Digital Check-in</option>
@@ -282,10 +511,12 @@ export default function ConfigurationSidebar({ checkpoints = [], setCheckpoints 
                             colorType={checkpoint.colorType}
                             icon={checkpoint.icon}
                             stations={checkpoint.stations}
+                            seatCapacity={checkpoint.seatCapacity}
                             nextCheckpointIds={checkpoint.nextCheckpointIds}
                             checkpoints={checkpoints}
                             onDelete={handleDeleteCheckpoint}
                             onUpdateStations={handleUpdateCheckpoint}
+                            onUpdateCheckpointMeta={handleUpdateCheckpointMeta}
                             onUpdateNextCheckpoints={handleUpdateNextCheckpoints}
                         />
                     ))
@@ -322,5 +553,32 @@ export default function ConfigurationSidebar({ checkpoints = [], setCheckpoints 
                 )}
             </button>
         </div>
+        {showImportConfirmModal && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 p-4">
+                <div className="w-full max-w-sm rounded-lg border border-slate-200 bg-white p-4 shadow-xl">
+                    <h2 className="text-sm font-bold text-slate-900">Replace Existing Configuration?</h2>
+                    <p className="mt-2 text-xs text-slate-600 leading-relaxed">
+                        This import will replace your current {pendingImportCounts?.current ?? 0} checkpoint(s)
+                        with {pendingImportCounts?.incoming ?? 0} checkpoint(s).
+                    </p>
+
+                    <div className="mt-4 flex items-center justify-end gap-2">
+                        <button
+                            onClick={handleCancelImport}
+                            className="px-3 py-1.5 text-xs font-bold rounded border border-slate-300 text-slate-700 hover:bg-slate-50 transition-colors"
+                        >
+                            Cancel
+                        </button>
+                        <button
+                            onClick={handleConfirmImport}
+                            className="px-3 py-1.5 text-xs font-bold rounded bg-[#1ED5F4] text-slate-900 hover:bg-[#1ac1de] transition-colors"
+                        >
+                            Replace & Import
+                        </button>
+                    </div>
+                </div>
+            </div>
+        )}
+        </>
     );
 }

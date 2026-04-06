@@ -77,7 +77,7 @@ export default function Dashboard() {
       </aside>
 
       {/* Right Area: React Flow Canvas */}
-      <main className="flex-1 relative bg-[#FAFCFF]">
+      <main className="react-flow-touch-area flex-1 relative bg-[#FAFCFF]">
 
         {/* Top Left Card (Overlaid on canvas) */}
         <div className="absolute top-6 left-6 bg-white border border-slate-200 shadow-sm rounded-lg p-3 pr-6 z-10">
@@ -107,6 +107,13 @@ export default function Dashboard() {
           onNodesChange={onNodesChange}
           onEdgesChange={onEdgesChange}
           nodeTypes={nodeTypes}
+          panOnDrag
+          panOnScroll
+          panOnScrollMode="free"
+          selectionOnDrag={false}
+          zoomOnPinch
+          zoomOnDoubleClick={false}
+          preventScrolling={false}
           fitView
         >
           <Background color="#CBD5E1" gap={24} size={2} />

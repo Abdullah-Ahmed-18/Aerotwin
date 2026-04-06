@@ -1,6 +1,6 @@
 'use client';
 
-import { Edit2, Trash2, ListTree, PlusCircle, ChevronDown, Plus, ShieldHalf, Ticket, TicketsPlane, ShoppingBag, QrCode, BaggageClaim, BriefcaseConveyorBelt, ShieldUser, PlaneTakeoff, X } from 'lucide-react';
+import { Trash2, ListTree, PlusCircle, ChevronDown, ShieldHalf, Ticket, TicketsPlane, ShoppingBag, QrCode, BaggageClaim, BriefcaseConveyorBelt, ShieldUser, PlaneTakeoff, Armchair, X } from 'lucide-react';
 import StationCard from './StationCard';
 import { useState, useEffect } from 'react';
 
@@ -12,10 +12,12 @@ interface CheckpointProps {
     colorType: string; // Updated to accept our dynamic string colors
     icon: React.ElementType;
     stations: { id: string; name: string; settings?: StationSettings }[];
+    seatCapacity?: string;
     nextCheckpointIds?: string[];
     checkpoints: { id: string; title: string; idCode: string }[];
     onDelete: (id: string) => void;
     onUpdateStations: (id: string, stations: { id: string; name: string; settings?: StationSettings }[]) => void;
+    onUpdateCheckpointMeta: (id: string, updates: { type?: string; seatCapacity?: string }) => void;
     onUpdateNextCheckpoints: (id: string, nextCheckpointIds: string[] | undefined) => void;
 }
 
@@ -28,8 +30,9 @@ interface StationSettings {
     hasXRayScanner: boolean;
 }
 
-export default function CheckpointCard({ id, title, idCode, type, colorType, icon: Icon, stations, nextCheckpointIds, checkpoints, onDelete, onUpdateStations, onUpdateNextCheckpoints }: CheckpointProps) {
+export default function CheckpointCard({ id, title, idCode, type, colorType, icon: Icon, stations, seatCapacity, nextCheckpointIds, checkpoints, onDelete, onUpdateStations, onUpdateCheckpointMeta, onUpdateNextCheckpoints }: CheckpointProps) {
     const [currentType, setCurrentType] = useState(type);
+    const [localSeatCapacity, setLocalSeatCapacity] = useState(seatCapacity || '');
     const [showAddStation, setShowAddStation] = useState(false);
     const [applyToAll, setApplyToAll] = useState(false);
     const [showNextCheckpointsDropdown, setShowNextCheckpointsDropdown] = useState(false);
@@ -41,6 +44,8 @@ export default function CheckpointCard({ id, title, idCode, type, colorType, ico
     // Dynamically determine icon based on current type
     const getIcon = (checkpointType: string) => {
         switch (checkpointType) {
+            case 'Arrival Terminal': return Armchair;
+            case 'Departing Terminal': return Armchair;
             case 'Security': return ShieldHalf;
             case 'Check-in /w Baggage Tagging': return TicketsPlane;
             case 'Digital Check-in': return QrCode;
@@ -55,6 +60,10 @@ export default function CheckpointCard({ id, title, idCode, type, colorType, ico
     // Dynamically determine color matching the Flow Diagram Nodes!
     const getColors = (checkpointType: string) => {
         switch (checkpointType) {
+            case 'Arrival Terminal':
+                return { border: 'border-l-cyan-500', icon: 'text-cyan-600' };
+            case 'Departing Terminal':
+                return { border: 'border-l-indigo-500', icon: 'text-indigo-600' };
             case 'Security':
                 return { border: 'border-l-amber-500', icon: 'text-amber-500' };
             case 'Check-in /w Baggage Tagging':
@@ -78,6 +87,15 @@ export default function CheckpointCard({ id, title, idCode, type, colorType, ico
     const colors = getColors(currentType);
     const leftBorder = colors.border;
     const iconColor = colors.icon;
+    const isTerminalType = currentType === 'Arrival Terminal' || currentType === 'Departing Terminal';
+
+    useEffect(() => {
+        setCurrentType(type);
+    }, [type]);
+
+    useEffect(() => {
+        setLocalSeatCapacity(seatCapacity || '');
+    }, [seatCapacity]);
 
     const handleAddStation = () => {
         if (!newStation.id || !newStation.name) {
@@ -149,6 +167,17 @@ export default function CheckpointCard({ id, title, idCode, type, colorType, ico
         }
     };
 
+    const handleTypeChange = (newType: string) => {
+        setCurrentType(newType);
+        onUpdateCheckpointMeta(id, { type: newType });
+    };
+
+    const handleSeatCapacityChange = (value: string) => {
+        const sanitized = value.replace(/[^0-9]/g, '');
+        setLocalSeatCapacity(sanitized);
+        onUpdateCheckpointMeta(id, { seatCapacity: sanitized });
+    };
+
     const toggleNextCheckpoint = (checkpointId: string) => {
         const currentIds = nextCheckpointIds || [];
         let newIds: string[];
@@ -217,9 +246,11 @@ export default function CheckpointCard({ id, title, idCode, type, colorType, ico
                         <div className="relative">
                             <select
                                 value={currentType}
-                                onChange={(e) => setCurrentType(e.target.value)}
+                                onChange={(e) => handleTypeChange(e.target.value)}
                                 className="w-full bg-slate-100 border border-transparent rounded pl-2 pr-6 h-7 text-xs text-slate-700 outline-none appearance-none"
                             >
+                                <option value="Arrival Terminal">Arrival Terminal</option>
+                                <option value="Departing Terminal">Departing Terminal</option>
                                 <option value="Security">Security</option>
                                 <option value="Check-in /w Baggage Tagging">Check-in /w Baggage Tagging</option>
                                 <option value="Digital Check-in">Digital Check-in</option>
@@ -287,35 +318,54 @@ export default function CheckpointCard({ id, title, idCode, type, colorType, ico
                 </div>
 
                 <div className="flex items-center gap-2">
-                    <div
-                        className={`w-7 h-4 rounded-full relative cursor-pointer transition-colors ${applyToAll ? 'bg-[#1ED5F4]' : 'bg-slate-300'
-                            }`}
-                        onClick={handleApplyToAllToggle}
-                    >
-                        <div className={`w-3 h-3 bg-white rounded-full absolute top-[2px] shadow-sm transition-all ${applyToAll ? 'left-[14px]' : 'left-[2px]'
-                            }`}></div>
-                    </div>
-                    <span className="text-[11px] text-slate-500">Apply settings to all stations</span>
+                    {!isTerminalType && (
+                        <>
+                            <div
+                                className={`w-7 h-4 rounded-full relative cursor-pointer transition-colors ${applyToAll ? 'bg-[#1ED5F4]' : 'bg-slate-300'
+                                    }`}
+                                onClick={handleApplyToAllToggle}
+                            >
+                                <div className={`w-3 h-3 bg-white rounded-full absolute top-[2px] shadow-sm transition-all ${applyToAll ? 'left-[14px]' : 'left-[2px]'
+                                    }`}></div>
+                            </div>
+                            <span className="text-[11px] text-slate-500">Apply settings to all stations</span>
+                        </>
+                    )}
+                    {isTerminalType && (
+                        <div className="w-full flex flex-col gap-1.5">
+                            <label className="text-[10px] font-bold text-slate-600 uppercase tracking-wider">Number of Seats</label>
+                            <input
+                                type="text"
+                                inputMode="numeric"
+                                value={localSeatCapacity}
+                                onChange={(e) => handleSeatCapacityChange(e.target.value)}
+                                placeholder="e.g., 240"
+                                className="w-full bg-slate-100 border border-transparent rounded px-2 h-7 text-xs text-slate-700 outline-none focus:border-[#1ED5F4]"
+                            />
+                        </div>
+                    )}
                 </div>
 
-                <hr className="border-slate-100 my-0.5" />
+                {!isTerminalType && <hr className="border-slate-100 my-0.5" />}
 
-                <div className="flex justify-between items-center text-[#1ED5F4]">
-                    <div className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider">
-                        <ListTree size={11} />
-                        <span>Active Stations</span>
+                {!isTerminalType && (
+                    <div className="flex justify-between items-center text-[#1ED5F4]">
+                        <div className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider">
+                            <ListTree size={11} />
+                            <span>Active Stations</span>
+                        </div>
+                        <div
+                            className="flex items-center gap-1.5 text-[10px] cursor-pointer hover:text-[#1ac1de]"
+                            onClick={() => setShowAddStation(!showAddStation)}
+                        >
+                            <PlusCircle size={11} />
+                            <span>Add Station</span>
+                        </div>
                     </div>
-                    <div
-                        className="flex items-center gap-1.5 text-[10px] cursor-pointer hover:text-[#1ac1de]"
-                        onClick={() => setShowAddStation(!showAddStation)}
-                    >
-                        <PlusCircle size={11} />
-                        <span>Add Station</span>
-                    </div>
-                </div>
+                )}
 
                 {/* Add Station Form */}
-                {showAddStation && (
+                {!isTerminalType && showAddStation && (
                     <div className="bg-slate-50 border border-slate-200 rounded p-2.5 flex flex-col gap-2.5">
                         <div className="flex justify-between items-center">
                             <span className="text-xs font-bold text-slate-700">New Station</span>
@@ -358,19 +408,21 @@ export default function CheckpointCard({ id, title, idCode, type, colorType, ico
                     </div>
                 )}
 
-                <div className="flex flex-col gap-1.5">
-                    {stations.map((s) => (
-                        <StationCard
-                            key={s.id}
-                            id={s.id}
-                            name={s.name}
-                            checkpointType={currentType}
-                            settings={s.settings}
-                            onSettingsChange={(settings) => handleStationSettingsChange(s.id, settings)}
-                            onDelete={() => handleDeleteStation(s.id)}
-                        />
-                    ))}
-                </div>
+                {!isTerminalType && (
+                    <div className="flex flex-col gap-1.5">
+                        {stations.map((s) => (
+                            <StationCard
+                                key={s.id}
+                                id={s.id}
+                                name={s.name}
+                                checkpointType={currentType}
+                                settings={s.settings}
+                                onSettingsChange={(settings) => handleStationSettingsChange(s.id, settings)}
+                                onDelete={() => handleDeleteStation(s.id)}
+                            />
+                        ))}
+                    </div>
+                )}
 
             </div>
         </div>
