@@ -26,6 +26,271 @@ const AIRPORT_COORDINATES = {
     MED: { code: "MED", name: "Prince Mohammad Bin Abdulaziz Airport", coords: [24.5534, 39.7051] }
 };
 
+// ==========================================
+// OPENSKY NETWORK API (OAuth2 Client Credentials)
+// ==========================================
+const OPENSKY_TOKEN_URL = "https://auth.opensky-network.org/auth/realms/opensky-network/protocol/openid-connect/token";
+const OPENSKY_API_BASE = "https://opensky-network.org/api";
+const OPENSKY_CLIENT_ID = "youssef salem-api-client";
+const OPENSKY_CLIENT_SECRET = "7B5E7kKfqI5DKauJVrHklu0ULnGTPVwn";
+const TOKEN_REFRESH_MARGIN_MS = 60 * 1000;
+
+// IATA → ICAO airport mapping (OpenSky uses ICAO codes)
+const IATA_TO_ICAO = {
+    HBE: "HEBA", CAI: "HECA", SSH: "HESH", HRG: "HEGN",
+    LXR: "HELX", ASW: "HESN", ALY: "HEAX", TCP: "HETB", RMF: "HERM",
+    DXB: "OMDB", AUH: "OMAA", MED: "OEMA", JED: "OEJN", RUH: "OERK",
+    DOH: "OTHH", KWI: "OKBK", BAH: "OBBI", MCT: "OOMS", AMM: "OJAI",
+    BEY: "OLBA",
+    LHR: "EGLL", CDG: "LFPG", FRA: "EDDF", AMS: "EHAM", FCO: "LIRF",
+    IST: "LTFM", ATH: "LGAV", BCN: "LEBL", MUC: "EDDM", ZRH: "LSZH",
+    JFK: "KJFK", LAX: "KLAX", ORD: "KORD", ATL: "KATL", DFW: "KDFW",
+    YYZ: "CYYZ",
+    ADD: "HAAB", NBO: "HKJK", JNB: "FAOR", CMN: "GMMN", TUN: "DTTA",
+    ALG: "DAAG", KRT: "HSSS",
+};
+
+// Airline IATA → ICAO callsign prefix (OpenSky uses ICAO prefixes)
+const AIRLINE_IATA_TO_ICAO = {
+    MS: "MSR", FZ: "FDB", G9: "ABY", SV: "SVA", TK: "THY",
+    W6: "WZZ", J9: "JZR", QR: "QTR", EK: "UAE", EY: "ETD",
+    LH: "DLH", BA: "BAW", AF: "AFR", KL: "KLM", LX: "SWR",
+    AA: "AAL", UA: "UAL", DL: "DAL", RJ: "RJA", ME: "MEA",
+    NE: "NES", XY: "KNE",
+};
+
+function iataToIcao(iataCode) {
+    const icao = IATA_TO_ICAO[iataCode?.toUpperCase()];
+    if (!icao) console.warn(`⚠️  OpenSky: No ICAO mapping for IATA "${iataCode}"`);
+    return icao || null;
+}
+
+// --- OAuth2 Token Manager ---
+class OpenSkyTokenManager {
+    constructor() {
+        this.accessToken = null;
+        this.expiresAt = 0;
+        this.refreshPromise = null;
+    }
+    async getToken() {
+        if (this.accessToken && Date.now() < this.expiresAt) return this.accessToken;
+        if (this.refreshPromise) return this.refreshPromise;
+        this.refreshPromise = this._refresh();
+        try { return await this.refreshPromise; }
+        finally { this.refreshPromise = null; }
+    }
+    async getHeaders() {
+        const token = await this.getToken();
+        return { Authorization: `Bearer ${token}` };
+    }
+    async _refresh() {
+        try {
+            console.log("🔑 OpenSky: Requesting new access token...");
+            const res = await axios.post(OPENSKY_TOKEN_URL,
+                new URLSearchParams({
+                    grant_type: "client_credentials",
+                    client_id: OPENSKY_CLIENT_ID,
+                    client_secret: OPENSKY_CLIENT_SECRET,
+                }).toString(),
+                { headers: { "Content-Type": "application/x-www-form-urlencoded" } }
+            );
+            this.accessToken = res.data.access_token;
+            this.expiresAt = Date.now() + (res.data.expires_in * 1000) - TOKEN_REFRESH_MARGIN_MS;
+            console.log(`✅ OpenSky: Token acquired (expires in ${res.data.expires_in}s)`);
+            return this.accessToken;
+        } catch (err) {
+            console.error("❌ OpenSky: Token fetch failed:", err.response?.data || err.message);
+            throw new Error("OpenSky token acquisition failed");
+        }
+    }
+    _clearToken() { this.accessToken = null; this.expiresAt = 0; }
+}
+const openskyTokens = new OpenSkyTokenManager();
+
+// --- OpenSky: Fetch live aircraft near airport (±0.5° bounding box) ---
+async function fetchOpenSkyLiveNearAirport(iataCode, airportCoords) {
+    try {
+        const headers = await openskyTokens.getHeaders();
+        const [lat, lon] = airportCoords.coords;
+        console.log(`🛫 OpenSky: Fetching live aircraft near ${iataCode} [${lat}, ${lon}]...`);
+        const response = await axios.get(`${OPENSKY_API_BASE}/states/all`, {
+            headers,
+            params: { lamin: lat-0.5, lamax: lat+0.5, lomin: lon-0.5, lomax: lon+0.5, extended: 1 },
+            timeout: 15000,
+        });
+        const states = response.data?.states || [];
+        console.log(`📡 OpenSky: ${states.length} aircraft near ${iataCode}`);
+        return states.map(s => ({
+            icao24: s[0], callsign: s[1]?.trim() || null, origin_country: s[2],
+            longitude: s[5], latitude: s[6], baro_altitude: s[7], on_ground: s[8],
+            velocity: s[9], true_track: s[10], vertical_rate: s[11],
+            geo_altitude: s[13], squawk: s[14], category: s[17],
+        }));
+    } catch (err) {
+        if (err.response?.status === 401) openskyTokens._clearToken();
+        console.error("❌ OpenSky live fetch failed:", err.response?.status, err.message);
+        return [];
+    }
+}
+
+// --- OpenSky: Fetch historical arrivals (batch-processed nightly) ---
+async function fetchOpenSkyArrivals(iataCode, hoursBack = 48) {
+    try {
+        const headers = await openskyTokens.getHeaders();
+        const icaoCode = iataToIcao(iataCode);
+        if (!icaoCode) return [];
+        const now = Math.floor(Date.now() / 1000);
+        console.log(`🛬 OpenSky: Fetching arrivals at ${iataCode} (${icaoCode}) past ${hoursBack}h...`);
+        const response = await axios.get(`${OPENSKY_API_BASE}/flights/arrival`, {
+            headers, params: { airport: icaoCode, begin: now - (hoursBack * 3600), end: now }, timeout: 15000,
+        });
+        const flights = response.data || [];
+        console.log(`📋 OpenSky: ${flights.length} arrivals at ${icaoCode}`);
+        return flights.map(f => ({
+            icao24: f.icao24, callsign: f.callsign?.trim() || null,
+            departure_airport_icao: f.estDepartureAirport, arrival_airport_icao: f.estArrivalAirport,
+            first_seen: f.firstSeen, last_seen: f.lastSeen,
+            first_seen_iso: f.firstSeen ? new Date(f.firstSeen * 1000).toISOString() : null,
+            last_seen_iso: f.lastSeen ? new Date(f.lastSeen * 1000).toISOString() : null,
+        }));
+    } catch (err) {
+        if (err.response?.status === 404) { console.log(`ℹ️  OpenSky: No arrivals at ${iataCode}`); return []; }
+        if (err.response?.status === 401) openskyTokens._clearToken();
+        console.error("❌ OpenSky arrivals failed:", err.response?.status, err.message);
+        return [];
+    }
+}
+
+// --- OpenSky: Fetch recent flights to build callsign→icao24 map ---
+// This covers flights in the last 2 hours, even if they're not currently live
+async function fetchOpenSkyRecentFlights() {
+    try {
+        const headers = await openskyTokens.getHeaders();
+        const now = Math.floor(Date.now() / 1000);
+        const begin = now - 7200; // 2 hours back (API max)
+        console.log(`🔍 OpenSky: Fetching all recent flights (past 2h) for callsign→icao24 mapping...`);
+        const response = await axios.get(`${OPENSKY_API_BASE}/flights/all`, {
+            headers, params: { begin, end: now }, timeout: 15000,
+        });
+        const flights = response.data || [];
+        console.log(`📋 OpenSky flights/all: ${flights.length} flights in past 2h`);
+        return flights;
+    } catch (err) {
+        if (err.response?.status === 404) { console.log(`ℹ️  OpenSky: No recent flights returned`); return []; }
+        if (err.response?.status === 401) openskyTokens._clearToken();
+        console.error("❌ OpenSky flights/all failed:", err.response?.status, err.message);
+        return [];
+    }
+}
+
+// --- Build a comprehensive callsign → icao24 map from multiple OpenSky sources ---
+function buildCallsignToHexMap(openskyLiveStates, openskyArrivals, openskyRecentFlights) {
+    const map = new Map(); // callsign → icao24
+
+    // Source 1: Live state vectors (highest priority — plane is in the air right now)
+    for (const s of openskyLiveStates) {
+        if (s.callsign && s.icao24) {
+            map.set(s.callsign, s.icao24);
+            const cleaned = s.callsign.replace(/\s+/g, '');
+            if (cleaned !== s.callsign) map.set(cleaned, s.icao24);
+        }
+    }
+
+    // Source 2: Recent flights from /flights/all
+    for (const f of openskyRecentFlights) {
+        const cs = f.callsign?.trim();
+        if (cs && f.icao24 && !map.has(cs)) {
+            map.set(cs, f.icao24);
+        }
+    }
+
+    // Source 3: Historical arrivals
+    for (const a of openskyArrivals) {
+        if (a.callsign && a.icao24 && !map.has(a.callsign)) {
+            map.set(a.callsign, a.icao24);
+        }
+    }
+
+    return map;
+}
+
+// --- OpenSky: Callsign lookup + flight matching (for live position data) ---
+function buildCallsignLookup(openskyStates) {
+    const lookup = new Map();
+    for (const s of openskyStates) {
+        if (s.callsign) {
+            lookup.set(s.callsign, s);
+            const cleaned = s.callsign.replace(/\s+/g, '');
+            if (cleaned !== s.callsign) lookup.set(cleaned, s);
+        }
+    }
+    return lookup;
+}
+
+function matchFlightToOpenSky(flightIata, callsignLookup) {
+    if (!flightIata || callsignLookup.size === 0) return null;
+    const direct = callsignLookup.get(flightIata);
+    if (direct) return direct;
+    const airlineIata = flightIata.substring(0, 2).toUpperCase();
+    const flightNum = flightIata.substring(2);
+    const icaoPrefix = AIRLINE_IATA_TO_ICAO[airlineIata];
+    if (icaoPrefix) {
+        const match = callsignLookup.get(`${icaoPrefix}${flightNum}`);
+        if (match) return match;
+    }
+    return null;
+}
+
+// --- Resolve icao24 for a flight using the callsign→hex map ---
+function resolveIcao24(flightIata, callsignToHexMap) {
+    if (!flightIata || callsignToHexMap.size === 0) return null;
+    // Direct match (IATA code as callsign)
+    const direct = callsignToHexMap.get(flightIata);
+    if (direct) return direct;
+    // Try ICAO callsign version
+    const airlineIata = flightIata.substring(0, 2).toUpperCase();
+    const flightNum = flightIata.substring(2);
+    const icaoPrefix = AIRLINE_IATA_TO_ICAO[airlineIata];
+    if (icaoPrefix) {
+        const icaoCallsign = `${icaoPrefix}${flightNum}`;
+        const match = callsignToHexMap.get(icaoCallsign);
+        if (match) return match;
+    }
+    return null;
+}
+
+// ==========================================
+// HEXDB - Aircraft Identity by ICAO24 Hex
+// ==========================================
+const HEXDB_API = "https://hexdb.io/api/v1/aircraft";
+const hexdbCache = new Map();
+
+async function lookupAircraftByHex(icao24) {
+    if (!icao24) return null;
+    const hex = icao24.toLowerCase();
+    if (hexdbCache.has(hex)) return hexdbCache.get(hex);
+    try {
+        const res = await axios.get(`${HEXDB_API}/${hex}`, { timeout: 5000 });
+        const data = res.data;
+        const result = {
+            icao_type: data.ICAOTypeCode || null,
+            type_long: data.Type || null,
+            manufacturer: data.Manufacturer || null,
+            registration: data.Registration || null,
+            owner: data.RegisteredOwners || null,
+            operator_flag: data.OperatorFlagCode || null,
+        };
+        hexdbCache.set(hex, result);
+        return result;
+    } catch (err) {
+        hexdbCache.set(hex, null);
+        if (err.response?.status !== 404) {
+            console.error(`⚠️  HexDB lookup failed for ${hex}:`, err.message);
+        }
+        return null;
+    }
+}
+
 function isValidIata(code) {
     return typeof code === "string" && /^[A-Z]{3}$/.test(code.trim().toUpperCase());
 }
@@ -334,20 +599,78 @@ app.get('/api/fetch-active-flights', async (req, res) => {
             params.arr_iata = airportIata;
         }
         
-        // Only add flight_status filter if it's not 'all'
         if (flightStatus !== 'all') {
             params.flight_status = flightStatus;
         }
         
-        const response = await axios.get(API_URL, { params });
+        // Fetch AviationStack + ALL OpenSky sources in parallel
+        const airportCoords = AIRPORT_COORDINATES[airportIata];
+        const [aviationStackRes, openskyStates, openskyArrivals, openskyRecentFlights] = await Promise.all([
+            axios.get(API_URL, { params }),
+            airportCoords
+                ? fetchOpenSkyLiveNearAirport(airportIata, airportCoords)
+                : Promise.resolve([]),
+            fetchOpenSkyArrivals(airportIata, 48).catch(() => []),
+            fetchOpenSkyRecentFlights().catch(() => []),
+        ]);
 
-        const rawFlights = response.data.data || [];
+        const rawFlights = aviationStackRes.data.data || [];
 
-        const formattedFlights = rawFlights.map(f => {
+        // Build lookups from ALL OpenSky sources
+        const callsignLookup = buildCallsignLookup(openskyStates); // for live position data
+        const callsignToHexMap = buildCallsignToHexMap(openskyStates, openskyArrivals, openskyRecentFlights);
+        console.log(`🗺️  Callsign→icao24 map: ${callsignToHexMap.size} entries (live: ${openskyStates.length}, arrivals: ${openskyArrivals.length}, recent: ${openskyRecentFlights.length})`);
+
+        let openskyMatches = 0;
+        let hexdbResolved = 0;
+
+        // Step 1: For each flight, resolve icao24 from ANY OpenSky source
+        const flightsWithMatches = rawFlights.map(f => {
+            const flightIata = normalizeFlightCode(f.flight?.iata);
+            const flightIcao = normalizeFlightCode(f.flight?.icao);
+            const flightId = flightIata || flightIcao || "UNKNOWN_FLIGHT";
+
+            // Try to get live position data
+            const openskyMatch = matchFlightToOpenSky(flightId, callsignLookup);
+
+            // Resolve icao24 from ANY source (live, arrivals, or recent flights)
+            let icao24 = openskyMatch?.icao24 || resolveIcao24(flightId, callsignToHexMap);
+
+            // Also check if AviationStack provides icao24 directly
+            if (!icao24 && f.aircraft?.icao24) {
+                icao24 = f.aircraft.icao24;
+            }
+
+            if (icao24) openskyMatches++;
+            return { raw: f, flightIata, flightIcao, flightId, openskyMatch, icao24 };
+        });
+
+        // Step 2: Batch HexDB lookups for ALL resolved icao24 addresses (in parallel)
+        const uniqueHexes = [...new Set(
+            flightsWithMatches
+                .filter(f => f.icao24)
+                .map(f => f.icao24)
+        )];
+        console.log(`🔎 HexDB: Looking up ${uniqueHexes.length} unique icao24 addresses...`);
+        const hexResults = await Promise.all(uniqueHexes.map(hex => lookupAircraftByHex(hex)));
+        const hexMap = new Map();
+        uniqueHexes.forEach((hex, i) => { if (hexResults[i]) hexMap.set(hex, hexResults[i]); });
+        console.log(`✅ HexDB: Resolved ${hexMap.size}/${uniqueHexes.length} aircraft identities`);
+
+        // Step 3: Build final flight objects with full enrichment
+        const formattedFlights = flightsWithMatches.map(({ raw: f, flightIata, flightIcao, flightId, openskyMatch, icao24 }) => {
             const aircraftRaw = f.aircraft?.iata;
-            const aircraftCode = resolvePlaneType(f.flight.iata, aircraftRaw);
-            
-            // Extract clean code for capacity lookup even if it says "(Dummy)"
+            let aircraftCode = resolvePlaneType(f.flight.iata, aircraftRaw);
+            let aircraftSource = aircraftRaw ? "AviationStack" : "Dummy";
+
+            // --- HexDB: Override aircraft type with real data if available ---
+            const hexData = icao24 ? hexMap.get(icao24) : null;
+            if (hexData?.icao_type) {
+                aircraftCode = hexData.icao_type;
+                aircraftSource = "HexDB";
+                hexdbResolved++;
+            }
+
             const lookupCode = aircraftCode.split(' ')[0];
             const maxCapacity = AIRCRAFT_CAPACITIES[lookupCode] || 180;
             
@@ -361,19 +684,13 @@ app.get('/api/fetch-active-flights', async (req, res) => {
             const isDomestic = DOMESTIC_EGYPT_AIRPORTS.includes(sourceIata);
             const flightType = isDomestic ? "Domestic" : "International";
 
-            // --- OPERATIONAL LOGIC WITH DUMMY LABELS ---
             const airlineName = f.airline?.name || "Unknown Airline";
             const terminal = (airlineName.includes("EgyptAir")) ? "T1" : "T2";
-            
-            // Check if Gate/Belt exists in API, otherwise generate and label as Dummy
             const gate = f.arrival?.gate ? f.arrival.gate : `${terminal}-G${Math.floor(Math.random() * 12) + 1} (Dummy)`;
             const belt = f.arrival?.baggage ? f.arrival.baggage : `B${Math.floor(Math.random() * 4) + 1} (Dummy)`;
 
-            const flightIata = normalizeFlightCode(f.flight?.iata);
-            const flightIcao = normalizeFlightCode(f.flight?.icao);
-
-            return {
-                flight_id: flightIata || flightIcao || "UNKNOWN_FLIGHT",
+            const flightObj = {
+                flight_id: flightId,
                 flight_iata: flightIata,
                 flight_icao: flightIcao,
                 airline: airlineName,
@@ -393,8 +710,15 @@ app.get('/api/fetch-active-flights', async (req, res) => {
                 },
                 
                 aircraft: { 
-                    type: aircraftCode, 
-                    capacity: `${maxCapacity} (Simulated)` 
+                    type: aircraftCode,
+                    type_source: aircraftSource,
+                    capacity: `${maxCapacity} (Simulated)`,
+                    ...(hexData ? {
+                        manufacturer: hexData.manufacturer,
+                        registration: hexData.registration,
+                        owner: hexData.owner,
+                        type_long: hexData.type_long,
+                    } : {})
                 },
 
                 payload_stats: {
@@ -407,17 +731,47 @@ app.get('/api/fetch-active-flights', async (req, res) => {
                     assigned_resources: { baggage_belt: belt }
                 }
             };
+
+            // Attach live OpenSky position if matched
+            if (openskyMatch) {
+                flightObj.opensky_live = {
+                    icao24: openskyMatch.icao24,
+                    callsign: openskyMatch.callsign,
+                    latitude: openskyMatch.latitude,
+                    longitude: openskyMatch.longitude,
+                    altitude_m: openskyMatch.baro_altitude,
+                    geo_altitude_m: openskyMatch.geo_altitude,
+                    velocity_mps: openskyMatch.velocity,
+                    heading: openskyMatch.true_track,
+                    vertical_rate_mps: openskyMatch.vertical_rate,
+                    on_ground: openskyMatch.on_ground,
+                    squawk: openskyMatch.squawk,
+                    origin_country: openskyMatch.origin_country,
+                };
+            }
+
+            return flightObj;
         });
+
+        console.log(`🔗 OpenSky enrichment: ${openskyMatches}/${formattedFlights.length} flights matched`);
+        console.log(`✈️  HexDB aircraft resolved: ${hexdbResolved}/${openskyMatches} (cache size: ${hexdbCache.size})`);
 
         const finalPayload = {
             meta: { 
                 updated: new Date().toISOString(), 
                 airport: airportIata,
                 airport_icao: airportIcao,
-                count: formattedFlights.length 
+                count: formattedFlights.length,
+                opensky_enriched: openskyMatches,
+                opensky_aircraft_nearby: openskyStates.length,
+                hexdb_resolved: hexdbResolved,
             },
             flights: formattedFlights
         };
+
+        // Save enriched data to disk
+        fs.writeFileSync('active_flights.json', JSON.stringify(finalPayload, null, 2));
+        console.log(`💾 Saved ${formattedFlights.length} enriched flights to active_flights.json`);
 
         res.status(200).json(finalPayload);
 
@@ -497,6 +851,65 @@ app.get('/api/airport-location', async (req, res) => {
         res.status(500).json({ error: 'Failed to fetch airport location.' });
     }
 });
+// ==========================================
+// 4. OPENSKY NETWORK ENDPOINTS
+// ==========================================
+
+// Live aircraft near airport (real-time state vectors)
+app.get('/api/opensky/live', async (req, res) => {
+    try {
+        const airportCode = (req.query.airport || TARGET_AIRPORT).toUpperCase();
+        const airportCoords = AIRPORT_COORDINATES[airportCode];
+
+        if (!airportCoords) {
+            return res.status(400).json({
+                error: `No coordinates configured for airport "${airportCode}". Add it to AIRPORT_COORDINATES.`
+            });
+        }
+
+        const states = await fetchOpenSkyLiveNearAirport(airportCode, airportCoords);
+
+        res.status(200).json({
+            meta: {
+                updated: new Date().toISOString(),
+                airport: airportCode,
+                aircraft_count: states.length,
+                bounding_box: {
+                    lat: [airportCoords.coords[0] - 0.5, airportCoords.coords[0] + 0.5],
+                    lon: [airportCoords.coords[1] - 0.5, airportCoords.coords[1] + 0.5],
+                },
+            },
+            aircraft: states,
+        });
+    } catch (error) {
+        console.error("OpenSky live error:", error.message);
+        res.status(500).json({ error: "Failed to fetch live OpenSky data." });
+    }
+});
+
+// Historical arrivals at airport (batch-processed, previous day onward)
+app.get('/api/opensky/arrivals', async (req, res) => {
+    try {
+        const airportCode = (req.query.airport || TARGET_AIRPORT).toUpperCase();
+        const hoursBack = Math.min(parseInt(req.query.hours) || 48, 168);
+
+        const arrivals = await fetchOpenSkyArrivals(airportCode, hoursBack);
+
+        res.status(200).json({
+            meta: {
+                updated: new Date().toISOString(),
+                airport: airportCode,
+                hours_queried: hoursBack,
+                arrival_count: arrivals.length,
+            },
+            arrivals,
+        });
+    } catch (error) {
+        console.error("OpenSky arrivals error:", error.message);
+        res.status(500).json({ error: "Failed to fetch OpenSky arrivals." });
+    }
+});
+
 // START
 app.listen(PORT, () => {
   console.log(`Server running on ${PORT}`);

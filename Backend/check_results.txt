@@ -1,0 +1,35 @@
+﻿META: count=33 opensky=26 hexdb=24 nearby=1
+
+SV331 | A321 | HexDB | HZ-ASO
+EY3388 | A321 | HexDB | HZ-ASO
+3L404 | A320 (Dummy) | Dummy | -
+F3773 | A320 (Dummy) | Dummy | -
+SV6670 | A333 (Dummy) | Dummy | -
+UZ130 | A320 (Dummy) | Dummy | -
+TG7564 | A21N | HexDB | TC-LSB
+MS9296 | A21N | HexDB | TC-LSB
+E5322 | A320 (Dummy) | Dummy | -
+TK696 | A21N | HexDB | TC-LSB
+G9522 | A320 | HexDB | SU-AAD
+E5522 | A320 | HexDB | SU-AAD
+LN210 | A320 (Dummy) | Dummy | -
+G9338 | A320 | HexDB | SU-AAD
+KL3937 | A321 | HexDB | HZ-ASR
+EY3393 | A321 | HexDB | HZ-ASR
+SV333 | A321 | HexDB | HZ-ASR
+G9594 | A320 | HexDB | A6-ANP
+SV411 | A320 | HexDB | HZ-AS54
+EY3389 | A320 | HexDB | HZ-AS54
+SM212 | A320 (Dummy) | Dummy | -
+G9404 | A320 | HexDB | A6-AUK
+NB400 | A320 | HexDB | 5A-BRA
+SM452 | A320 (Dummy) | Dummy | -
+3L404 | A320 | HexDB | A6-AUK
+F3773 | A20N | HexDB | HZ-FBD
+SV6670 | A20N | HexDB | HZ-FBD
+J93725 | A320 (Dummy) | Dummy | -
+TG7564 | A21N | HexDB | TC-LTE
+MS9296 | A21N | HexDB | TC-LTE
+A3936 | A320 | HexDB | SX-DNE
+MS9242 | A320 | HexDB | SX-DNE
+TK696 | A21N | HexDB | TC-LTE
