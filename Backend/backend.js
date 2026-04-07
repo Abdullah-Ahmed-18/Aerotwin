@@ -1,16 +1,17 @@
+require("dotenv").config();
 const express = require("express");
 const axios = require("axios");
 const { spawn } = require("child_process");
 const fs = require("fs");
 const cors = require("cors");
 const app = express();
-const PORT = 5000;
+const PORT = process.env.PORT || 5000;
 
 // ==========================================
 // CONFIGURATION
 // ==========================================
-const API_KEY = "a359142e5c2139ed3800f0f6ae381010"; // <--- PASTE KEY HERE
-const TARGET_AIRPORT = "HBE";
+const API_KEY = process.env.AVIATIONSTACK_API_KEY;
+const TARGET_AIRPORT = process.env.TARGET_AIRPORT || "HBE";
 const API_URL = "http://api.aviationstack.com/v1/flights";
 const AIRPORTS_URL = "http://api.aviationstack.com/v1/airports";
 const DOMESTIC_EGYPT_AIRPORTS = ["CAI", "SSH", "HRG", "LXR", "ASW", "HBE", "ALY", "TCP", "RMF"];
@@ -31,8 +32,8 @@ const AIRPORT_COORDINATES = {
 // ==========================================
 const OPENSKY_TOKEN_URL = "https://auth.opensky-network.org/auth/realms/opensky-network/protocol/openid-connect/token";
 const OPENSKY_API_BASE = "https://opensky-network.org/api";
-const OPENSKY_CLIENT_ID = "youssef salem-api-client";
-const OPENSKY_CLIENT_SECRET = "7B5E7kKfqI5DKauJVrHklu0ULnGTPVwn";
+const OPENSKY_CLIENT_ID = process.env.OPENSKY_CLIENT_ID;
+const OPENSKY_CLIENT_SECRET = process.env.OPENSKY_CLIENT_SECRET;
 const TOKEN_REFRESH_MARGIN_MS = 60 * 1000;
 
 // IATA → ICAO airport mapping (OpenSky uses ICAO codes)

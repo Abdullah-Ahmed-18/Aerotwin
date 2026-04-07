@@ -1,12 +1,152 @@
 {
   "meta": {
-    "updated": "2026-04-07T10:17:19.653Z",
+    "updated": "2026-04-07T14:12:28.281Z",
     "airport": "HBE",
     "airport_icao": "UNK",
-    "count": 30,
+    "count": 33,
     "source": "frontend-export"
   },
   "flights": [
+    {
+      "flight_id": "8U432",
+      "flight_iata": "8U432",
+      "flight_icao": "AAW432",
+      "airline": "Afriqiyah Airways",
+      "flight_status": "scheduled",
+      "flight_type": "International",
+      "route": {
+        "source": "BEN",
+        "source_icao": "HLLB",
+        "destination": "HBE",
+        "destination_icao": "HEAX",
+        "details": {
+          "origin_name": "Benina International",
+          "terminal": "T2",
+          "gate_id": "T2-G4 (Dummy)"
+        }
+      },
+      "aircraft": {
+        "type": "A320 (Dummy)",
+        "type_source": "Dummy",
+        "capacity": "180 (Simulated)"
+      },
+      "payload_stats": {
+        "total_passengers": "146 (Simulated)",
+        "estimated_groups": "61 (Simulated)",
+        "total_bags": "175 (Simulated)",
+        "priority_pax": "18 (Simulated)",
+        "prm_pax": "1 (Simulated)",
+        "service_multiplier": 1.4,
+        "assigned_resources": {
+          "baggage_belt": "B2 (Dummy)"
+        }
+      },
+      "personas": {
+        "p1": 0,
+        "p2": 0,
+        "p3": 0,
+        "p4": 70,
+        "p5": 0,
+        "p6": 20,
+        "p7": 10
+      }
+    },
+    {
+      "flight_id": "G9104",
+      "flight_iata": "G9104",
+      "flight_icao": "ABY104",
+      "airline": "Air Arabia",
+      "flight_status": "scheduled",
+      "flight_type": "International",
+      "route": {
+        "source": "BGY",
+        "source_icao": "LIME",
+        "destination": "HBE",
+        "destination_icao": "HEAX",
+        "details": {
+          "origin_name": "Bergamo - Orio al Serio",
+          "terminal": "T2",
+          "gate_id": "T2-G2 (Dummy)"
+        }
+      },
+      "aircraft": {
+        "type": "A320",
+        "type_source": "HexDB",
+        "capacity": "180 (Simulated)",
+        "manufacturer": "Airbus",
+        "registration": "SU-AAD",
+        "owner": "Air Arabia Egypt",
+        "type_long": "A320 214"
+      },
+      "payload_stats": {
+        "total_passengers": "142 (Simulated)",
+        "estimated_groups": "60 (Simulated)",
+        "total_bags": "170 (Simulated)",
+        "priority_pax": "17 (Simulated)",
+        "prm_pax": "2 (Simulated)",
+        "service_multiplier": 1.4,
+        "assigned_resources": {
+          "baggage_belt": "B2 (Dummy)"
+        }
+      },
+      "personas": {
+        "p1": 0,
+        "p2": 0,
+        "p3": 0,
+        "p4": 70,
+        "p5": 0,
+        "p6": 20,
+        "p7": 10
+      }
+    },
+    {
+      "flight_id": "G9326",
+      "flight_iata": "G9326",
+      "flight_icao": "ABY326",
+      "airline": "Air Arabia",
+      "flight_status": "active",
+      "flight_type": "International",
+      "route": {
+        "source": "JED",
+        "source_icao": "OEJN",
+        "destination": "HBE",
+        "destination_icao": "HEAX",
+        "details": {
+          "origin_name": "King Abdulaziz International",
+          "terminal": "T2",
+          "gate_id": "T2-G8 (Dummy)"
+        }
+      },
+      "aircraft": {
+        "type": "A320",
+        "type_source": "HexDB",
+        "capacity": "180 (Simulated)",
+        "manufacturer": "Airbus",
+        "registration": "SU-AAD",
+        "owner": "Air Arabia Egypt",
+        "type_long": "A320 214"
+      },
+      "payload_stats": {
+        "total_passengers": "162 (Simulated)",
+        "estimated_groups": "68 (Simulated)",
+        "total_bags": "194 (Simulated)",
+        "priority_pax": "19 (Simulated)",
+        "prm_pax": "2 (Simulated)",
+        "service_multiplier": 1.4,
+        "assigned_resources": {
+          "baggage_belt": "B2 (Dummy)"
+        }
+      },
+      "personas": {
+        "p1": 0,
+        "p2": 0,
+        "p3": 0,
+        "p4": 70,
+        "p5": 0,
+        "p6": 20,
+        "p7": 10
+      }
+    },
     {
       "flight_id": "G9594",
       "flight_iata": "G9594",
@@ -22,20 +162,24 @@
         "details": {
           "origin_name": "Sharjah",
           "terminal": "T2",
-          "gate_id": "T2-G1 (Dummy)"
+          "gate_id": "T2-G3 (Dummy)"
         }
       },
       "aircraft": {
-        "type": "A320 (Dummy)",
-        "type_source": "Dummy",
-        "capacity": "180 (Simulated)"
+        "type": "A320",
+        "type_source": "HexDB",
+        "capacity": "180 (Simulated)",
+        "manufacturer": "Airbus",
+        "registration": "A6-ANP",
+        "owner": "Air Arabia",
+        "type_long": "A320 214SL"
       },
       "payload_stats": {
-        "total_passengers": "146 (Simulated)",
-        "estimated_groups": "61 (Simulated)",
-        "total_bags": "175 (Simulated)",
+        "total_passengers": "154 (Simulated)",
+        "estimated_groups": "65 (Simulated)",
+        "total_bags": "185 (Simulated)",
         "priority_pax": "18 (Simulated)",
-        "prm_pax": "0 (Simulated)",
+        "prm_pax": "1 (Simulated)",
         "service_multiplier": 1.4,
         "assigned_resources": {
           "baggage_belt": "B3 (Dummy)"
@@ -66,7 +210,7 @@
         "details": {
           "origin_name": "King Abdulaziz International",
           "terminal": "T2",
-          "gate_id": "T2-G4 (Dummy)"
+          "gate_id": "T2-G1 (Dummy)"
         }
       },
       "aircraft": {
@@ -79,14 +223,14 @@
         "type_long": "A320 214SL"
       },
       "payload_stats": {
-        "total_passengers": "169 (Simulated)",
-        "estimated_groups": "71 (Simulated)",
-        "total_bags": "203 (Simulated)",
+        "total_passengers": "168 (Simulated)",
+        "estimated_groups": "70 (Simulated)",
+        "total_bags": "202 (Simulated)",
         "priority_pax": "20 (Simulated)",
-        "prm_pax": "1 (Simulated)",
+        "prm_pax": "2 (Simulated)",
         "service_multiplier": 1.4,
         "assigned_resources": {
-          "baggage_belt": "B3 (Dummy)"
+          "baggage_belt": "B4 (Dummy)"
         }
       },
       "personas": {
@@ -114,7 +258,7 @@
         "details": {
           "origin_name": "King Abdulaziz International",
           "terminal": "T2",
-          "gate_id": "T2-G6 (Dummy)"
+          "gate_id": "T2-G10 (Dummy)"
         }
       },
       "aircraft": {
@@ -127,14 +271,14 @@
         "type_long": "A320 214SL"
       },
       "payload_stats": {
-        "total_passengers": "135 (Simulated)",
-        "estimated_groups": "57 (Simulated)",
-        "total_bags": "162 (Simulated)",
-        "priority_pax": "16 (Simulated)",
-        "prm_pax": "1 (Simulated)",
+        "total_passengers": "155 (Simulated)",
+        "estimated_groups": "65 (Simulated)",
+        "total_bags": "186 (Simulated)",
+        "priority_pax": "19 (Simulated)",
+        "prm_pax": "0 (Simulated)",
         "service_multiplier": 1.4,
         "assigned_resources": {
-          "baggage_belt": "B3 (Dummy)"
+          "baggage_belt": "B4 (Dummy)"
         }
       },
       "personas": {
@@ -152,7 +296,7 @@
       "flight_iata": "FZ175",
       "flight_icao": "FDB175",
       "airline": "flydubai",
-      "flight_status": "scheduled",
+      "flight_status": "active",
       "flight_type": "International",
       "route": {
         "source": "DXB",
@@ -162,7 +306,7 @@
         "details": {
           "origin_name": "Dubai",
           "terminal": "T2",
-          "gate_id": "T2-G10 (Dummy)"
+          "gate_id": "T2-G7 (Dummy)"
         }
       },
       "aircraft": {
@@ -171,14 +315,14 @@
         "capacity": "189 (Simulated)"
       },
       "payload_stats": {
-        "total_passengers": "169 (Simulated)",
-        "estimated_groups": "71 (Simulated)",
-        "total_bags": "203 (Simulated)",
+        "total_passengers": "164 (Simulated)",
+        "estimated_groups": "69 (Simulated)",
+        "total_bags": "197 (Simulated)",
         "priority_pax": "20 (Simulated)",
-        "prm_pax": "2 (Simulated)",
+        "prm_pax": "0 (Simulated)",
         "service_multiplier": 1.4,
         "assigned_resources": {
-          "baggage_belt": "B4 (Dummy)"
+          "baggage_belt": "B3 (Dummy)"
         }
       },
       "personas": {
@@ -196,7 +340,7 @@
       "flight_iata": "MS656",
       "flight_icao": "MSR656",
       "airline": "EgyptAir",
-      "flight_status": "scheduled",
+      "flight_status": "active",
       "flight_type": "International",
       "route": {
         "source": "JED",
@@ -206,23 +350,27 @@
         "details": {
           "origin_name": "King Abdulaziz International",
           "terminal": "T1",
-          "gate_id": "T1-G10 (Dummy)"
+          "gate_id": "T1-G11 (Dummy)"
         }
       },
       "aircraft": {
-        "type": "A320 (Dummy)",
-        "type_source": "Dummy",
-        "capacity": "180 (Simulated)"
+        "type": "B738",
+        "type_source": "HexDB",
+        "capacity": "189 (Simulated)",
+        "manufacturer": "Boeing",
+        "registration": "SU-GCS",
+        "owner": "Egyptair",
+        "type_long": "737NG 866/W"
       },
       "payload_stats": {
-        "total_passengers": "146 (Simulated)",
-        "estimated_groups": "61 (Simulated)",
-        "total_bags": "175 (Simulated)",
+        "total_passengers": "151 (Simulated)",
+        "estimated_groups": "63 (Simulated)",
+        "total_bags": "181 (Simulated)",
         "priority_pax": "18 (Simulated)",
-        "prm_pax": "0 (Simulated)",
+        "prm_pax": "2 (Simulated)",
         "service_multiplier": 1.4,
         "assigned_resources": {
-          "baggage_belt": "B3 (Dummy)"
+          "baggage_belt": "B2 (Dummy)"
         }
       },
       "personas": {
@@ -250,7 +398,7 @@
         "details": {
           "origin_name": "Abu Dhabi International",
           "terminal": "T2",
-          "gate_id": "T2-G5 (Dummy)"
+          "gate_id": "T2-G8 (Dummy)"
         }
       },
       "aircraft": {
@@ -263,11 +411,11 @@
         "type_long": "A320 214SL"
       },
       "payload_stats": {
-        "total_passengers": "155 (Simulated)",
-        "estimated_groups": "65 (Simulated)",
-        "total_bags": "186 (Simulated)",
-        "priority_pax": "19 (Simulated)",
-        "prm_pax": "1 (Simulated)",
+        "total_passengers": "150 (Simulated)",
+        "estimated_groups": "63 (Simulated)",
+        "total_bags": "180 (Simulated)",
+        "priority_pax": "18 (Simulated)",
+        "prm_pax": "0 (Simulated)",
         "service_multiplier": 1.4,
         "assigned_resources": {
           "baggage_belt": "B1 (Dummy)"
@@ -298,7 +446,7 @@
         "details": {
           "origin_name": "King Abdulaziz International",
           "terminal": "T2",
-          "gate_id": "T2-G12 (Dummy)"
+          "gate_id": "T2-G6 (Dummy)"
         }
       },
       "aircraft": {
@@ -311,14 +459,14 @@
         "type_long": "A320 214"
       },
       "payload_stats": {
-        "total_passengers": "154 (Simulated)",
+        "total_passengers": "156 (Simulated)",
         "estimated_groups": "65 (Simulated)",
-        "total_bags": "185 (Simulated)",
-        "priority_pax": "18 (Simulated)",
-        "prm_pax": "1 (Simulated)",
+        "total_bags": "187 (Simulated)",
+        "priority_pax": "19 (Simulated)",
+        "prm_pax": "0 (Simulated)",
         "service_multiplier": 1.4,
         "assigned_resources": {
-          "baggage_belt": "B4 (Dummy)"
+          "baggage_belt": "B3 (Dummy)"
         }
       },
       "personas": {
@@ -346,7 +494,7 @@
         "details": {
           "origin_name": "King Abdulaziz International",
           "terminal": "T2",
-          "gate_id": "T2-G4 (Dummy)"
+          "gate_id": "T2-G10 (Dummy)"
         }
       },
       "aircraft": {
@@ -359,14 +507,14 @@
         "type_long": "A321 211"
       },
       "payload_stats": {
-        "total_passengers": "207 (Simulated)",
-        "estimated_groups": "87 (Simulated)",
-        "total_bags": "248 (Simulated)",
-        "priority_pax": "25 (Simulated)",
+        "total_passengers": "181 (Simulated)",
+        "estimated_groups": "76 (Simulated)",
+        "total_bags": "217 (Simulated)",
+        "priority_pax": "22 (Simulated)",
         "prm_pax": "1 (Simulated)",
         "service_multiplier": 1.4,
         "assigned_resources": {
-          "baggage_belt": "B3 (Dummy)"
+          "baggage_belt": "B2 (Dummy)"
         }
       },
       "personas": {
@@ -394,7 +542,7 @@
         "details": {
           "origin_name": "King Abdulaziz International",
           "terminal": "T2",
-          "gate_id": "T2-G11 (Dummy)"
+          "gate_id": "T2-G7 (Dummy)"
         }
       },
       "aircraft": {
@@ -407,14 +555,14 @@
         "type_long": "A321 211"
       },
       "payload_stats": {
-        "total_passengers": "171 (Simulated)",
-        "estimated_groups": "72 (Simulated)",
-        "total_bags": "205 (Simulated)",
-        "priority_pax": "21 (Simulated)",
-        "prm_pax": "0 (Simulated)",
+        "total_passengers": "165 (Simulated)",
+        "estimated_groups": "69 (Simulated)",
+        "total_bags": "198 (Simulated)",
+        "priority_pax": "20 (Simulated)",
+        "prm_pax": "1 (Simulated)",
         "service_multiplier": 1.4,
         "assigned_resources": {
-          "baggage_belt": "B1 (Dummy)"
+          "baggage_belt": "B2 (Dummy)"
         }
       },
       "personas": {
@@ -442,7 +590,7 @@
         "details": {
           "origin_name": "Abu Dhabi International",
           "terminal": "T2",
-          "gate_id": "T2-G2 (Dummy)"
+          "gate_id": "T2-G5 (Dummy)"
         }
       },
       "aircraft": {
@@ -455,14 +603,14 @@
         "type_long": "A320 214SL"
       },
       "payload_stats": {
-        "total_passengers": "166 (Simulated)",
-        "estimated_groups": "70 (Simulated)",
-        "total_bags": "199 (Simulated)",
-        "priority_pax": "20 (Simulated)",
+        "total_passengers": "151 (Simulated)",
+        "estimated_groups": "63 (Simulated)",
+        "total_bags": "181 (Simulated)",
+        "priority_pax": "18 (Simulated)",
         "prm_pax": "2 (Simulated)",
         "service_multiplier": 1.4,
         "assigned_resources": {
-          "baggage_belt": "B2 (Dummy)"
+          "baggage_belt": "B4 (Dummy)"
         }
       },
       "personas": {
@@ -490,7 +638,7 @@
         "details": {
           "origin_name": "King Abdulaziz International",
           "terminal": "T2",
-          "gate_id": "T2-G7 (Dummy)"
+          "gate_id": "T2-G10 (Dummy)"
         }
       },
       "aircraft": {
@@ -503,14 +651,14 @@
         "type_long": "A320 251NSL"
       },
       "payload_stats": {
-        "total_passengers": "166 (Simulated)",
-        "estimated_groups": "70 (Simulated)",
-        "total_bags": "199 (Simulated)",
-        "priority_pax": "20 (Simulated)",
-        "prm_pax": "1 (Simulated)",
+        "total_passengers": "145 (Simulated)",
+        "estimated_groups": "61 (Simulated)",
+        "total_bags": "174 (Simulated)",
+        "priority_pax": "17 (Simulated)",
+        "prm_pax": "2 (Simulated)",
         "service_multiplier": 1.4,
         "assigned_resources": {
-          "baggage_belt": "B4 (Dummy)"
+          "baggage_belt": "B3 (Dummy)"
         }
       },
       "personas": {
@@ -538,7 +686,7 @@
         "details": {
           "origin_name": "King Abdulaziz International",
           "terminal": "T2",
-          "gate_id": "T2-G9 (Dummy)"
+          "gate_id": "T2-G7 (Dummy)"
         }
       },
       "aircraft": {
@@ -551,14 +699,14 @@
         "type_long": "A320 251NSL"
       },
       "payload_stats": {
-        "total_passengers": "148 (Simulated)",
-        "estimated_groups": "62 (Simulated)",
-        "total_bags": "178 (Simulated)",
-        "priority_pax": "18 (Simulated)",
+        "total_passengers": "164 (Simulated)",
+        "estimated_groups": "69 (Simulated)",
+        "total_bags": "197 (Simulated)",
+        "priority_pax": "20 (Simulated)",
         "prm_pax": "0 (Simulated)",
         "service_multiplier": 1.4,
         "assigned_resources": {
-          "baggage_belt": "B3 (Dummy)"
+          "baggage_belt": "B2 (Dummy)"
         }
       },
       "personas": {
@@ -586,7 +734,7 @@
         "details": {
           "origin_name": "Mitiga",
           "terminal": "T2",
-          "gate_id": "T2-G8 (Dummy)"
+          "gate_id": "T2-G11 (Dummy)"
         }
       },
       "aircraft": {
@@ -595,14 +743,14 @@
         "capacity": "180 (Simulated)"
       },
       "payload_stats": {
-        "total_passengers": "156 (Simulated)",
-        "estimated_groups": "65 (Simulated)",
-        "total_bags": "187 (Simulated)",
-        "priority_pax": "19 (Simulated)",
+        "total_passengers": "138 (Simulated)",
+        "estimated_groups": "58 (Simulated)",
+        "total_bags": "166 (Simulated)",
+        "priority_pax": "17 (Simulated)",
         "prm_pax": "1 (Simulated)",
         "service_multiplier": 1.4,
         "assigned_resources": {
-          "baggage_belt": "B4 (Dummy)"
+          "baggage_belt": "B1 (Dummy)"
         }
       },
       "personas": {
@@ -630,7 +778,7 @@
         "details": {
           "origin_name": "Istanbul Airport",
           "terminal": "T2",
-          "gate_id": "T2-G3 (Dummy)"
+          "gate_id": "T2-G7 (Dummy)"
         }
       },
       "aircraft": {
@@ -643,14 +791,14 @@
         "type_long": "A321 271NXSL"
       },
       "payload_stats": {
-        "total_passengers": "199 (Simulated)",
-        "estimated_groups": "83 (Simulated)",
-        "total_bags": "239 (Simulated)",
+        "total_passengers": "201 (Simulated)",
+        "estimated_groups": "84 (Simulated)",
+        "total_bags": "241 (Simulated)",
         "priority_pax": "24 (Simulated)",
         "prm_pax": "1 (Simulated)",
         "service_multiplier": 1.4,
         "assigned_resources": {
-          "baggage_belt": "B2 (Dummy)"
+          "baggage_belt": "B4 (Dummy)"
         }
       },
       "personas": {
@@ -678,7 +826,7 @@
         "details": {
           "origin_name": "Istanbul Airport",
           "terminal": "T1",
-          "gate_id": "T1-G4 (Dummy)"
+          "gate_id": "T1-G1 (Dummy)"
         }
       },
       "aircraft": {
@@ -691,14 +839,14 @@
         "type_long": "A321 271NXSL"
       },
       "payload_stats": {
-        "total_passengers": "202 (Simulated)",
-        "estimated_groups": "85 (Simulated)",
-        "total_bags": "242 (Simulated)",
-        "priority_pax": "24 (Simulated)",
+        "total_passengers": "212 (Simulated)",
+        "estimated_groups": "89 (Simulated)",
+        "total_bags": "254 (Simulated)",
+        "priority_pax": "25 (Simulated)",
         "prm_pax": "1 (Simulated)",
         "service_multiplier": 1.4,
         "assigned_resources": {
-          "baggage_belt": "B2 (Dummy)"
+          "baggage_belt": "B1 (Dummy)"
         }
       },
       "personas": {
@@ -726,7 +874,7 @@
         "details": {
           "origin_name": "King Abdulaziz International",
           "terminal": "T2",
-          "gate_id": "T2-G5 (Dummy)"
+          "gate_id": "T2-G3 (Dummy)"
         }
       },
       "aircraft": {
@@ -739,11 +887,11 @@
         "type_long": "A320 214"
       },
       "payload_stats": {
-        "total_passengers": "135 (Simulated)",
-        "estimated_groups": "57 (Simulated)",
-        "total_bags": "162 (Simulated)",
-        "priority_pax": "16 (Simulated)",
-        "prm_pax": "1 (Simulated)",
+        "total_passengers": "154 (Simulated)",
+        "estimated_groups": "65 (Simulated)",
+        "total_bags": "185 (Simulated)",
+        "priority_pax": "18 (Simulated)",
+        "prm_pax": "0 (Simulated)",
         "service_multiplier": 1.4,
         "assigned_resources": {
           "baggage_belt": "B3 (Dummy)"
@@ -774,7 +922,7 @@
         "details": {
           "origin_name": "Istanbul Airport",
           "terminal": "T2",
-          "gate_id": "T2-G4 (Dummy)"
+          "gate_id": "T2-G9 (Dummy)"
         }
       },
       "aircraft": {
@@ -791,10 +939,10 @@
         "estimated_groups": "88 (Simulated)",
         "total_bags": "251 (Simulated)",
         "priority_pax": "25 (Simulated)",
-        "prm_pax": "2 (Simulated)",
+        "prm_pax": "0 (Simulated)",
         "service_multiplier": 1.4,
         "assigned_resources": {
-          "baggage_belt": "B3 (Dummy)"
+          "baggage_belt": "B1 (Dummy)"
         }
       },
       "personas": {
@@ -822,7 +970,7 @@
         "details": {
           "origin_name": "Queen Alia International",
           "terminal": "T2",
-          "gate_id": "T2-G12 (Dummy)"
+          "gate_id": "T2-G3 (Dummy)"
         }
       },
       "aircraft": {
@@ -835,14 +983,14 @@
         "type_long": "A320 214"
       },
       "payload_stats": {
-        "total_passengers": "164 (Simulated)",
-        "estimated_groups": "69 (Simulated)",
-        "total_bags": "197 (Simulated)",
-        "priority_pax": "20 (Simulated)",
-        "prm_pax": "2 (Simulated)",
+        "total_passengers": "147 (Simulated)",
+        "estimated_groups": "62 (Simulated)",
+        "total_bags": "176 (Simulated)",
+        "priority_pax": "18 (Simulated)",
+        "prm_pax": "1 (Simulated)",
         "service_multiplier": 1.4,
         "assigned_resources": {
-          "baggage_belt": "B1 (Dummy)"
+          "baggage_belt": "B4 (Dummy)"
         }
       },
       "personas": {
@@ -870,7 +1018,7 @@
         "details": {
           "origin_name": "Queen Alia International",
           "terminal": "T2",
-          "gate_id": "T2-G12 (Dummy)"
+          "gate_id": "T2-G8 (Dummy)"
         }
       },
       "aircraft": {
@@ -890,7 +1038,7 @@
         "prm_pax": "1 (Simulated)",
         "service_multiplier": 1.4,
         "assigned_resources": {
-          "baggage_belt": "B4 (Dummy)"
+          "baggage_belt": "B2 (Dummy)"
         }
       },
       "personas": {
@@ -927,14 +1075,14 @@
         "capacity": "180 (Simulated)"
       },
       "payload_stats": {
-        "total_passengers": "142 (Simulated)",
-        "estimated_groups": "60 (Simulated)",
-        "total_bags": "170 (Simulated)",
+        "total_passengers": "141 (Simulated)",
+        "estimated_groups": "59 (Simulated)",
+        "total_bags": "169 (Simulated)",
         "priority_pax": "17 (Simulated)",
         "prm_pax": "1 (Simulated)",
         "service_multiplier": 1.4,
         "assigned_resources": {
-          "baggage_belt": "B4 (Dummy)"
+          "baggage_belt": "B1 (Dummy)"
         }
       },
       "personas": {
@@ -962,7 +1110,7 @@
         "details": {
           "origin_name": "King Khaled International",
           "terminal": "T2",
-          "gate_id": "T2-G2 (Dummy)"
+          "gate_id": "T2-G3 (Dummy)"
         }
       },
       "aircraft": {
@@ -975,11 +1123,11 @@
         "type_long": "A320 214"
       },
       "payload_stats": {
-        "total_passengers": "145 (Simulated)",
-        "estimated_groups": "61 (Simulated)",
-        "total_bags": "174 (Simulated)",
-        "priority_pax": "17 (Simulated)",
-        "prm_pax": "1 (Simulated)",
+        "total_passengers": "156 (Simulated)",
+        "estimated_groups": "65 (Simulated)",
+        "total_bags": "187 (Simulated)",
+        "priority_pax": "19 (Simulated)",
+        "prm_pax": "0 (Simulated)",
         "service_multiplier": 1.4,
         "assigned_resources": {
           "baggage_belt": "B4 (Dummy)"
@@ -1010,7 +1158,7 @@
         "details": {
           "origin_name": "King Khaled International",
           "terminal": "T2",
-          "gate_id": "T2-G1 (Dummy)"
+          "gate_id": "T2-G3 (Dummy)"
         }
       },
       "aircraft": {
@@ -1023,14 +1171,14 @@
         "type_long": "A321 211"
       },
       "payload_stats": {
-        "total_passengers": "172 (Simulated)",
-        "estimated_groups": "72 (Simulated)",
-        "total_bags": "206 (Simulated)",
-        "priority_pax": "21 (Simulated)",
-        "prm_pax": "1 (Simulated)",
+        "total_passengers": "205 (Simulated)",
+        "estimated_groups": "86 (Simulated)",
+        "total_bags": "246 (Simulated)",
+        "priority_pax": "25 (Simulated)",
+        "prm_pax": "0 (Simulated)",
         "service_multiplier": 1.4,
         "assigned_resources": {
-          "baggage_belt": "B1 (Dummy)"
+          "baggage_belt": "B3 (Dummy)"
         }
       },
       "personas": {
@@ -1058,7 +1206,7 @@
         "details": {
           "origin_name": "King Khaled International",
           "terminal": "T2",
-          "gate_id": "T2-G12 (Dummy)"
+          "gate_id": "T2-G1 (Dummy)"
         }
       },
       "aircraft": {
@@ -1071,14 +1219,14 @@
         "type_long": "A321 211"
       },
       "payload_stats": {
-        "total_passengers": "173 (Simulated)",
+        "total_passengers": "174 (Simulated)",
         "estimated_groups": "73 (Simulated)",
-        "total_bags": "208 (Simulated)",
+        "total_bags": "209 (Simulated)",
         "priority_pax": "21 (Simulated)",
-        "prm_pax": "1 (Simulated)",
+        "prm_pax": "2 (Simulated)",
         "service_multiplier": 1.4,
         "assigned_resources": {
-          "baggage_belt": "B3 (Dummy)"
+          "baggage_belt": "B2 (Dummy)"
         }
       },
       "personas": {
@@ -1106,7 +1254,7 @@
         "details": {
           "origin_name": "King Khaled International",
           "terminal": "T2",
-          "gate_id": "T2-G5 (Dummy)"
+          "gate_id": "T2-G11 (Dummy)"
         }
       },
       "aircraft": {
@@ -1119,14 +1267,14 @@
         "type_long": "A321 211"
       },
       "payload_stats": {
-        "total_passengers": "186 (Simulated)",
+        "total_passengers": "187 (Simulated)",
         "estimated_groups": "78 (Simulated)",
-        "total_bags": "223 (Simulated)",
+        "total_bags": "224 (Simulated)",
         "priority_pax": "22 (Simulated)",
-        "prm_pax": "1 (Simulated)",
+        "prm_pax": "0 (Simulated)",
         "service_multiplier": 1.4,
         "assigned_resources": {
-          "baggage_belt": "B3 (Dummy)"
+          "baggage_belt": "B1 (Dummy)"
         }
       },
       "personas": {
@@ -1154,7 +1302,7 @@
         "details": {
           "origin_name": "Queen Alia International",
           "terminal": "T2",
-          "gate_id": "T2-G3 (Dummy)"
+          "gate_id": "T2-G1 (Dummy)"
         }
       },
       "aircraft": {
@@ -1163,14 +1311,14 @@
         "capacity": "180 (Simulated)"
       },
       "payload_stats": {
-        "total_passengers": "162 (Simulated)",
-        "estimated_groups": "68 (Simulated)",
-        "total_bags": "194 (Simulated)",
-        "priority_pax": "19 (Simulated)",
+        "total_passengers": "169 (Simulated)",
+        "estimated_groups": "71 (Simulated)",
+        "total_bags": "203 (Simulated)",
+        "priority_pax": "20 (Simulated)",
         "prm_pax": "0 (Simulated)",
         "service_multiplier": 1.4,
         "assigned_resources": {
-          "baggage_belt": "B3 (Dummy)"
+          "baggage_belt": "B4 (Dummy)"
         }
       },
       "personas": {
@@ -1211,14 +1359,14 @@
         "type_long": "A320 214"
       },
       "payload_stats": {
-        "total_passengers": "158 (Simulated)",
-        "estimated_groups": "66 (Simulated)",
-        "total_bags": "190 (Simulated)",
-        "priority_pax": "19 (Simulated)",
-        "prm_pax": "2 (Simulated)",
+        "total_passengers": "150 (Simulated)",
+        "estimated_groups": "63 (Simulated)",
+        "total_bags": "180 (Simulated)",
+        "priority_pax": "18 (Simulated)",
+        "prm_pax": "0 (Simulated)",
         "service_multiplier": 1.4,
         "assigned_resources": {
-          "baggage_belt": "B2 (Dummy)"
+          "baggage_belt": "B4 (Dummy)"
         }
       },
       "personas": {
@@ -1246,7 +1394,7 @@
         "details": {
           "origin_name": "King Abdulaziz International",
           "terminal": "T2",
-          "gate_id": "T2-G9 (Dummy)"
+          "gate_id": "T2-G1 (Dummy)"
         }
       },
       "aircraft": {
@@ -1255,14 +1403,14 @@
         "capacity": "180 (Simulated)"
       },
       "payload_stats": {
-        "total_passengers": "169 (Simulated)",
-        "estimated_groups": "71 (Simulated)",
-        "total_bags": "203 (Simulated)",
-        "priority_pax": "20 (Simulated)",
-        "prm_pax": "0 (Simulated)",
+        "total_passengers": "160 (Simulated)",
+        "estimated_groups": "67 (Simulated)",
+        "total_bags": "192 (Simulated)",
+        "priority_pax": "19 (Simulated)",
+        "prm_pax": "1 (Simulated)",
         "service_multiplier": 1.4,
         "assigned_resources": {
-          "baggage_belt": "B1 (Dummy)"
+          "baggage_belt": "B4 (Dummy)"
         }
       },
       "personas": {
@@ -1290,7 +1438,7 @@
         "details": {
           "origin_name": "King Fahd International Airport",
           "terminal": "T2",
-          "gate_id": "T2-G1 (Dummy)"
+          "gate_id": "T2-G10 (Dummy)"
         }
       },
       "aircraft": {
@@ -1299,14 +1447,14 @@
         "capacity": "180 (Simulated)"
       },
       "payload_stats": {
-        "total_passengers": "162 (Simulated)",
-        "estimated_groups": "68 (Simulated)",
-        "total_bags": "194 (Simulated)",
-        "priority_pax": "19 (Simulated)",
+        "total_passengers": "145 (Simulated)",
+        "estimated_groups": "61 (Simulated)",
+        "total_bags": "174 (Simulated)",
+        "priority_pax": "17 (Simulated)",
         "prm_pax": "2 (Simulated)",
         "service_multiplier": 1.4,
         "assigned_resources": {
-          "baggage_belt": "B3 (Dummy)"
+          "baggage_belt": "B1 (Dummy)"
         }
       },
       "personas": {
@@ -1334,7 +1482,7 @@
         "details": {
           "origin_name": "Athens International Airport \"Eleftherios Venizelos\"",
           "terminal": "T2",
-          "gate_id": "T2-G8 (Dummy)"
+          "gate_id": "T2-G3 (Dummy)"
         }
       },
       "aircraft": {
@@ -1351,7 +1499,7 @@
         "estimated_groups": "60 (Simulated)",
         "total_bags": "172 (Simulated)",
         "priority_pax": "17 (Simulated)",
-        "prm_pax": "0 (Simulated)",
+        "prm_pax": "1 (Simulated)",
         "service_multiplier": 1.4,
         "assigned_resources": {
           "baggage_belt": "B2 (Dummy)"
@@ -1382,7 +1530,7 @@
         "details": {
           "origin_name": "Athens International Airport \"Eleftherios Venizelos\"",
           "terminal": "T1",
-          "gate_id": "T1-G6 (Dummy)"
+          "gate_id": "T1-G12 (Dummy)"
         }
       },
       "aircraft": {
@@ -1395,11 +1543,11 @@
         "type_long": "A320 232SL"
       },
       "payload_stats": {
-        "total_passengers": "149 (Simulated)",
+        "total_passengers": "151 (Simulated)",
         "estimated_groups": "63 (Simulated)",
-        "total_bags": "179 (Simulated)",
+        "total_bags": "181 (Simulated)",
         "priority_pax": "18 (Simulated)",
-        "prm_pax": "1 (Simulated)",
+        "prm_pax": "2 (Simulated)",
         "service_multiplier": 1.4,
         "assigned_resources": {
           "baggage_belt": "B1 (Dummy)"
