@@ -3,6 +3,8 @@ const express = require("express");
 const axios = require("axios");
 const { spawn } = require("child_process");
 const fs = require("fs");
+const path = require("path");
+const csv = require("csv-parser");
 const cors = require("cors");
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -261,35 +263,44 @@ function resolveIcao24(flightIata, callsignToHexMap) {
 }
 
 // ==========================================
-// HEXDB - Aircraft Identity by ICAO24 Hex
+// LOCAL CSV - Aircraft Identity by ICAO24 Hex
 // ==========================================
-const HEXDB_API = "https://hexdb.io/api/v1/aircraft";
-const hexdbCache = new Map();
+const AIRCRAFT_CSV_PATH = path.join(__dirname, 'aircraftDatabase.csv');
+const aircraftDatabase = new Map(); // icao24 → aircraft info
 
-async function lookupAircraftByHex(icao24) {
+function loadAircraftCSV() {
+    return new Promise((resolve, reject) => {
+        let count = 0;
+        fs.createReadStream(AIRCRAFT_CSV_PATH)
+            .pipe(csv())
+            .on('data', (row) => {
+                const hex = (row.icao24 || '').toLowerCase().trim();
+                if (hex) {
+                    aircraftDatabase.set(hex, {
+                        icao_type: row.typecode || null,
+                        type_long: row.model || null,
+                        manufacturer: row.manufacturername || null,
+                        registration: row.registration || null,
+                        owner: row.owner || row.operator || null,
+                        operator_flag: row.operatoricao || null,
+                    });
+                    count++;
+                }
+            })
+            .on('end', () => {
+                console.log(`✅ Aircraft CSV loaded: ${aircraftDatabase.size} unique aircraft from ${count} rows`);
+                resolve();
+            })
+            .on('error', (err) => {
+                console.error(`❌ Failed to load aircraft CSV:`, err.message);
+                reject(err);
+            });
+    });
+}
+
+function lookupAircraftByHex(icao24) {
     if (!icao24) return null;
-    const hex = icao24.toLowerCase();
-    if (hexdbCache.has(hex)) return hexdbCache.get(hex);
-    try {
-        const res = await axios.get(`${HEXDB_API}/${hex}`, { timeout: 5000 });
-        const data = res.data;
-        const result = {
-            icao_type: data.ICAOTypeCode || null,
-            type_long: data.Type || null,
-            manufacturer: data.Manufacturer || null,
-            registration: data.Registration || null,
-            owner: data.RegisteredOwners || null,
-            operator_flag: data.OperatorFlagCode || null,
-        };
-        hexdbCache.set(hex, result);
-        return result;
-    } catch (err) {
-        hexdbCache.set(hex, null);
-        if (err.response?.status !== 404) {
-            console.error(`⚠️  HexDB lookup failed for ${hex}:`, err.message);
-        }
-        return null;
-    }
+    return aircraftDatabase.get(icao24.toLowerCase()) || null;
 }
 
 function isValidIata(code) {
@@ -624,6 +635,9 @@ app.get('/api/fetch-active-flights', async (req, res) => {
 
         let openskyMatches = 0;
         let hexdbResolved = 0;
+        let dummyCount = 0;
+        let aviationStackCount = 0;
+        let csvDbCount = 0;
 
         // Step 1: For each flight, resolve icao24 from ANY OpenSky source
         const flightsWithMatches = rawFlights.map(f => {
@@ -646,17 +660,19 @@ app.get('/api/fetch-active-flights', async (req, res) => {
             return { raw: f, flightIata, flightIcao, flightId, openskyMatch, icao24 };
         });
 
-        // Step 2: Batch HexDB lookups for ALL resolved icao24 addresses (in parallel)
+        // Step 2: Local CSV lookups for ALL resolved icao24 addresses (instant)
         const uniqueHexes = [...new Set(
             flightsWithMatches
                 .filter(f => f.icao24)
                 .map(f => f.icao24)
         )];
-        console.log(`🔎 HexDB: Looking up ${uniqueHexes.length} unique icao24 addresses...`);
-        const hexResults = await Promise.all(uniqueHexes.map(hex => lookupAircraftByHex(hex)));
+        console.log(`🔎 CSV DB: Looking up ${uniqueHexes.length} unique icao24 addresses...`);
         const hexMap = new Map();
-        uniqueHexes.forEach((hex, i) => { if (hexResults[i]) hexMap.set(hex, hexResults[i]); });
-        console.log(`✅ HexDB: Resolved ${hexMap.size}/${uniqueHexes.length} aircraft identities`);
+        uniqueHexes.forEach(hex => {
+            const result = lookupAircraftByHex(hex);
+            if (result) hexMap.set(hex, result);
+        });
+        console.log(`✅ CSV DB: Resolved ${hexMap.size}/${uniqueHexes.length} aircraft identities`);
 
         // Step 3: Build final flight objects with full enrichment
         const formattedFlights = flightsWithMatches.map(({ raw: f, flightIata, flightIcao, flightId, openskyMatch, icao24 }) => {
@@ -664,12 +680,17 @@ app.get('/api/fetch-active-flights', async (req, res) => {
             let aircraftCode = resolvePlaneType(f.flight.iata, aircraftRaw);
             let aircraftSource = aircraftRaw ? "AviationStack" : "Dummy";
 
-            // --- HexDB: Override aircraft type with real data if available ---
+            // --- CSV DB: Override aircraft type with real data if available ---
             const hexData = icao24 ? hexMap.get(icao24) : null;
             if (hexData?.icao_type) {
                 aircraftCode = hexData.icao_type;
-                aircraftSource = "HexDB";
+                aircraftSource = "CSV_DB";
                 hexdbResolved++;
+                csvDbCount++;
+            } else if (aircraftSource === "AviationStack") {
+                aviationStackCount++;
+            } else {
+                dummyCount++;
             }
 
             const lookupCode = aircraftCode.split(' ')[0];
@@ -755,7 +776,34 @@ app.get('/api/fetch-active-flights', async (req, res) => {
         });
 
         console.log(`🔗 OpenSky enrichment: ${openskyMatches}/${formattedFlights.length} flights matched`);
-        console.log(`✈️  HexDB aircraft resolved: ${hexdbResolved}/${openskyMatches} (cache size: ${hexdbCache.size})`);
+        console.log(`✈️  CSV DB aircraft resolved: ${csvDbCount}/${formattedFlights.length} | AviationStack: ${aviationStackCount} | Dummy: ${dummyCount}`);
+
+        // All possible flight statuses (matching frontend filters)
+        const ALL_STATUSES = ["scheduled", "active", "landed", "cancelled", "incident", "diverted", "unknown"];
+        
+        // Count flights by status with aircraft source breakdown
+        const statusCounts = {};
+        ALL_STATUSES.forEach(s => {
+            statusCounts[s] = { count: 0, csv_db: 0, aviationstack: 0, dummy: 0 };
+        });
+        formattedFlights.forEach(f => {
+            const status = f.flight_status || "unknown";
+            const source = f.aircraft?.type_source || "unknown";
+            if (!statusCounts[status]) {
+                statusCounts[status] = { count: 0, csv_db: 0, aviationstack: 0, dummy: 0 };
+            }
+            statusCounts[status].count++;
+            if (source === "CSV_DB") statusCounts[status].csv_db++;
+            else if (source === "AviationStack") statusCounts[status].aviationstack++;
+            else statusCounts[status].dummy++;
+        });
+        console.log(`📊 Flight status breakdown:`, JSON.stringify(statusCounts, null, 2));
+
+        // Simple count per status for frontend badges
+        const statusCountsSimple = {};
+        ALL_STATUSES.forEach(s => {
+            statusCountsSimple[s] = statusCounts[s].count;
+        });
 
         const finalPayload = {
             meta: { 
@@ -763,9 +811,15 @@ app.get('/api/fetch-active-flights', async (req, res) => {
                 airport: airportIata,
                 airport_icao: airportIcao,
                 count: formattedFlights.length,
+                status_counts: statusCountsSimple,
+                flight_status_breakdown: statusCounts,
                 opensky_enriched: openskyMatches,
                 opensky_aircraft_nearby: openskyStates.length,
-                hexdb_resolved: hexdbResolved,
+                aircraft_sources: {
+                    csv_db: csvDbCount,
+                    aviationstack: aviationStackCount,
+                    dummy: dummyCount,
+                },
             },
             flights: formattedFlights
         };
@@ -911,7 +965,14 @@ app.get('/api/opensky/arrivals', async (req, res) => {
     }
 });
 
-// START
-app.listen(PORT, () => {
-  console.log(`Server running on ${PORT}`);
-});
+// START — load CSV database first, then start server
+loadAircraftCSV()
+    .then(() => {
+        app.listen(PORT, () => {
+            console.log(`Server running on ${PORT}`);
+        });
+    })
+    .catch(err => {
+        console.error('❌ Cannot start server without aircraft database:', err.message);
+        process.exit(1);
+    });

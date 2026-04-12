@@ -1,26 +1,700 @@
 {
   "meta": {
-    "updated": "2026-04-07T14:12:28.281Z",
-    "airport": "HBE",
+    "updated": "2026-04-12T20:49:47.950Z",
+    "airport": "DXB",
     "airport_icao": "UNK",
-    "count": 33,
-    "source": "frontend-export"
+    "count": 100,
+    "status_counts": {
+      "scheduled": 60,
+      "active": 39,
+      "landed": 0,
+      "cancelled": 1,
+      "incident": 0,
+      "diverted": 0,
+      "unknown": 0
+    },
+    "flight_status_breakdown": {
+      "scheduled": {
+        "count": 60,
+        "csv_db": 17,
+        "aviationstack": 0,
+        "dummy": 43
+      },
+      "active": {
+        "count": 39,
+        "csv_db": 32,
+        "aviationstack": 0,
+        "dummy": 7
+      },
+      "landed": {
+        "count": 0,
+        "csv_db": 0,
+        "aviationstack": 0,
+        "dummy": 0
+      },
+      "cancelled": {
+        "count": 1,
+        "csv_db": 0,
+        "aviationstack": 0,
+        "dummy": 1
+      },
+      "incident": {
+        "count": 0,
+        "csv_db": 0,
+        "aviationstack": 0,
+        "dummy": 0
+      },
+      "diverted": {
+        "count": 0,
+        "csv_db": 0,
+        "aviationstack": 0,
+        "dummy": 0
+      },
+      "unknown": {
+        "count": 0,
+        "csv_db": 0,
+        "aviationstack": 0,
+        "dummy": 0
+      }
+    },
+    "opensky_enriched": 59,
+    "opensky_aircraft_nearby": 7,
+    "aircraft_sources": {
+      "csv_db": 49,
+      "aviationstack": 0,
+      "dummy": 51
+    }
   },
   "flights": [
     {
-      "flight_id": "8U432",
-      "flight_iata": "8U432",
-      "flight_icao": "AAW432",
-      "airline": "Afriqiyah Airways",
+      "flight_id": "FZ6337",
+      "flight_iata": "FZ6337",
+      "flight_icao": "FDB6337",
+      "airline": "flydubai",
       "flight_status": "scheduled",
       "flight_type": "International",
       "route": {
-        "source": "BEN",
-        "source_icao": "HLLB",
-        "destination": "HBE",
-        "destination_icao": "HEAX",
+        "source": "MNL",
+        "source_icao": "RPLL",
+        "destination": "DXB",
+        "destination_icao": "OMDB",
         "details": {
-          "origin_name": "Benina International",
+          "origin_name": "Ninoy Aquino International",
+          "terminal": "T2",
+          "gate_id": "T2-G11 (Dummy)"
+        }
+      },
+      "aircraft": {
+        "type": "B77W",
+        "type_source": "CSV_DB",
+        "capacity": "180 (Simulated)",
+        "manufacturer": "Boeing",
+        "registration": "A6-EPG",
+        "owner": "Emirates Airline",
+        "type_long": "777 31HER"
+      },
+      "payload_stats": {
+        "total_passengers": "161 (Simulated)",
+        "estimated_groups": "68 (Simulated)",
+        "total_bags": "193 (Simulated)",
+        "priority_pax": "19 (Simulated)",
+        "prm_pax": "2 (Simulated)",
+        "service_multiplier": 1.4,
+        "assigned_resources": {
+          "baggage_belt": "8"
+        }
+      }
+    },
+    {
+      "flight_id": "C6351",
+      "flight_iata": "C6351",
+      "flight_icao": "MFX351",
+      "airline": "My Freighter",
+      "flight_status": "scheduled",
+      "flight_type": "International",
+      "route": {
+        "source": "TAS",
+        "source_icao": "UZTT",
+        "destination": "DXB",
+        "destination_icao": "OMDB",
+        "details": {
+          "origin_name": "Tashkent International",
+          "terminal": "T2",
+          "gate_id": "T2-G12 (Dummy)"
+        }
+      },
+      "aircraft": {
+        "type": "A320 (Dummy)",
+        "type_source": "Dummy",
+        "capacity": "180 (Simulated)"
+      },
+      "payload_stats": {
+        "total_passengers": "152 (Simulated)",
+        "estimated_groups": "64 (Simulated)",
+        "total_bags": "182 (Simulated)",
+        "priority_pax": "18 (Simulated)",
+        "prm_pax": "0 (Simulated)",
+        "service_multiplier": 1.4,
+        "assigned_resources": {
+          "baggage_belt": "B2 (Dummy)"
+        }
+      }
+    },
+    {
+      "flight_id": "HY333",
+      "flight_iata": "HY333",
+      "flight_icao": "UZB333",
+      "airline": "Uzbekistan Airways",
+      "flight_status": "scheduled",
+      "flight_type": "International",
+      "route": {
+        "source": "TAS",
+        "source_icao": "UZTT",
+        "destination": "DXB",
+        "destination_icao": "OMDB",
+        "details": {
+          "origin_name": "Tashkent International",
+          "terminal": "T2",
+          "gate_id": "T2-G1 (Dummy)"
+        }
+      },
+      "aircraft": {
+        "type": "A320 (Dummy)",
+        "type_source": "Dummy",
+        "capacity": "180 (Simulated)"
+      },
+      "payload_stats": {
+        "total_passengers": "151 (Simulated)",
+        "estimated_groups": "63 (Simulated)",
+        "total_bags": "181 (Simulated)",
+        "priority_pax": "18 (Simulated)",
+        "prm_pax": "0 (Simulated)",
+        "service_multiplier": 1.4,
+        "assigned_resources": {
+          "baggage_belt": "8"
+        }
+      }
+    },
+    {
+      "flight_id": "MK9965",
+      "flight_iata": "MK9965",
+      "flight_icao": "MAU9965",
+      "airline": "Air Mauritius",
+      "flight_status": "scheduled",
+      "flight_type": "International",
+      "route": {
+        "source": "JED",
+        "source_icao": "OEJN",
+        "destination": "DXB",
+        "destination_icao": "OMDB",
+        "details": {
+          "origin_name": "King Abdulaziz International",
+          "terminal": "T2",
+          "gate_id": "T2-G7 (Dummy)"
+        }
+      },
+      "aircraft": {
+        "type": "A388",
+        "type_source": "CSV_DB",
+        "capacity": "180 (Simulated)",
+        "manufacturer": "Airbus",
+        "registration": "A6-EOY",
+        "owner": "Emirates Airline",
+        "type_long": "A380 861"
+      },
+      "payload_stats": {
+        "total_passengers": "142 (Simulated)",
+        "estimated_groups": "60 (Simulated)",
+        "total_bags": "170 (Simulated)",
+        "priority_pax": "17 (Simulated)",
+        "prm_pax": "1 (Simulated)",
+        "service_multiplier": 1.4,
+        "assigned_resources": {
+          "baggage_belt": "14"
+        }
+      }
+    },
+    {
+      "flight_id": "FZ192",
+      "flight_iata": "FZ192",
+      "flight_icao": "FDB192",
+      "airline": "flydubai",
+      "flight_status": "cancelled",
+      "flight_type": "International",
+      "route": {
+        "source": "SPX",
+        "source_icao": "HESX",
+        "destination": "DXB",
+        "destination_icao": "OMDB",
+        "details": {
+          "origin_name": "Sphinx International Airport",
+          "terminal": "T2",
+          "gate_id": "T2-G5 (Dummy)"
+        }
+      },
+      "aircraft": {
+        "type": "B38M (Dummy)",
+        "type_source": "Dummy",
+        "capacity": "189 (Simulated)"
+      },
+      "payload_stats": {
+        "total_passengers": "160 (Simulated)",
+        "estimated_groups": "67 (Simulated)",
+        "total_bags": "192 (Simulated)",
+        "priority_pax": "19 (Simulated)",
+        "prm_pax": "0 (Simulated)",
+        "service_multiplier": 1.4,
+        "assigned_resources": {
+          "baggage_belt": "B4 (Dummy)"
+        }
+      }
+    },
+    {
+      "flight_id": "EK375",
+      "flight_iata": "EK375",
+      "flight_icao": "UAE375",
+      "airline": "Emirates",
+      "flight_status": "scheduled",
+      "flight_type": "International",
+      "route": {
+        "source": "BKK",
+        "source_icao": "VTBS",
+        "destination": "DXB",
+        "destination_icao": "OMDB",
+        "details": {
+          "origin_name": "Suvarnabhumi International",
+          "terminal": "T2",
+          "gate_id": "T2-G8 (Dummy)"
+        }
+      },
+      "aircraft": {
+        "type": "A388",
+        "type_source": "CSV_DB",
+        "capacity": "180 (Simulated)",
+        "manufacturer": "Airbus",
+        "registration": "A6-EUO",
+        "owner": "Emirates Airline",
+        "type_long": "A380 842"
+      },
+      "payload_stats": {
+        "total_passengers": "151 (Simulated)",
+        "estimated_groups": "63 (Simulated)",
+        "total_bags": "181 (Simulated)",
+        "priority_pax": "18 (Simulated)",
+        "prm_pax": "0 (Simulated)",
+        "service_multiplier": 1.4,
+        "assigned_resources": {
+          "baggage_belt": "14"
+        }
+      }
+    },
+    {
+      "flight_id": "FZ1794",
+      "flight_iata": "FZ1794",
+      "flight_icao": "FDB1794",
+      "airline": "flydubai",
+      "flight_status": "scheduled",
+      "flight_type": "International",
+      "route": {
+        "source": "ZAG",
+        "source_icao": "LDZA",
+        "destination": "DXB",
+        "destination_icao": "OMDB",
+        "details": {
+          "origin_name": "Franjo Tudman International Airport",
+          "terminal": "T2",
+          "gate_id": "T2-G2 (Dummy)"
+        }
+      },
+      "aircraft": {
+        "type": "B38M",
+        "type_source": "CSV_DB",
+        "capacity": "189 (Simulated)",
+        "manufacturer": null,
+        "registration": "A6-FMY",
+        "owner": null,
+        "type_long": null
+      },
+      "payload_stats": {
+        "total_passengers": "152 (Simulated)",
+        "estimated_groups": "64 (Simulated)",
+        "total_bags": "182 (Simulated)",
+        "priority_pax": "18 (Simulated)",
+        "prm_pax": "2 (Simulated)",
+        "service_multiplier": 1.4,
+        "assigned_resources": {
+          "baggage_belt": "8"
+        }
+      }
+    },
+    {
+      "flight_id": "EK2013",
+      "flight_iata": "EK2013",
+      "flight_icao": "UAE2013",
+      "airline": "Emirates",
+      "flight_status": "scheduled",
+      "flight_type": "International",
+      "route": {
+        "source": "ZAG",
+        "source_icao": "LDZA",
+        "destination": "DXB",
+        "destination_icao": "OMDB",
+        "details": {
+          "origin_name": "Franjo Tudman International Airport",
+          "terminal": "T2",
+          "gate_id": "T2-G4 (Dummy)"
+        }
+      },
+      "aircraft": {
+        "type": "B38M",
+        "type_source": "CSV_DB",
+        "capacity": "189 (Simulated)",
+        "manufacturer": null,
+        "registration": "A6-FMY",
+        "owner": null,
+        "type_long": null
+      },
+      "payload_stats": {
+        "total_passengers": "165 (Simulated)",
+        "estimated_groups": "69 (Simulated)",
+        "total_bags": "198 (Simulated)",
+        "priority_pax": "20 (Simulated)",
+        "prm_pax": "2 (Simulated)",
+        "service_multiplier": 1.4,
+        "assigned_resources": {
+          "baggage_belt": "8"
+        }
+      }
+    },
+    {
+      "flight_id": "FZ502",
+      "flight_iata": "FZ502",
+      "flight_icao": "FDB502",
+      "airline": "flydubai",
+      "flight_status": "scheduled",
+      "flight_type": "International",
+      "route": {
+        "source": "DAC",
+        "source_icao": "VGHS",
+        "destination": "DXB",
+        "destination_icao": "OMDB",
+        "details": {
+          "origin_name": "Zia International",
+          "terminal": "T2",
+          "gate_id": "T2-G8 (Dummy)"
+        }
+      },
+      "aircraft": {
+        "type": "B38M (Dummy)",
+        "type_source": "Dummy",
+        "capacity": "189 (Simulated)"
+      },
+      "payload_stats": {
+        "total_passengers": "171 (Simulated)",
+        "estimated_groups": "72 (Simulated)",
+        "total_bags": "205 (Simulated)",
+        "priority_pax": "21 (Simulated)",
+        "prm_pax": "2 (Simulated)",
+        "service_multiplier": 1.4,
+        "assigned_resources": {
+          "baggage_belt": "4"
+        }
+      }
+    },
+    {
+      "flight_id": "EK2331",
+      "flight_iata": "EK2331",
+      "flight_icao": "UAE2331",
+      "airline": "Emirates",
+      "flight_status": "scheduled",
+      "flight_type": "International",
+      "route": {
+        "source": "DAC",
+        "source_icao": "VGHS",
+        "destination": "DXB",
+        "destination_icao": "OMDB",
+        "details": {
+          "origin_name": "Zia International",
+          "terminal": "T2",
+          "gate_id": "T2-G3 (Dummy)"
+        }
+      },
+      "aircraft": {
+        "type": "A320 (Dummy)",
+        "type_source": "Dummy",
+        "capacity": "180 (Simulated)"
+      },
+      "payload_stats": {
+        "total_passengers": "168 (Simulated)",
+        "estimated_groups": "70 (Simulated)",
+        "total_bags": "202 (Simulated)",
+        "priority_pax": "20 (Simulated)",
+        "prm_pax": "0 (Simulated)",
+        "service_multiplier": 1.4,
+        "assigned_resources": {
+          "baggage_belt": "4"
+        }
+      }
+    },
+    {
+      "flight_id": "ME426",
+      "flight_iata": "ME426",
+      "flight_icao": "MEA426",
+      "airline": "Middle East Airlines",
+      "flight_status": "scheduled",
+      "flight_type": "International",
+      "route": {
+        "source": "BEY",
+        "source_icao": "OLBA",
+        "destination": "DXB",
+        "destination_icao": "OMDB",
+        "details": {
+          "origin_name": "Beirut Rafic Hariri Airport",
+          "terminal": "T2",
+          "gate_id": "T2-G9 (Dummy)"
+        }
+      },
+      "aircraft": {
+        "type": "A320 (Dummy)",
+        "type_source": "Dummy",
+        "capacity": "180 (Simulated)"
+      },
+      "payload_stats": {
+        "total_passengers": "150 (Simulated)",
+        "estimated_groups": "63 (Simulated)",
+        "total_bags": "180 (Simulated)",
+        "priority_pax": "18 (Simulated)",
+        "prm_pax": "0 (Simulated)",
+        "service_multiplier": 1.4,
+        "assigned_resources": {
+          "baggage_belt": "8"
+        }
+      }
+    },
+    {
+      "flight_id": "T5817",
+      "flight_iata": "T5817",
+      "flight_icao": "TUA817",
+      "airline": "Turkmenistan Airlines",
+      "flight_status": "scheduled",
+      "flight_type": "International",
+      "route": {
+        "source": "ASB",
+        "source_icao": "UTAA",
+        "destination": "DXB",
+        "destination_icao": "OMDB",
+        "details": {
+          "origin_name": "Ashgabat",
+          "terminal": "T2",
+          "gate_id": "T2-G5 (Dummy)"
+        }
+      },
+      "aircraft": {
+        "type": "A320 (Dummy)",
+        "type_source": "Dummy",
+        "capacity": "180 (Simulated)"
+      },
+      "payload_stats": {
+        "total_passengers": "164 (Simulated)",
+        "estimated_groups": "69 (Simulated)",
+        "total_bags": "197 (Simulated)",
+        "priority_pax": "20 (Simulated)",
+        "prm_pax": "0 (Simulated)",
+        "service_multiplier": 1.4,
+        "assigned_resources": {
+          "baggage_belt": "B4 (Dummy)"
+        }
+      }
+    },
+    {
+      "flight_id": "EK9929",
+      "flight_iata": "EK9929",
+      "flight_icao": "UAE9929",
+      "airline": "Emirates",
+      "flight_status": "scheduled",
+      "flight_type": "International",
+      "route": {
+        "source": "HKG",
+        "source_icao": "VHHH",
+        "destination": "DXB",
+        "destination_icao": "OMDB",
+        "details": {
+          "origin_name": "Hong Kong International",
+          "terminal": "T2",
+          "gate_id": "T2-G2 (Dummy)"
+        }
+      },
+      "aircraft": {
+        "type": "A320 (Dummy)",
+        "type_source": "Dummy",
+        "capacity": "180 (Simulated)"
+      },
+      "payload_stats": {
+        "total_passengers": "166 (Simulated)",
+        "estimated_groups": "70 (Simulated)",
+        "total_bags": "199 (Simulated)",
+        "priority_pax": "20 (Simulated)",
+        "prm_pax": "2 (Simulated)",
+        "service_multiplier": 1.4,
+        "assigned_resources": {
+          "baggage_belt": "B2 (Dummy)"
+        }
+      }
+    },
+    {
+      "flight_id": "EK2125",
+      "flight_iata": "EK2125",
+      "flight_icao": "UAE2125",
+      "airline": "Emirates",
+      "flight_status": "scheduled",
+      "flight_type": "International",
+      "route": {
+        "source": "DEL",
+        "source_icao": "VIDP",
+        "destination": "DXB",
+        "destination_icao": "OMDB",
+        "details": {
+          "origin_name": "Indira Gandhi International",
+          "terminal": "T2",
+          "gate_id": "T2-G9 (Dummy)"
+        }
+      },
+      "aircraft": {
+        "type": "A320 (Dummy)",
+        "type_source": "Dummy",
+        "capacity": "180 (Simulated)"
+      },
+      "payload_stats": {
+        "total_passengers": "156 (Simulated)",
+        "estimated_groups": "65 (Simulated)",
+        "total_bags": "187 (Simulated)",
+        "priority_pax": "19 (Simulated)",
+        "prm_pax": "1 (Simulated)",
+        "service_multiplier": 1.4,
+        "assigned_resources": {
+          "baggage_belt": "5"
+        }
+      }
+    },
+    {
+      "flight_id": "EK2137",
+      "flight_iata": "EK2137",
+      "flight_icao": "UAE2137",
+      "airline": "Emirates",
+      "flight_status": "scheduled",
+      "flight_type": "International",
+      "route": {
+        "source": "BOM",
+        "source_icao": "VABB",
+        "destination": "DXB",
+        "destination_icao": "OMDB",
+        "details": {
+          "origin_name": "Chhatrapati Shivaji International (Sahar International)",
+          "terminal": "T2",
+          "gate_id": "T2-G2 (Dummy)"
+        }
+      },
+      "aircraft": {
+        "type": "A320 (Dummy)",
+        "type_source": "Dummy",
+        "capacity": "180 (Simulated)"
+      },
+      "payload_stats": {
+        "total_passengers": "165 (Simulated)",
+        "estimated_groups": "69 (Simulated)",
+        "total_bags": "198 (Simulated)",
+        "priority_pax": "20 (Simulated)",
+        "prm_pax": "1 (Simulated)",
+        "service_multiplier": 1.4,
+        "assigned_resources": {
+          "baggage_belt": "4"
+        }
+      }
+    },
+    {
+      "flight_id": "8M100",
+      "flight_iata": "8M100",
+      "flight_icao": "MMA100",
+      "airline": "Myanmar Airways International",
+      "flight_status": "scheduled",
+      "flight_type": "International",
+      "route": {
+        "source": "RGN",
+        "source_icao": "VYYY",
+        "destination": "DXB",
+        "destination_icao": "OMDB",
+        "details": {
+          "origin_name": "Mingaladon",
+          "terminal": "T2",
+          "gate_id": "T2-G9 (Dummy)"
+        }
+      },
+      "aircraft": {
+        "type": "A320 (Dummy)",
+        "type_source": "Dummy",
+        "capacity": "180 (Simulated)"
+      },
+      "payload_stats": {
+        "total_passengers": "168 (Simulated)",
+        "estimated_groups": "70 (Simulated)",
+        "total_bags": "202 (Simulated)",
+        "priority_pax": "20 (Simulated)",
+        "prm_pax": "0 (Simulated)",
+        "service_multiplier": 1.4,
+        "assigned_resources": {
+          "baggage_belt": "B3 (Dummy)"
+        }
+      }
+    },
+    {
+      "flight_id": "FZ920",
+      "flight_iata": "FZ920",
+      "flight_icao": "FDB920",
+      "airline": "flydubai",
+      "flight_status": "scheduled",
+      "flight_type": "International",
+      "route": {
+        "source": "JED",
+        "source_icao": "OEJN",
+        "destination": "DXB",
+        "destination_icao": "OMDB",
+        "details": {
+          "origin_name": "King Abdulaziz International",
+          "terminal": "T2",
+          "gate_id": "T2-G2 (Dummy)"
+        }
+      },
+      "aircraft": {
+        "type": "B38M (Dummy)",
+        "type_source": "Dummy",
+        "capacity": "189 (Simulated)"
+      },
+      "payload_stats": {
+        "total_passengers": "143 (Simulated)",
+        "estimated_groups": "60 (Simulated)",
+        "total_bags": "172 (Simulated)",
+        "priority_pax": "17 (Simulated)",
+        "prm_pax": "0 (Simulated)",
+        "service_multiplier": 1.4,
+        "assigned_resources": {
+          "baggage_belt": "B2 (Dummy)"
+        }
+      }
+    },
+    {
+      "flight_id": "IX6040",
+      "flight_iata": "IX6040",
+      "flight_icao": "AXB6040",
+      "airline": "Air India Express",
+      "flight_status": "scheduled",
+      "flight_type": "International",
+      "route": {
+        "source": "IXE",
+        "source_icao": "VOML",
+        "destination": "DXB",
+        "destination_icao": "OMDB",
+        "details": {
+          "origin_name": "Bajpe",
           "terminal": "T2",
           "gate_id": "T2-G4 (Dummy)"
         }
@@ -31,282 +705,208 @@
         "capacity": "180 (Simulated)"
       },
       "payload_stats": {
-        "total_passengers": "146 (Simulated)",
-        "estimated_groups": "61 (Simulated)",
-        "total_bags": "175 (Simulated)",
-        "priority_pax": "18 (Simulated)",
-        "prm_pax": "1 (Simulated)",
-        "service_multiplier": 1.4,
-        "assigned_resources": {
-          "baggage_belt": "B2 (Dummy)"
-        }
-      },
-      "personas": {
-        "p1": 0,
-        "p2": 0,
-        "p3": 0,
-        "p4": 70,
-        "p5": 0,
-        "p6": 20,
-        "p7": 10
-      }
-    },
-    {
-      "flight_id": "G9104",
-      "flight_iata": "G9104",
-      "flight_icao": "ABY104",
-      "airline": "Air Arabia",
-      "flight_status": "scheduled",
-      "flight_type": "International",
-      "route": {
-        "source": "BGY",
-        "source_icao": "LIME",
-        "destination": "HBE",
-        "destination_icao": "HEAX",
-        "details": {
-          "origin_name": "Bergamo - Orio al Serio",
-          "terminal": "T2",
-          "gate_id": "T2-G2 (Dummy)"
-        }
-      },
-      "aircraft": {
-        "type": "A320",
-        "type_source": "HexDB",
-        "capacity": "180 (Simulated)",
-        "manufacturer": "Airbus",
-        "registration": "SU-AAD",
-        "owner": "Air Arabia Egypt",
-        "type_long": "A320 214"
-      },
-      "payload_stats": {
-        "total_passengers": "142 (Simulated)",
-        "estimated_groups": "60 (Simulated)",
-        "total_bags": "170 (Simulated)",
-        "priority_pax": "17 (Simulated)",
-        "prm_pax": "2 (Simulated)",
-        "service_multiplier": 1.4,
-        "assigned_resources": {
-          "baggage_belt": "B2 (Dummy)"
-        }
-      },
-      "personas": {
-        "p1": 0,
-        "p2": 0,
-        "p3": 0,
-        "p4": 70,
-        "p5": 0,
-        "p6": 20,
-        "p7": 10
-      }
-    },
-    {
-      "flight_id": "G9326",
-      "flight_iata": "G9326",
-      "flight_icao": "ABY326",
-      "airline": "Air Arabia",
-      "flight_status": "active",
-      "flight_type": "International",
-      "route": {
-        "source": "JED",
-        "source_icao": "OEJN",
-        "destination": "HBE",
-        "destination_icao": "HEAX",
-        "details": {
-          "origin_name": "King Abdulaziz International",
-          "terminal": "T2",
-          "gate_id": "T2-G8 (Dummy)"
-        }
-      },
-      "aircraft": {
-        "type": "A320",
-        "type_source": "HexDB",
-        "capacity": "180 (Simulated)",
-        "manufacturer": "Airbus",
-        "registration": "SU-AAD",
-        "owner": "Air Arabia Egypt",
-        "type_long": "A320 214"
-      },
-      "payload_stats": {
-        "total_passengers": "162 (Simulated)",
-        "estimated_groups": "68 (Simulated)",
-        "total_bags": "194 (Simulated)",
-        "priority_pax": "19 (Simulated)",
-        "prm_pax": "2 (Simulated)",
-        "service_multiplier": 1.4,
-        "assigned_resources": {
-          "baggage_belt": "B2 (Dummy)"
-        }
-      },
-      "personas": {
-        "p1": 0,
-        "p2": 0,
-        "p3": 0,
-        "p4": 70,
-        "p5": 0,
-        "p6": 20,
-        "p7": 10
-      }
-    },
-    {
-      "flight_id": "G9594",
-      "flight_iata": "G9594",
-      "flight_icao": "ABY594",
-      "airline": "Air Arabia",
-      "flight_status": "active",
-      "flight_type": "International",
-      "route": {
-        "source": "SHJ",
-        "source_icao": "OMSJ",
-        "destination": "HBE",
-        "destination_icao": "HEAX",
-        "details": {
-          "origin_name": "Sharjah",
-          "terminal": "T2",
-          "gate_id": "T2-G3 (Dummy)"
-        }
-      },
-      "aircraft": {
-        "type": "A320",
-        "type_source": "HexDB",
-        "capacity": "180 (Simulated)",
-        "manufacturer": "Airbus",
-        "registration": "A6-ANP",
-        "owner": "Air Arabia",
-        "type_long": "A320 214SL"
-      },
-      "payload_stats": {
-        "total_passengers": "154 (Simulated)",
-        "estimated_groups": "65 (Simulated)",
-        "total_bags": "185 (Simulated)",
-        "priority_pax": "18 (Simulated)",
-        "prm_pax": "1 (Simulated)",
-        "service_multiplier": 1.4,
-        "assigned_resources": {
-          "baggage_belt": "B3 (Dummy)"
-        }
-      },
-      "personas": {
-        "p1": 0,
-        "p2": 0,
-        "p3": 0,
-        "p4": 70,
-        "p5": 0,
-        "p6": 20,
-        "p7": 10
-      }
-    },
-    {
-      "flight_id": "SV411",
-      "flight_iata": "SV411",
-      "flight_icao": "SVA411",
-      "airline": "Saudia",
-      "flight_status": "active",
-      "flight_type": "International",
-      "route": {
-        "source": "JED",
-        "source_icao": "OEJN",
-        "destination": "HBE",
-        "destination_icao": "HEAX",
-        "details": {
-          "origin_name": "King Abdulaziz International",
-          "terminal": "T2",
-          "gate_id": "T2-G1 (Dummy)"
-        }
-      },
-      "aircraft": {
-        "type": "A320",
-        "type_source": "HexDB",
-        "capacity": "180 (Simulated)",
-        "manufacturer": "Airbus",
-        "registration": "HZ-AS54",
-        "owner": "Saudi Arabian Airlines",
-        "type_long": "A320 214SL"
-      },
-      "payload_stats": {
-        "total_passengers": "168 (Simulated)",
+        "total_passengers": "166 (Simulated)",
         "estimated_groups": "70 (Simulated)",
-        "total_bags": "202 (Simulated)",
+        "total_bags": "199 (Simulated)",
         "priority_pax": "20 (Simulated)",
-        "prm_pax": "2 (Simulated)",
-        "service_multiplier": 1.4,
-        "assigned_resources": {
-          "baggage_belt": "B4 (Dummy)"
-        }
-      },
-      "personas": {
-        "p1": 0,
-        "p2": 0,
-        "p3": 0,
-        "p4": 70,
-        "p5": 0,
-        "p6": 20,
-        "p7": 10
-      }
-    },
-    {
-      "flight_id": "EY3389",
-      "flight_iata": "EY3389",
-      "flight_icao": "ETD3389",
-      "airline": "Etihad Airways",
-      "flight_status": "active",
-      "flight_type": "International",
-      "route": {
-        "source": "JED",
-        "source_icao": "OEJN",
-        "destination": "HBE",
-        "destination_icao": "HEAX",
-        "details": {
-          "origin_name": "King Abdulaziz International",
-          "terminal": "T2",
-          "gate_id": "T2-G10 (Dummy)"
-        }
-      },
-      "aircraft": {
-        "type": "A320",
-        "type_source": "HexDB",
-        "capacity": "180 (Simulated)",
-        "manufacturer": "Airbus",
-        "registration": "HZ-AS54",
-        "owner": "Saudi Arabian Airlines",
-        "type_long": "A320 214SL"
-      },
-      "payload_stats": {
-        "total_passengers": "155 (Simulated)",
-        "estimated_groups": "65 (Simulated)",
-        "total_bags": "186 (Simulated)",
-        "priority_pax": "19 (Simulated)",
         "prm_pax": "0 (Simulated)",
         "service_multiplier": 1.4,
         "assigned_resources": {
-          "baggage_belt": "B4 (Dummy)"
+          "baggage_belt": "6"
         }
-      },
-      "personas": {
-        "p1": 0,
-        "p2": 0,
-        "p3": 0,
-        "p4": 70,
-        "p5": 0,
-        "p6": 20,
-        "p7": 10
       }
     },
     {
-      "flight_id": "FZ175",
-      "flight_iata": "FZ175",
-      "flight_icao": "FDB175",
-      "airline": "flydubai",
-      "flight_status": "active",
+      "flight_id": "AI9119",
+      "flight_iata": "AI9119",
+      "flight_icao": "AIC9119",
+      "airline": "Air India",
+      "flight_status": "scheduled",
       "flight_type": "International",
       "route": {
-        "source": "DXB",
-        "source_icao": "OMDB",
-        "destination": "HBE",
-        "destination_icao": "HEAX",
+        "source": "IXE",
+        "source_icao": "VOML",
+        "destination": "DXB",
+        "destination_icao": "OMDB",
         "details": {
-          "origin_name": "Dubai",
+          "origin_name": "Bajpe",
+          "terminal": "T2",
+          "gate_id": "T2-G11 (Dummy)"
+        }
+      },
+      "aircraft": {
+        "type": "A320 (Dummy)",
+        "type_source": "Dummy",
+        "capacity": "180 (Simulated)"
+      },
+      "payload_stats": {
+        "total_passengers": "135 (Simulated)",
+        "estimated_groups": "57 (Simulated)",
+        "total_bags": "162 (Simulated)",
+        "priority_pax": "16 (Simulated)",
+        "prm_pax": "1 (Simulated)",
+        "service_multiplier": 1.4,
+        "assigned_resources": {
+          "baggage_belt": "6"
+        }
+      }
+    },
+    {
+      "flight_id": "AI9121",
+      "flight_iata": "AI9121",
+      "flight_icao": "AIC9121",
+      "airline": "Air India",
+      "flight_status": "scheduled",
+      "flight_type": "International",
+      "route": {
+        "source": "IXE",
+        "source_icao": "VOML",
+        "destination": "DXB",
+        "destination_icao": "OMDB",
+        "details": {
+          "origin_name": "Bajpe",
           "terminal": "T2",
           "gate_id": "T2-G7 (Dummy)"
+        }
+      },
+      "aircraft": {
+        "type": "A320 (Dummy)",
+        "type_source": "Dummy",
+        "capacity": "180 (Simulated)"
+      },
+      "payload_stats": {
+        "total_passengers": "135 (Simulated)",
+        "estimated_groups": "57 (Simulated)",
+        "total_bags": "162 (Simulated)",
+        "priority_pax": "16 (Simulated)",
+        "prm_pax": "2 (Simulated)",
+        "service_multiplier": 1.4,
+        "assigned_resources": {
+          "baggage_belt": "6"
+        }
+      }
+    },
+    {
+      "flight_id": "FZ642",
+      "flight_iata": "FZ642",
+      "flight_icao": "FDB642",
+      "airline": "flydubai",
+      "flight_status": "scheduled",
+      "flight_type": "International",
+      "route": {
+        "source": "ADD",
+        "source_icao": "HAAB",
+        "destination": "DXB",
+        "destination_icao": "OMDB",
+        "details": {
+          "origin_name": "Bole International",
+          "terminal": "T2",
+          "gate_id": "T2-G6 (Dummy)"
+        }
+      },
+      "aircraft": {
+        "type": "B38M (Dummy)",
+        "type_source": "Dummy",
+        "capacity": "189 (Simulated)"
+      },
+      "payload_stats": {
+        "total_passengers": "161 (Simulated)",
+        "estimated_groups": "68 (Simulated)",
+        "total_bags": "193 (Simulated)",
+        "priority_pax": "19 (Simulated)",
+        "prm_pax": "1 (Simulated)",
+        "service_multiplier": 1.4,
+        "assigned_resources": {
+          "baggage_belt": "5"
+        }
+      }
+    },
+    {
+      "flight_id": "FZ732",
+      "flight_iata": "FZ732",
+      "flight_icao": "FDB732",
+      "airline": "flydubai",
+      "flight_status": "scheduled",
+      "flight_type": "International",
+      "route": {
+        "source": "ASB",
+        "source_icao": "UTAA",
+        "destination": "DXB",
+        "destination_icao": "OMDB",
+        "details": {
+          "origin_name": "Ashgabat",
+          "terminal": "T2",
+          "gate_id": "T2-G7 (Dummy)"
+        }
+      },
+      "aircraft": {
+        "type": "B38M (Dummy)",
+        "type_source": "Dummy",
+        "capacity": "189 (Simulated)"
+      },
+      "payload_stats": {
+        "total_passengers": "161 (Simulated)",
+        "estimated_groups": "68 (Simulated)",
+        "total_bags": "193 (Simulated)",
+        "priority_pax": "19 (Simulated)",
+        "prm_pax": "1 (Simulated)",
+        "service_multiplier": 1.4,
+        "assigned_resources": {
+          "baggage_belt": "6"
+        }
+      }
+    },
+    {
+      "flight_id": "EK2483",
+      "flight_iata": "EK2483",
+      "flight_icao": "UAE2483",
+      "airline": "Emirates",
+      "flight_status": "scheduled",
+      "flight_type": "International",
+      "route": {
+        "source": "ASB",
+        "source_icao": "UTAA",
+        "destination": "DXB",
+        "destination_icao": "OMDB",
+        "details": {
+          "origin_name": "Ashgabat",
+          "terminal": "T2",
+          "gate_id": "T2-G7 (Dummy)"
+        }
+      },
+      "aircraft": {
+        "type": "A320 (Dummy)",
+        "type_source": "Dummy",
+        "capacity": "180 (Simulated)"
+      },
+      "payload_stats": {
+        "total_passengers": "166 (Simulated)",
+        "estimated_groups": "70 (Simulated)",
+        "total_bags": "199 (Simulated)",
+        "priority_pax": "20 (Simulated)",
+        "prm_pax": "1 (Simulated)",
+        "service_multiplier": 1.4,
+        "assigned_resources": {
+          "baggage_belt": "6"
+        }
+      }
+    },
+    {
+      "flight_id": "FZ338",
+      "flight_iata": "FZ338",
+      "flight_icao": "FDB338",
+      "airline": "flydubai",
+      "flight_status": "scheduled",
+      "flight_type": "International",
+      "route": {
+        "source": "SKT",
+        "source_icao": "OPST",
+        "destination": "DXB",
+        "destination_icao": "OMDB",
+        "details": {
+          "origin_name": "Sialkot International",
+          "terminal": "T2",
+          "gate_id": "T2-G1 (Dummy)"
         }
       },
       "aircraft": {
@@ -322,419 +922,26 @@
         "prm_pax": "0 (Simulated)",
         "service_multiplier": 1.4,
         "assigned_resources": {
-          "baggage_belt": "B3 (Dummy)"
+          "baggage_belt": "4"
         }
-      },
-      "personas": {
-        "p1": 0,
-        "p2": 0,
-        "p3": 0,
-        "p4": 70,
-        "p5": 0,
-        "p6": 20,
-        "p7": 10
       }
     },
     {
-      "flight_id": "MS656",
-      "flight_iata": "MS656",
-      "flight_icao": "MSR656",
-      "airline": "EgyptAir",
-      "flight_status": "active",
-      "flight_type": "International",
-      "route": {
-        "source": "JED",
-        "source_icao": "OEJN",
-        "destination": "HBE",
-        "destination_icao": "HEAX",
-        "details": {
-          "origin_name": "King Abdulaziz International",
-          "terminal": "T1",
-          "gate_id": "T1-G11 (Dummy)"
-        }
-      },
-      "aircraft": {
-        "type": "B738",
-        "type_source": "HexDB",
-        "capacity": "189 (Simulated)",
-        "manufacturer": "Boeing",
-        "registration": "SU-GCS",
-        "owner": "Egyptair",
-        "type_long": "737NG 866/W"
-      },
-      "payload_stats": {
-        "total_passengers": "151 (Simulated)",
-        "estimated_groups": "63 (Simulated)",
-        "total_bags": "181 (Simulated)",
-        "priority_pax": "18 (Simulated)",
-        "prm_pax": "2 (Simulated)",
-        "service_multiplier": 1.4,
-        "assigned_resources": {
-          "baggage_belt": "B2 (Dummy)"
-        }
-      },
-      "personas": {
-        "p1": 0,
-        "p2": 0,
-        "p3": 0,
-        "p4": 70,
-        "p5": 0,
-        "p6": 20,
-        "p7": 10
-      }
-    },
-    {
-      "flight_id": "G9404",
-      "flight_iata": "G9404",
-      "flight_icao": "ABY404",
-      "airline": "Air Arabia",
-      "flight_status": "active",
-      "flight_type": "International",
-      "route": {
-        "source": "AUH",
-        "source_icao": "OMAA",
-        "destination": "HBE",
-        "destination_icao": "HEAX",
-        "details": {
-          "origin_name": "Abu Dhabi International",
-          "terminal": "T2",
-          "gate_id": "T2-G8 (Dummy)"
-        }
-      },
-      "aircraft": {
-        "type": "A320",
-        "type_source": "HexDB",
-        "capacity": "180 (Simulated)",
-        "manufacturer": "Airbus",
-        "registration": "A6-AUK",
-        "owner": "Air Arabia Abu Dhabi",
-        "type_long": "A320 214SL"
-      },
-      "payload_stats": {
-        "total_passengers": "150 (Simulated)",
-        "estimated_groups": "63 (Simulated)",
-        "total_bags": "180 (Simulated)",
-        "priority_pax": "18 (Simulated)",
-        "prm_pax": "0 (Simulated)",
-        "service_multiplier": 1.4,
-        "assigned_resources": {
-          "baggage_belt": "B1 (Dummy)"
-        }
-      },
-      "personas": {
-        "p1": 0,
-        "p2": 0,
-        "p3": 0,
-        "p4": 70,
-        "p5": 0,
-        "p6": 20,
-        "p7": 10
-      }
-    },
-    {
-      "flight_id": "G9322",
-      "flight_iata": "G9322",
-      "flight_icao": "ABY322",
-      "airline": "Air Arabia",
-      "flight_status": "active",
-      "flight_type": "International",
-      "route": {
-        "source": "JED",
-        "source_icao": "OEJN",
-        "destination": "HBE",
-        "destination_icao": "HEAX",
-        "details": {
-          "origin_name": "King Abdulaziz International",
-          "terminal": "T2",
-          "gate_id": "T2-G6 (Dummy)"
-        }
-      },
-      "aircraft": {
-        "type": "A320",
-        "type_source": "HexDB",
-        "capacity": "180 (Simulated)",
-        "manufacturer": "Airbus",
-        "registration": "SU-AAD",
-        "owner": "Air Arabia Egypt",
-        "type_long": "A320 214"
-      },
-      "payload_stats": {
-        "total_passengers": "156 (Simulated)",
-        "estimated_groups": "65 (Simulated)",
-        "total_bags": "187 (Simulated)",
-        "priority_pax": "19 (Simulated)",
-        "prm_pax": "0 (Simulated)",
-        "service_multiplier": 1.4,
-        "assigned_resources": {
-          "baggage_belt": "B3 (Dummy)"
-        }
-      },
-      "personas": {
-        "p1": 0,
-        "p2": 0,
-        "p3": 0,
-        "p4": 70,
-        "p5": 0,
-        "p6": 20,
-        "p7": 10
-      }
-    },
-    {
-      "flight_id": "SV331",
-      "flight_iata": "SV331",
-      "flight_icao": "SVA331",
-      "airline": "Saudia",
-      "flight_status": "active",
-      "flight_type": "International",
-      "route": {
-        "source": "JED",
-        "source_icao": "OEJN",
-        "destination": "HBE",
-        "destination_icao": "HEAX",
-        "details": {
-          "origin_name": "King Abdulaziz International",
-          "terminal": "T2",
-          "gate_id": "T2-G10 (Dummy)"
-        }
-      },
-      "aircraft": {
-        "type": "A321",
-        "type_source": "HexDB",
-        "capacity": "220 (Simulated)",
-        "manufacturer": "Airbus",
-        "registration": "HZ-ASK",
-        "owner": "Saudi Arabian Airlines",
-        "type_long": "A321 211"
-      },
-      "payload_stats": {
-        "total_passengers": "181 (Simulated)",
-        "estimated_groups": "76 (Simulated)",
-        "total_bags": "217 (Simulated)",
-        "priority_pax": "22 (Simulated)",
-        "prm_pax": "1 (Simulated)",
-        "service_multiplier": 1.4,
-        "assigned_resources": {
-          "baggage_belt": "B2 (Dummy)"
-        }
-      },
-      "personas": {
-        "p1": 0,
-        "p2": 0,
-        "p3": 0,
-        "p4": 70,
-        "p5": 0,
-        "p6": 20,
-        "p7": 10
-      }
-    },
-    {
-      "flight_id": "EY3388",
-      "flight_iata": "EY3388",
-      "flight_icao": "ETD3388",
-      "airline": "Etihad Airways",
-      "flight_status": "active",
-      "flight_type": "International",
-      "route": {
-        "source": "JED",
-        "source_icao": "OEJN",
-        "destination": "HBE",
-        "destination_icao": "HEAX",
-        "details": {
-          "origin_name": "King Abdulaziz International",
-          "terminal": "T2",
-          "gate_id": "T2-G7 (Dummy)"
-        }
-      },
-      "aircraft": {
-        "type": "A321",
-        "type_source": "HexDB",
-        "capacity": "220 (Simulated)",
-        "manufacturer": "Airbus",
-        "registration": "HZ-ASK",
-        "owner": "Saudi Arabian Airlines",
-        "type_long": "A321 211"
-      },
-      "payload_stats": {
-        "total_passengers": "165 (Simulated)",
-        "estimated_groups": "69 (Simulated)",
-        "total_bags": "198 (Simulated)",
-        "priority_pax": "20 (Simulated)",
-        "prm_pax": "1 (Simulated)",
-        "service_multiplier": 1.4,
-        "assigned_resources": {
-          "baggage_belt": "B2 (Dummy)"
-        }
-      },
-      "personas": {
-        "p1": 0,
-        "p2": 0,
-        "p3": 0,
-        "p4": 70,
-        "p5": 0,
-        "p6": 20,
-        "p7": 10
-      }
-    },
-    {
-      "flight_id": "3L404",
-      "flight_iata": "3L404",
-      "flight_icao": "ADY404",
-      "airline": "Air Arabia Abu Dhabi",
-      "flight_status": "active",
-      "flight_type": "International",
-      "route": {
-        "source": "AUH",
-        "source_icao": "OMAA",
-        "destination": "HBE",
-        "destination_icao": "HEAX",
-        "details": {
-          "origin_name": "Abu Dhabi International",
-          "terminal": "T2",
-          "gate_id": "T2-G5 (Dummy)"
-        }
-      },
-      "aircraft": {
-        "type": "A320",
-        "type_source": "HexDB",
-        "capacity": "180 (Simulated)",
-        "manufacturer": "Airbus",
-        "registration": "A6-AUK",
-        "owner": "Air Arabia Abu Dhabi",
-        "type_long": "A320 214SL"
-      },
-      "payload_stats": {
-        "total_passengers": "151 (Simulated)",
-        "estimated_groups": "63 (Simulated)",
-        "total_bags": "181 (Simulated)",
-        "priority_pax": "18 (Simulated)",
-        "prm_pax": "2 (Simulated)",
-        "service_multiplier": 1.4,
-        "assigned_resources": {
-          "baggage_belt": "B4 (Dummy)"
-        }
-      },
-      "personas": {
-        "p1": 0,
-        "p2": 0,
-        "p3": 0,
-        "p4": 70,
-        "p5": 0,
-        "p6": 20,
-        "p7": 10
-      }
-    },
-    {
-      "flight_id": "F3773",
-      "flight_iata": "F3773",
-      "flight_icao": "FAD773",
-      "airline": "Flyadeal",
-      "flight_status": "landed",
-      "flight_type": "International",
-      "route": {
-        "source": "JED",
-        "source_icao": "OEJN",
-        "destination": "HBE",
-        "destination_icao": "HEAX",
-        "details": {
-          "origin_name": "King Abdulaziz International",
-          "terminal": "T2",
-          "gate_id": "T2-G10 (Dummy)"
-        }
-      },
-      "aircraft": {
-        "type": "A20N",
-        "type_source": "HexDB",
-        "capacity": "180 (Simulated)",
-        "manufacturer": "Airbus",
-        "registration": "HZ-FBD",
-        "owner": "Flyadeal",
-        "type_long": "A320 251NSL"
-      },
-      "payload_stats": {
-        "total_passengers": "145 (Simulated)",
-        "estimated_groups": "61 (Simulated)",
-        "total_bags": "174 (Simulated)",
-        "priority_pax": "17 (Simulated)",
-        "prm_pax": "2 (Simulated)",
-        "service_multiplier": 1.4,
-        "assigned_resources": {
-          "baggage_belt": "B3 (Dummy)"
-        }
-      },
-      "personas": {
-        "p1": 0,
-        "p2": 0,
-        "p3": 0,
-        "p4": 70,
-        "p5": 0,
-        "p6": 20,
-        "p7": 10
-      }
-    },
-    {
-      "flight_id": "SV6670",
-      "flight_iata": "SV6670",
-      "flight_icao": "SVA6670",
-      "airline": "Saudia",
-      "flight_status": "landed",
-      "flight_type": "International",
-      "route": {
-        "source": "JED",
-        "source_icao": "OEJN",
-        "destination": "HBE",
-        "destination_icao": "HEAX",
-        "details": {
-          "origin_name": "King Abdulaziz International",
-          "terminal": "T2",
-          "gate_id": "T2-G7 (Dummy)"
-        }
-      },
-      "aircraft": {
-        "type": "A20N",
-        "type_source": "HexDB",
-        "capacity": "180 (Simulated)",
-        "manufacturer": "Airbus",
-        "registration": "HZ-FBD",
-        "owner": "Flyadeal",
-        "type_long": "A320 251NSL"
-      },
-      "payload_stats": {
-        "total_passengers": "164 (Simulated)",
-        "estimated_groups": "69 (Simulated)",
-        "total_bags": "197 (Simulated)",
-        "priority_pax": "20 (Simulated)",
-        "prm_pax": "0 (Simulated)",
-        "service_multiplier": 1.4,
-        "assigned_resources": {
-          "baggage_belt": "B2 (Dummy)"
-        }
-      },
-      "personas": {
-        "p1": 0,
-        "p2": 0,
-        "p3": 0,
-        "p4": 70,
-        "p5": 0,
-        "p6": 20,
-        "p7": 10
-      }
-    },
-    {
-      "flight_id": "UZ130",
-      "flight_iata": "UZ130",
-      "flight_icao": "BRQ130",
-      "airline": "Buraq Air",
+      "flight_id": "EK2115",
+      "flight_iata": "EK2115",
+      "flight_icao": "UAE2115",
+      "airline": "Emirates",
       "flight_status": "scheduled",
       "flight_type": "International",
       "route": {
-        "source": "MJI",
-        "source_icao": "HLLM",
-        "destination": "HBE",
-        "destination_icao": "HEAX",
+        "source": "SKT",
+        "source_icao": "OPST",
+        "destination": "DXB",
+        "destination_icao": "OMDB",
         "details": {
-          "origin_name": "Mitiga",
+          "origin_name": "Sialkot International",
           "terminal": "T2",
-          "gate_id": "T2-G11 (Dummy)"
+          "gate_id": "T2-G3 (Dummy)"
         }
       },
       "aircraft": {
@@ -743,328 +950,284 @@
         "capacity": "180 (Simulated)"
       },
       "payload_stats": {
-        "total_passengers": "138 (Simulated)",
-        "estimated_groups": "58 (Simulated)",
-        "total_bags": "166 (Simulated)",
-        "priority_pax": "17 (Simulated)",
-        "prm_pax": "1 (Simulated)",
+        "total_passengers": "159 (Simulated)",
+        "estimated_groups": "67 (Simulated)",
+        "total_bags": "191 (Simulated)",
+        "priority_pax": "19 (Simulated)",
+        "prm_pax": "2 (Simulated)",
         "service_multiplier": 1.4,
         "assigned_resources": {
-          "baggage_belt": "B1 (Dummy)"
+          "baggage_belt": "4"
         }
-      },
-      "personas": {
-        "p1": 0,
-        "p2": 0,
-        "p3": 0,
-        "p4": 70,
-        "p5": 0,
-        "p6": 20,
-        "p7": 10
       }
     },
     {
-      "flight_id": "TG7564",
-      "flight_iata": "TG7564",
-      "flight_icao": "THA7564",
-      "airline": "Thai Airways International",
-      "flight_status": "active",
-      "flight_type": "International",
-      "route": {
-        "source": "IST",
-        "source_icao": "LTFM",
-        "destination": "HBE",
-        "destination_icao": "HEAX",
-        "details": {
-          "origin_name": "Istanbul Airport",
-          "terminal": "T2",
-          "gate_id": "T2-G7 (Dummy)"
-        }
-      },
-      "aircraft": {
-        "type": "A21N",
-        "type_source": "HexDB",
-        "capacity": "240 (Simulated)",
-        "manufacturer": "Airbus",
-        "registration": "TC-LTE",
-        "owner": "Turkish Airlines",
-        "type_long": "A321 271NXSL"
-      },
-      "payload_stats": {
-        "total_passengers": "201 (Simulated)",
-        "estimated_groups": "84 (Simulated)",
-        "total_bags": "241 (Simulated)",
-        "priority_pax": "24 (Simulated)",
-        "prm_pax": "1 (Simulated)",
-        "service_multiplier": 1.4,
-        "assigned_resources": {
-          "baggage_belt": "B4 (Dummy)"
-        }
-      },
-      "personas": {
-        "p1": 0,
-        "p2": 0,
-        "p3": 0,
-        "p4": 70,
-        "p5": 0,
-        "p6": 20,
-        "p7": 10
-      }
-    },
-    {
-      "flight_id": "MS9296",
-      "flight_iata": "MS9296",
-      "flight_icao": "MSR9296",
-      "airline": "EgyptAir",
-      "flight_status": "active",
-      "flight_type": "International",
-      "route": {
-        "source": "IST",
-        "source_icao": "LTFM",
-        "destination": "HBE",
-        "destination_icao": "HEAX",
-        "details": {
-          "origin_name": "Istanbul Airport",
-          "terminal": "T1",
-          "gate_id": "T1-G1 (Dummy)"
-        }
-      },
-      "aircraft": {
-        "type": "A21N",
-        "type_source": "HexDB",
-        "capacity": "240 (Simulated)",
-        "manufacturer": "Airbus",
-        "registration": "TC-LTE",
-        "owner": "Turkish Airlines",
-        "type_long": "A321 271NXSL"
-      },
-      "payload_stats": {
-        "total_passengers": "212 (Simulated)",
-        "estimated_groups": "89 (Simulated)",
-        "total_bags": "254 (Simulated)",
-        "priority_pax": "25 (Simulated)",
-        "prm_pax": "1 (Simulated)",
-        "service_multiplier": 1.4,
-        "assigned_resources": {
-          "baggage_belt": "B1 (Dummy)"
-        }
-      },
-      "personas": {
-        "p1": 0,
-        "p2": 0,
-        "p3": 0,
-        "p4": 70,
-        "p5": 0,
-        "p6": 20,
-        "p7": 10
-      }
-    },
-    {
-      "flight_id": "E5322",
-      "flight_iata": "E5322",
-      "flight_icao": "RBG322",
-      "airline": "Air Arabia Egypt",
+      "flight_id": "EK802",
+      "flight_iata": "EK802",
+      "flight_icao": "UAE802",
+      "airline": "Emirates",
       "flight_status": "scheduled",
       "flight_type": "International",
       "route": {
         "source": "JED",
         "source_icao": "OEJN",
-        "destination": "HBE",
-        "destination_icao": "HEAX",
+        "destination": "DXB",
+        "destination_icao": "OMDB",
         "details": {
           "origin_name": "King Abdulaziz International",
           "terminal": "T2",
-          "gate_id": "T2-G3 (Dummy)"
+          "gate_id": "T2-G7 (Dummy)"
         }
       },
       "aircraft": {
-        "type": "A320",
-        "type_source": "HexDB",
+        "type": "A388",
+        "type_source": "CSV_DB",
         "capacity": "180 (Simulated)",
         "manufacturer": "Airbus",
-        "registration": "SU-AAD",
-        "owner": "Air Arabia Egypt",
-        "type_long": "A320 214"
+        "registration": "A6-EOY",
+        "owner": "Emirates Airline",
+        "type_long": "A380 861"
+      },
+      "payload_stats": {
+        "total_passengers": "170 (Simulated)",
+        "estimated_groups": "71 (Simulated)",
+        "total_bags": "204 (Simulated)",
+        "priority_pax": "20 (Simulated)",
+        "prm_pax": "0 (Simulated)",
+        "service_multiplier": 1.4,
+        "assigned_resources": {
+          "baggage_belt": "14"
+        }
+      }
+    },
+    {
+      "flight_id": "FZ360",
+      "flight_iata": "FZ360",
+      "flight_icao": "FDB360",
+      "airline": "flydubai",
+      "flight_status": "scheduled",
+      "flight_type": "International",
+      "route": {
+        "source": "LHE",
+        "source_icao": "OPLA",
+        "destination": "DXB",
+        "destination_icao": "OMDB",
+        "details": {
+          "origin_name": "Alama Iqbal International",
+          "terminal": "T2",
+          "gate_id": "T2-G9 (Dummy)"
+        }
+      },
+      "aircraft": {
+        "type": "B38M (Dummy)",
+        "type_source": "Dummy",
+        "capacity": "189 (Simulated)"
+      },
+      "payload_stats": {
+        "total_passengers": "167 (Simulated)",
+        "estimated_groups": "70 (Simulated)",
+        "total_bags": "200 (Simulated)",
+        "priority_pax": "20 (Simulated)",
+        "prm_pax": "0 (Simulated)",
+        "service_multiplier": 1.4,
+        "assigned_resources": {
+          "baggage_belt": "4"
+        }
+      }
+    },
+    {
+      "flight_id": "FZ354",
+      "flight_iata": "FZ354",
+      "flight_icao": "FDB354",
+      "airline": "flydubai",
+      "flight_status": "scheduled",
+      "flight_type": "International",
+      "route": {
+        "source": "ISB",
+        "source_icao": "OPIS",
+        "destination": "DXB",
+        "destination_icao": "OMDB",
+        "details": {
+          "origin_name": "Islamabad International",
+          "terminal": "T2",
+          "gate_id": "T2-G12 (Dummy)"
+        }
+      },
+      "aircraft": {
+        "type": "B38M (Dummy)",
+        "type_source": "Dummy",
+        "capacity": "189 (Simulated)"
+      },
+      "payload_stats": {
+        "total_passengers": "177 (Simulated)",
+        "estimated_groups": "74 (Simulated)",
+        "total_bags": "212 (Simulated)",
+        "priority_pax": "21 (Simulated)",
+        "prm_pax": "1 (Simulated)",
+        "service_multiplier": 1.4,
+        "assigned_resources": {
+          "baggage_belt": "5"
+        }
+      }
+    },
+    {
+      "flight_id": "FZ356",
+      "flight_iata": "FZ356",
+      "flight_icao": "FDB356",
+      "airline": "flydubai",
+      "flight_status": "scheduled",
+      "flight_type": "International",
+      "route": {
+        "source": "LYP",
+        "source_icao": "OPFA",
+        "destination": "DXB",
+        "destination_icao": "OMDB",
+        "details": {
+          "origin_name": "Faisalabad",
+          "terminal": "T2",
+          "gate_id": "T2-G2 (Dummy)"
+        }
+      },
+      "aircraft": {
+        "type": "B38M (Dummy)",
+        "type_source": "Dummy",
+        "capacity": "189 (Simulated)"
+      },
+      "payload_stats": {
+        "total_passengers": "161 (Simulated)",
+        "estimated_groups": "68 (Simulated)",
+        "total_bags": "193 (Simulated)",
+        "priority_pax": "19 (Simulated)",
+        "prm_pax": "2 (Simulated)",
+        "service_multiplier": 1.4,
+        "assigned_resources": {
+          "baggage_belt": "5"
+        }
+      }
+    },
+    {
+      "flight_id": "EK2097",
+      "flight_iata": "EK2097",
+      "flight_icao": "UAE2097",
+      "airline": "Emirates",
+      "flight_status": "scheduled",
+      "flight_type": "International",
+      "route": {
+        "source": "LYP",
+        "source_icao": "OPFA",
+        "destination": "DXB",
+        "destination_icao": "OMDB",
+        "details": {
+          "origin_name": "Faisalabad",
+          "terminal": "T2",
+          "gate_id": "T2-G8 (Dummy)"
+        }
+      },
+      "aircraft": {
+        "type": "A320 (Dummy)",
+        "type_source": "Dummy",
+        "capacity": "180 (Simulated)"
+      },
+      "payload_stats": {
+        "total_passengers": "137 (Simulated)",
+        "estimated_groups": "58 (Simulated)",
+        "total_bags": "164 (Simulated)",
+        "priority_pax": "16 (Simulated)",
+        "prm_pax": "1 (Simulated)",
+        "service_multiplier": 1.4,
+        "assigned_resources": {
+          "baggage_belt": "5"
+        }
+      }
+    },
+    {
+      "flight_id": "EK569",
+      "flight_iata": "EK569",
+      "flight_icao": "UAE569",
+      "airline": "Emirates",
+      "flight_status": "scheduled",
+      "flight_type": "International",
+      "route": {
+        "source": "BLR",
+        "source_icao": "VOBL",
+        "destination": "DXB",
+        "destination_icao": "OMDB",
+        "details": {
+          "origin_name": "Bangalore International Airport",
+          "terminal": "T2",
+          "gate_id": "T2-G8 (Dummy)"
+        }
+      },
+      "aircraft": {
+        "type": "A388",
+        "type_source": "CSV_DB",
+        "capacity": "180 (Simulated)",
+        "manufacturer": "Airbus",
+        "registration": "A6-EVC",
+        "owner": "Emirates Airline",
+        "type_long": "A380 842"
+      },
+      "payload_stats": {
+        "total_passengers": "155 (Simulated)",
+        "estimated_groups": "65 (Simulated)",
+        "total_bags": "186 (Simulated)",
+        "priority_pax": "19 (Simulated)",
+        "prm_pax": "0 (Simulated)",
+        "service_multiplier": 1.4,
+        "assigned_resources": {
+          "baggage_belt": "6"
+        }
+      }
+    },
+    {
+      "flight_id": "FZ332",
+      "flight_iata": "FZ332",
+      "flight_icao": "FDB332",
+      "airline": "flydubai",
+      "flight_status": "scheduled",
+      "flight_type": "International",
+      "route": {
+        "source": "KHI",
+        "source_icao": "OPKC",
+        "destination": "DXB",
+        "destination_icao": "OMDB",
+        "details": {
+          "origin_name": "Quaid-e-azam International",
+          "terminal": "T2",
+          "gate_id": "T2-G12 (Dummy)"
+        }
+      },
+      "aircraft": {
+        "type": "B38M (Dummy)",
+        "type_source": "Dummy",
+        "capacity": "189 (Simulated)"
       },
       "payload_stats": {
         "total_passengers": "154 (Simulated)",
         "estimated_groups": "65 (Simulated)",
         "total_bags": "185 (Simulated)",
         "priority_pax": "18 (Simulated)",
-        "prm_pax": "0 (Simulated)",
-        "service_multiplier": 1.4,
-        "assigned_resources": {
-          "baggage_belt": "B3 (Dummy)"
-        }
-      },
-      "personas": {
-        "p1": 0,
-        "p2": 0,
-        "p3": 0,
-        "p4": 70,
-        "p5": 0,
-        "p6": 20,
-        "p7": 10
-      }
-    },
-    {
-      "flight_id": "TK696",
-      "flight_iata": "TK696",
-      "flight_icao": "THY696",
-      "airline": "Turkish Airlines",
-      "flight_status": "active",
-      "flight_type": "International",
-      "route": {
-        "source": "IST",
-        "source_icao": "LTFM",
-        "destination": "HBE",
-        "destination_icao": "HEAX",
-        "details": {
-          "origin_name": "Istanbul Airport",
-          "terminal": "T2",
-          "gate_id": "T2-G9 (Dummy)"
-        }
-      },
-      "aircraft": {
-        "type": "A21N",
-        "type_source": "HexDB",
-        "capacity": "240 (Simulated)",
-        "manufacturer": "Airbus",
-        "registration": "TC-LTE",
-        "owner": "Turkish Airlines",
-        "type_long": "A321 271NXSL"
-      },
-      "payload_stats": {
-        "total_passengers": "209 (Simulated)",
-        "estimated_groups": "88 (Simulated)",
-        "total_bags": "251 (Simulated)",
-        "priority_pax": "25 (Simulated)",
-        "prm_pax": "0 (Simulated)",
-        "service_multiplier": 1.4,
-        "assigned_resources": {
-          "baggage_belt": "B1 (Dummy)"
-        }
-      },
-      "personas": {
-        "p1": 0,
-        "p2": 0,
-        "p3": 0,
-        "p4": 70,
-        "p5": 0,
-        "p6": 20,
-        "p7": 10
-      }
-    },
-    {
-      "flight_id": "G9522",
-      "flight_iata": "G9522",
-      "flight_icao": "ABY522",
-      "airline": "Air Arabia",
-      "flight_status": "active",
-      "flight_type": "International",
-      "route": {
-        "source": "AMM",
-        "source_icao": "OJAI",
-        "destination": "HBE",
-        "destination_icao": "HEAX",
-        "details": {
-          "origin_name": "Queen Alia International",
-          "terminal": "T2",
-          "gate_id": "T2-G3 (Dummy)"
-        }
-      },
-      "aircraft": {
-        "type": "A320",
-        "type_source": "HexDB",
-        "capacity": "180 (Simulated)",
-        "manufacturer": "Airbus",
-        "registration": "SU-AAD",
-        "owner": "Air Arabia Egypt",
-        "type_long": "A320 214"
-      },
-      "payload_stats": {
-        "total_passengers": "147 (Simulated)",
-        "estimated_groups": "62 (Simulated)",
-        "total_bags": "176 (Simulated)",
-        "priority_pax": "18 (Simulated)",
         "prm_pax": "1 (Simulated)",
         "service_multiplier": 1.4,
         "assigned_resources": {
-          "baggage_belt": "B4 (Dummy)"
+          "baggage_belt": "4"
         }
-      },
-      "personas": {
-        "p1": 0,
-        "p2": 0,
-        "p3": 0,
-        "p4": 70,
-        "p5": 0,
-        "p6": 20,
-        "p7": 10
       }
     },
     {
-      "flight_id": "E5522",
-      "flight_iata": "E5522",
-      "flight_icao": "RBG522",
-      "airline": "Air Arabia Egypt",
-      "flight_status": "active",
-      "flight_type": "International",
-      "route": {
-        "source": "AMM",
-        "source_icao": "OJAI",
-        "destination": "HBE",
-        "destination_icao": "HEAX",
-        "details": {
-          "origin_name": "Queen Alia International",
-          "terminal": "T2",
-          "gate_id": "T2-G8 (Dummy)"
-        }
-      },
-      "aircraft": {
-        "type": "A320",
-        "type_source": "HexDB",
-        "capacity": "180 (Simulated)",
-        "manufacturer": "Airbus",
-        "registration": "SU-AAD",
-        "owner": "Air Arabia Egypt",
-        "type_long": "A320 214"
-      },
-      "payload_stats": {
-        "total_passengers": "136 (Simulated)",
-        "estimated_groups": "57 (Simulated)",
-        "total_bags": "163 (Simulated)",
-        "priority_pax": "16 (Simulated)",
-        "prm_pax": "1 (Simulated)",
-        "service_multiplier": 1.4,
-        "assigned_resources": {
-          "baggage_belt": "B2 (Dummy)"
-        }
-      },
-      "personas": {
-        "p1": 0,
-        "p2": 0,
-        "p3": 0,
-        "p4": 70,
-        "p5": 0,
-        "p6": 20,
-        "p7": 10
-      }
-    },
-    {
-      "flight_id": "LN210",
-      "flight_iata": "LN210",
-      "flight_icao": "LAA210",
-      "airline": "Libyan Airlines",
+      "flight_id": "EK2109",
+      "flight_iata": "EK2109",
+      "flight_icao": "UAE2109",
+      "airline": "Emirates",
       "flight_status": "scheduled",
       "flight_type": "International",
       "route": {
-        "source": "MJI",
-        "source_icao": "HLLM",
-        "destination": "HBE",
-        "destination_icao": "HEAX",
+        "source": "KHI",
+        "source_icao": "OPKC",
+        "destination": "DXB",
+        "destination_icao": "OMDB",
         "details": {
-          "origin_name": "Mitiga",
+          "origin_name": "Quaid-e-azam International",
           "terminal": "T2",
           "gate_id": "T2-G2 (Dummy)"
         }
@@ -1075,52 +1238,612 @@
         "capacity": "180 (Simulated)"
       },
       "payload_stats": {
+        "total_passengers": "151 (Simulated)",
+        "estimated_groups": "63 (Simulated)",
+        "total_bags": "181 (Simulated)",
+        "priority_pax": "18 (Simulated)",
+        "prm_pax": "2 (Simulated)",
+        "service_multiplier": 1.4,
+        "assigned_resources": {
+          "baggage_belt": "4"
+        }
+      }
+    },
+    {
+      "flight_id": "EK525",
+      "flight_iata": "EK525",
+      "flight_icao": "UAE525",
+      "airline": "Emirates",
+      "flight_status": "scheduled",
+      "flight_type": "International",
+      "route": {
+        "source": "HYD",
+        "source_icao": "VOHS",
+        "destination": "DXB",
+        "destination_icao": "OMDB",
+        "details": {
+          "origin_name": "Hyderabad Airport",
+          "terminal": "T2",
+          "gate_id": "T2-G4 (Dummy)"
+        }
+      },
+      "aircraft": {
+        "type": "B77W",
+        "type_source": "CSV_DB",
+        "capacity": "180 (Simulated)",
+        "manufacturer": "Boeing",
+        "registration": "A6-EPQ",
+        "owner": "Emirates Airline",
+        "type_long": "777 300ER"
+      },
+      "payload_stats": {
         "total_passengers": "141 (Simulated)",
         "estimated_groups": "59 (Simulated)",
         "total_bags": "169 (Simulated)",
         "priority_pax": "17 (Simulated)",
-        "prm_pax": "1 (Simulated)",
+        "prm_pax": "0 (Simulated)",
         "service_multiplier": 1.4,
         "assigned_resources": {
-          "baggage_belt": "B1 (Dummy)"
+          "baggage_belt": "12"
         }
-      },
-      "personas": {
-        "p1": 0,
-        "p2": 0,
-        "p3": 0,
-        "p4": 70,
-        "p5": 0,
-        "p6": 20,
-        "p7": 10
       }
     },
     {
-      "flight_id": "G9338",
-      "flight_iata": "G9338",
-      "flight_icao": "ABY338",
-      "airline": "Air Arabia",
-      "flight_status": "landed",
+      "flight_id": "EK523",
+      "flight_iata": "EK523",
+      "flight_icao": "UAE523",
+      "airline": "Emirates",
+      "flight_status": "scheduled",
       "flight_type": "International",
       "route": {
-        "source": "RUH",
-        "source_icao": "OERK",
-        "destination": "HBE",
-        "destination_icao": "HEAX",
+        "source": "TRV",
+        "source_icao": "VOTV",
+        "destination": "DXB",
+        "destination_icao": "OMDB",
         "details": {
-          "origin_name": "King Khaled International",
+          "origin_name": "Thiruvananthapuram International",
+          "terminal": "T2",
+          "gate_id": "T2-G12 (Dummy)"
+        }
+      },
+      "aircraft": {
+        "type": "B77W",
+        "type_source": "CSV_DB",
+        "capacity": "180 (Simulated)",
+        "manufacturer": "Boeing",
+        "registration": "A6-ENZ",
+        "owner": "Emirates Airline",
+        "type_long": "777 31HER"
+      },
+      "payload_stats": {
+        "total_passengers": "154 (Simulated)",
+        "estimated_groups": "65 (Simulated)",
+        "total_bags": "185 (Simulated)",
+        "priority_pax": "18 (Simulated)",
+        "prm_pax": "2 (Simulated)",
+        "service_multiplier": 1.4,
+        "assigned_resources": {
+          "baggage_belt": "8"
+        }
+      }
+    },
+    {
+      "flight_id": "EK539",
+      "flight_iata": "EK539",
+      "flight_icao": "UAE539",
+      "airline": "Emirates",
+      "flight_status": "scheduled",
+      "flight_type": "International",
+      "route": {
+        "source": "AMD",
+        "source_icao": "VAAH",
+        "destination": "DXB",
+        "destination_icao": "OMDB",
+        "details": {
+          "origin_name": "Sardar Vallabhbhai Patel International Airport",
+          "terminal": "T2",
+          "gate_id": "T2-G1 (Dummy)"
+        }
+      },
+      "aircraft": {
+        "type": "A320 (Dummy)",
+        "type_source": "Dummy",
+        "capacity": "180 (Simulated)"
+      },
+      "payload_stats": {
+        "total_passengers": "167 (Simulated)",
+        "estimated_groups": "70 (Simulated)",
+        "total_bags": "200 (Simulated)",
+        "priority_pax": "20 (Simulated)",
+        "prm_pax": "2 (Simulated)",
+        "service_multiplier": 1.4,
+        "assigned_resources": {
+          "baggage_belt": "6"
+        }
+      }
+    },
+    {
+      "flight_id": "EK337",
+      "flight_iata": "EK337",
+      "flight_icao": "UAE337",
+      "airline": "Emirates",
+      "flight_status": "scheduled",
+      "flight_type": "International",
+      "route": {
+        "source": "MNL",
+        "source_icao": "RPLL",
+        "destination": "DXB",
+        "destination_icao": "OMDB",
+        "details": {
+          "origin_name": "Ninoy Aquino International",
+          "terminal": "T2",
+          "gate_id": "T2-G7 (Dummy)"
+        }
+      },
+      "aircraft": {
+        "type": "B77W",
+        "type_source": "CSV_DB",
+        "capacity": "180 (Simulated)",
+        "manufacturer": "Boeing",
+        "registration": "A6-EPG",
+        "owner": "Emirates Airline",
+        "type_long": "777 31HER"
+      },
+      "payload_stats": {
+        "total_passengers": "139 (Simulated)",
+        "estimated_groups": "58 (Simulated)",
+        "total_bags": "167 (Simulated)",
+        "priority_pax": "17 (Simulated)",
+        "prm_pax": "1 (Simulated)",
+        "service_multiplier": 1.4,
+        "assigned_resources": {
+          "baggage_belt": "8"
+        }
+      }
+    },
+    {
+      "flight_id": "FZ446",
+      "flight_iata": "FZ446",
+      "flight_icao": "FDB446",
+      "airline": "flydubai",
+      "flight_status": "scheduled",
+      "flight_type": "International",
+      "route": {
+        "source": "BOM",
+        "source_icao": "VABB",
+        "destination": "DXB",
+        "destination_icao": "OMDB",
+        "details": {
+          "origin_name": "Chhatrapati Shivaji International (Sahar International)",
+          "terminal": "T2",
+          "gate_id": "T2-G4 (Dummy)"
+        }
+      },
+      "aircraft": {
+        "type": "B38M (Dummy)",
+        "type_source": "Dummy",
+        "capacity": "189 (Simulated)"
+      },
+      "payload_stats": {
+        "total_passengers": "141 (Simulated)",
+        "estimated_groups": "59 (Simulated)",
+        "total_bags": "169 (Simulated)",
+        "priority_pax": "17 (Simulated)",
+        "prm_pax": "0 (Simulated)",
+        "service_multiplier": 1.4,
+        "assigned_resources": {
+          "baggage_belt": "4"
+        }
+      }
+    },
+    {
+      "flight_id": "FZ1942",
+      "flight_iata": "FZ1942",
+      "flight_icao": "FDB1942",
+      "airline": "flydubai",
+      "flight_status": "scheduled",
+      "flight_type": "International",
+      "route": {
+        "source": "TAS",
+        "source_icao": "UZTT",
+        "destination": "DXB",
+        "destination_icao": "OMDB",
+        "details": {
+          "origin_name": "Tashkent International",
           "terminal": "T2",
           "gate_id": "T2-G3 (Dummy)"
         }
       },
       "aircraft": {
-        "type": "A320",
-        "type_source": "HexDB",
+        "type": "B38M (Dummy)",
+        "type_source": "Dummy",
+        "capacity": "189 (Simulated)"
+      },
+      "payload_stats": {
+        "total_passengers": "164 (Simulated)",
+        "estimated_groups": "69 (Simulated)",
+        "total_bags": "197 (Simulated)",
+        "priority_pax": "20 (Simulated)",
+        "prm_pax": "0 (Simulated)",
+        "service_multiplier": 1.4,
+        "assigned_resources": {
+          "baggage_belt": "14"
+        }
+      }
+    },
+    {
+      "flight_id": "EK2087",
+      "flight_iata": "EK2087",
+      "flight_icao": "UAE2087",
+      "airline": "Emirates",
+      "flight_status": "scheduled",
+      "flight_type": "International",
+      "route": {
+        "source": "TAS",
+        "source_icao": "UZTT",
+        "destination": "DXB",
+        "destination_icao": "OMDB",
+        "details": {
+          "origin_name": "Tashkent International",
+          "terminal": "T2",
+          "gate_id": "T2-G1 (Dummy)"
+        }
+      },
+      "aircraft": {
+        "type": "A320 (Dummy)",
+        "type_source": "Dummy",
+        "capacity": "180 (Simulated)"
+      },
+      "payload_stats": {
+        "total_passengers": "149 (Simulated)",
+        "estimated_groups": "63 (Simulated)",
+        "total_bags": "179 (Simulated)",
+        "priority_pax": "18 (Simulated)",
+        "prm_pax": "2 (Simulated)",
+        "service_multiplier": 1.4,
+        "assigned_resources": {
+          "baggage_belt": "14"
+        }
+      }
+    },
+    {
+      "flight_id": "EK543",
+      "flight_iata": "EK543",
+      "flight_icao": "UAE543",
+      "airline": "Emirates",
+      "flight_status": "scheduled",
+      "flight_type": "International",
+      "route": {
+        "source": "MAA",
+        "source_icao": "VOMM",
+        "destination": "DXB",
+        "destination_icao": "OMDB",
+        "details": {
+          "origin_name": "Madras International (Meenambakkam)",
+          "terminal": "T2",
+          "gate_id": "T2-G4 (Dummy)"
+        }
+      },
+      "aircraft": {
+        "type": "B77W",
+        "type_source": "CSV_DB",
+        "capacity": "180 (Simulated)",
+        "manufacturer": "Boeing",
+        "registration": "A6-ENO",
+        "owner": "Emirates Airline",
+        "type_long": "777 31HER"
+      },
+      "payload_stats": {
+        "total_passengers": "141 (Simulated)",
+        "estimated_groups": "59 (Simulated)",
+        "total_bags": "169 (Simulated)",
+        "priority_pax": "17 (Simulated)",
+        "prm_pax": "0 (Simulated)",
+        "service_multiplier": 1.4,
+        "assigned_resources": {
+          "baggage_belt": "8"
+        }
+      }
+    },
+    {
+      "flight_id": "QF8371",
+      "flight_iata": "QF8371",
+      "flight_icao": "QFA8371",
+      "airline": "Qantas",
+      "flight_status": "active",
+      "flight_type": "International",
+      "route": {
+        "source": "BKK",
+        "source_icao": "VTBS",
+        "destination": "DXB",
+        "destination_icao": "OMDB",
+        "details": {
+          "origin_name": "Suvarnabhumi International",
+          "terminal": "T2",
+          "gate_id": "T2-G9 (Dummy)"
+        }
+      },
+      "aircraft": {
+        "type": "B77W",
+        "type_source": "CSV_DB",
+        "capacity": "180 (Simulated)",
+        "manufacturer": "Boeing",
+        "registration": "A6-ENW",
+        "owner": "Emirates Airline",
+        "type_long": "777 31HER"
+      },
+      "payload_stats": {
+        "total_passengers": "140 (Simulated)",
+        "estimated_groups": "59 (Simulated)",
+        "total_bags": "168 (Simulated)",
+        "priority_pax": "17 (Simulated)",
+        "prm_pax": "0 (Simulated)",
+        "service_multiplier": 1.4,
+        "assigned_resources": {
+          "baggage_belt": "B2 (Dummy)"
+        }
+      }
+    },
+    {
+      "flight_id": "DE5914",
+      "flight_iata": "DE5914",
+      "flight_icao": "CFG5914",
+      "airline": "Condor",
+      "flight_status": "active",
+      "flight_type": "International",
+      "route": {
+        "source": "BKK",
+        "source_icao": "VTBS",
+        "destination": "DXB",
+        "destination_icao": "OMDB",
+        "details": {
+          "origin_name": "Suvarnabhumi International",
+          "terminal": "T2",
+          "gate_id": "T2-G7 (Dummy)"
+        }
+      },
+      "aircraft": {
+        "type": "B77W",
+        "type_source": "CSV_DB",
+        "capacity": "180 (Simulated)",
+        "manufacturer": "Boeing",
+        "registration": "A6-ENW",
+        "owner": "Emirates Airline",
+        "type_long": "777 31HER"
+      },
+      "payload_stats": {
+        "total_passengers": "148 (Simulated)",
+        "estimated_groups": "62 (Simulated)",
+        "total_bags": "178 (Simulated)",
+        "priority_pax": "18 (Simulated)",
+        "prm_pax": "0 (Simulated)",
+        "service_multiplier": 1.4,
+        "assigned_resources": {
+          "baggage_belt": "B3 (Dummy)"
+        }
+      }
+    },
+    {
+      "flight_id": "BT5813",
+      "flight_iata": "BT5813",
+      "flight_icao": "BTI5813",
+      "airline": "Air Baltic",
+      "flight_status": "active",
+      "flight_type": "International",
+      "route": {
+        "source": "BKK",
+        "source_icao": "VTBS",
+        "destination": "DXB",
+        "destination_icao": "OMDB",
+        "details": {
+          "origin_name": "Suvarnabhumi International",
+          "terminal": "T2",
+          "gate_id": "T2-G10 (Dummy)"
+        }
+      },
+      "aircraft": {
+        "type": "B77W",
+        "type_source": "CSV_DB",
+        "capacity": "180 (Simulated)",
+        "manufacturer": "Boeing",
+        "registration": "A6-ENW",
+        "owner": "Emirates Airline",
+        "type_long": "777 31HER"
+      },
+      "payload_stats": {
+        "total_passengers": "140 (Simulated)",
+        "estimated_groups": "59 (Simulated)",
+        "total_bags": "168 (Simulated)",
+        "priority_pax": "17 (Simulated)",
+        "prm_pax": "1 (Simulated)",
+        "service_multiplier": 1.4,
+        "assigned_resources": {
+          "baggage_belt": "B3 (Dummy)"
+        }
+      }
+    },
+    {
+      "flight_id": "EK501",
+      "flight_iata": "EK501",
+      "flight_icao": "UAE501",
+      "airline": "Emirates",
+      "flight_status": "scheduled",
+      "flight_type": "International",
+      "route": {
+        "source": "BOM",
+        "source_icao": "VABB",
+        "destination": "DXB",
+        "destination_icao": "OMDB",
+        "details": {
+          "origin_name": "Chhatrapati Shivaji International (Sahar International)",
+          "terminal": "T2",
+          "gate_id": "T2-G2 (Dummy)"
+        }
+      },
+      "aircraft": {
+        "type": "A388",
+        "type_source": "CSV_DB",
         "capacity": "180 (Simulated)",
         "manufacturer": "Airbus",
-        "registration": "SU-AAD",
-        "owner": "Air Arabia Egypt",
-        "type_long": "A320 214"
+        "registration": "A6-EUR",
+        "owner": "Emirates Airline",
+        "type_long": "A380 842"
+      },
+      "payload_stats": {
+        "total_passengers": "150 (Simulated)",
+        "estimated_groups": "63 (Simulated)",
+        "total_bags": "180 (Simulated)",
+        "priority_pax": "18 (Simulated)",
+        "prm_pax": "0 (Simulated)",
+        "service_multiplier": 1.4,
+        "assigned_resources": {
+          "baggage_belt": "6"
+        }
+      }
+    },
+    {
+      "flight_id": "EK533",
+      "flight_iata": "EK533",
+      "flight_icao": "UAE533",
+      "airline": "Emirates",
+      "flight_status": "scheduled",
+      "flight_type": "International",
+      "route": {
+        "source": "COK",
+        "source_icao": "VOCI",
+        "destination": "DXB",
+        "destination_icao": "OMDB",
+        "details": {
+          "origin_name": "Cochin International",
+          "terminal": "T2",
+          "gate_id": "T2-G7 (Dummy)"
+        }
+      },
+      "aircraft": {
+        "type": "B77W",
+        "type_source": "CSV_DB",
+        "capacity": "180 (Simulated)",
+        "manufacturer": "Boeing",
+        "registration": "A6-EBY",
+        "owner": "Emirates Airline",
+        "type_long": "777 36NER"
+      },
+      "payload_stats": {
+        "total_passengers": "168 (Simulated)",
+        "estimated_groups": "70 (Simulated)",
+        "total_bags": "202 (Simulated)",
+        "priority_pax": "20 (Simulated)",
+        "prm_pax": "1 (Simulated)",
+        "service_multiplier": 1.4,
+        "assigned_resources": {
+          "baggage_belt": "8"
+        }
+      }
+    },
+    {
+      "flight_id": "TP6356",
+      "flight_iata": "TP6356",
+      "flight_icao": "TAP6356",
+      "airline": "TAP Air Portugal",
+      "flight_status": "active",
+      "flight_type": "International",
+      "route": {
+        "source": "SIN",
+        "source_icao": "WSSS",
+        "destination": "DXB",
+        "destination_icao": "OMDB",
+        "details": {
+          "origin_name": "Singapore Changi",
+          "terminal": "T2",
+          "gate_id": "T2-G5 (Dummy)"
+        }
+      },
+      "aircraft": {
+        "type": "A388",
+        "type_source": "CSV_DB",
+        "capacity": "180 (Simulated)",
+        "manufacturer": "Airbus",
+        "registration": "A6-EEH",
+        "owner": "Emirates Airline",
+        "type_long": "A380 861"
+      },
+      "payload_stats": {
+        "total_passengers": "137 (Simulated)",
+        "estimated_groups": "58 (Simulated)",
+        "total_bags": "164 (Simulated)",
+        "priority_pax": "16 (Simulated)",
+        "prm_pax": "2 (Simulated)",
+        "service_multiplier": 1.4,
+        "assigned_resources": {
+          "baggage_belt": "10"
+        }
+      }
+    },
+    {
+      "flight_id": "QF8353",
+      "flight_iata": "QF8353",
+      "flight_icao": "QFA8353",
+      "airline": "Qantas",
+      "flight_status": "active",
+      "flight_type": "International",
+      "route": {
+        "source": "SIN",
+        "source_icao": "WSSS",
+        "destination": "DXB",
+        "destination_icao": "OMDB",
+        "details": {
+          "origin_name": "Singapore Changi",
+          "terminal": "T2",
+          "gate_id": "T2-G5 (Dummy)"
+        }
+      },
+      "aircraft": {
+        "type": "A388",
+        "type_source": "CSV_DB",
+        "capacity": "180 (Simulated)",
+        "manufacturer": "Airbus",
+        "registration": "A6-EEH",
+        "owner": "Emirates Airline",
+        "type_long": "A380 861"
+      },
+      "payload_stats": {
+        "total_passengers": "160 (Simulated)",
+        "estimated_groups": "67 (Simulated)",
+        "total_bags": "192 (Simulated)",
+        "priority_pax": "19 (Simulated)",
+        "prm_pax": "2 (Simulated)",
+        "service_multiplier": 1.4,
+        "assigned_resources": {
+          "baggage_belt": "10"
+        }
+      }
+    },
+    {
+      "flight_id": "TP6375",
+      "flight_iata": "TP6375",
+      "flight_icao": "TAP6375",
+      "airline": "TAP Air Portugal",
+      "flight_status": "active",
+      "flight_type": "International",
+      "route": {
+        "source": "BKK",
+        "source_icao": "VTBS",
+        "destination": "DXB",
+        "destination_icao": "OMDB",
+        "details": {
+          "origin_name": "Suvarnabhumi International",
+          "terminal": "T2",
+          "gate_id": "T2-G1 (Dummy)"
+        }
+      },
+      "aircraft": {
+        "type": "A388",
+        "type_source": "CSV_DB",
+        "capacity": "180 (Simulated)",
+        "manufacturer": "Airbus",
+        "registration": "A6-EOO",
+        "owner": "Emirates Airline",
+        "type_long": "A380 861"
       },
       "payload_stats": {
         "total_passengers": "156 (Simulated)",
@@ -1130,93 +1853,145 @@
         "prm_pax": "0 (Simulated)",
         "service_multiplier": 1.4,
         "assigned_resources": {
-          "baggage_belt": "B4 (Dummy)"
+          "baggage_belt": "B1 (Dummy)"
         }
-      },
-      "personas": {
-        "p1": 0,
-        "p2": 0,
-        "p3": 0,
-        "p4": 70,
-        "p5": 0,
-        "p6": 20,
-        "p7": 10
       }
     },
     {
-      "flight_id": "KL3937",
-      "flight_iata": "KL3937",
-      "flight_icao": "KLM3937",
-      "airline": "KLM",
+      "flight_id": "QF8385",
+      "flight_iata": "QF8385",
+      "flight_icao": "QFA8385",
+      "airline": "Qantas",
       "flight_status": "active",
       "flight_type": "International",
       "route": {
-        "source": "RUH",
-        "source_icao": "OERK",
-        "destination": "HBE",
-        "destination_icao": "HEAX",
+        "source": "BKK",
+        "source_icao": "VTBS",
+        "destination": "DXB",
+        "destination_icao": "OMDB",
         "details": {
-          "origin_name": "King Khaled International",
+          "origin_name": "Suvarnabhumi International",
           "terminal": "T2",
-          "gate_id": "T2-G3 (Dummy)"
+          "gate_id": "T2-G7 (Dummy)"
         }
       },
       "aircraft": {
-        "type": "A321",
-        "type_source": "HexDB",
-        "capacity": "220 (Simulated)",
+        "type": "A388",
+        "type_source": "CSV_DB",
+        "capacity": "180 (Simulated)",
         "manufacturer": "Airbus",
-        "registration": "HZ-ASR",
-        "owner": "Saudi Arabian Airlines",
-        "type_long": "A321 211"
+        "registration": "A6-EOO",
+        "owner": "Emirates Airline",
+        "type_long": "A380 861"
       },
       "payload_stats": {
-        "total_passengers": "205 (Simulated)",
-        "estimated_groups": "86 (Simulated)",
-        "total_bags": "246 (Simulated)",
-        "priority_pax": "25 (Simulated)",
+        "total_passengers": "148 (Simulated)",
+        "estimated_groups": "62 (Simulated)",
+        "total_bags": "178 (Simulated)",
+        "priority_pax": "18 (Simulated)",
         "prm_pax": "0 (Simulated)",
         "service_multiplier": 1.4,
         "assigned_resources": {
-          "baggage_belt": "B3 (Dummy)"
+          "baggage_belt": "B1 (Dummy)"
         }
-      },
-      "personas": {
-        "p1": 0,
-        "p2": 0,
-        "p3": 0,
-        "p4": 70,
-        "p5": 0,
-        "p6": 20,
-        "p7": 10
       }
     },
     {
-      "flight_id": "EY3393",
-      "flight_iata": "EY3393",
-      "flight_icao": "ETD3393",
-      "airline": "Etihad Airways",
-      "flight_status": "active",
+      "flight_id": "WB304",
+      "flight_iata": "WB304",
+      "flight_icao": "RWD304",
+      "airline": "RwandAir",
+      "flight_status": "scheduled",
       "flight_type": "International",
       "route": {
-        "source": "RUH",
-        "source_icao": "OERK",
-        "destination": "HBE",
-        "destination_icao": "HEAX",
+        "source": "KGL",
+        "source_icao": "HRYR",
+        "destination": "DXB",
+        "destination_icao": "OMDB",
         "details": {
-          "origin_name": "King Khaled International",
+          "origin_name": "Kigali International",
           "terminal": "T2",
-          "gate_id": "T2-G1 (Dummy)"
+          "gate_id": "T2-G8 (Dummy)"
         }
       },
       "aircraft": {
-        "type": "A321",
-        "type_source": "HexDB",
-        "capacity": "220 (Simulated)",
-        "manufacturer": "Airbus",
-        "registration": "HZ-ASR",
-        "owner": "Saudi Arabian Airlines",
-        "type_long": "A321 211"
+        "type": "A320 (Dummy)",
+        "type_source": "Dummy",
+        "capacity": "180 (Simulated)"
+      },
+      "payload_stats": {
+        "total_passengers": "163 (Simulated)",
+        "estimated_groups": "68 (Simulated)",
+        "total_bags": "196 (Simulated)",
+        "priority_pax": "20 (Simulated)",
+        "prm_pax": "0 (Simulated)",
+        "service_multiplier": 1.4,
+        "assigned_resources": {
+          "baggage_belt": "B4 (Dummy)"
+        }
+      }
+    },
+    {
+      "flight_id": "EK513",
+      "flight_iata": "EK513",
+      "flight_icao": "UAE513",
+      "airline": "Emirates",
+      "flight_status": "scheduled",
+      "flight_type": "International",
+      "route": {
+        "source": "DEL",
+        "source_icao": "VIDP",
+        "destination": "DXB",
+        "destination_icao": "OMDB",
+        "details": {
+          "origin_name": "Indira Gandhi International",
+          "terminal": "T2",
+          "gate_id": "T2-G12 (Dummy)"
+        }
+      },
+      "aircraft": {
+        "type": "B77W",
+        "type_source": "CSV_DB",
+        "capacity": "180 (Simulated)",
+        "manufacturer": "Boeing",
+        "registration": "A6-EGR",
+        "owner": "Emirates Airline",
+        "type_long": "Boeing 777-31H(ER)"
+      },
+      "payload_stats": {
+        "total_passengers": "148 (Simulated)",
+        "estimated_groups": "62 (Simulated)",
+        "total_bags": "178 (Simulated)",
+        "priority_pax": "18 (Simulated)",
+        "prm_pax": "0 (Simulated)",
+        "service_multiplier": 1.4,
+        "assigned_resources": {
+          "baggage_belt": "2"
+        }
+      }
+    },
+    {
+      "flight_id": "FZ442",
+      "flight_iata": "FZ442",
+      "flight_icao": "FDB442",
+      "airline": "flydubai",
+      "flight_status": "scheduled",
+      "flight_type": "International",
+      "route": {
+        "source": "DEL",
+        "source_icao": "VIDP",
+        "destination": "DXB",
+        "destination_icao": "OMDB",
+        "details": {
+          "origin_name": "Indira Gandhi International",
+          "terminal": "T2",
+          "gate_id": "T2-G10 (Dummy)"
+        }
+      },
+      "aircraft": {
+        "type": "B38M (Dummy)",
+        "type_source": "Dummy",
+        "capacity": "189 (Simulated)"
       },
       "payload_stats": {
         "total_passengers": "174 (Simulated)",
@@ -1226,83 +2001,1475 @@
         "prm_pax": "2 (Simulated)",
         "service_multiplier": 1.4,
         "assigned_resources": {
-          "baggage_belt": "B2 (Dummy)"
+          "baggage_belt": "5"
         }
-      },
-      "personas": {
-        "p1": 0,
-        "p2": 0,
-        "p3": 0,
-        "p4": 70,
-        "p5": 0,
-        "p6": 20,
-        "p7": 10
       }
     },
     {
-      "flight_id": "SV333",
-      "flight_iata": "SV333",
-      "flight_icao": "SVA333",
-      "airline": "Saudia",
+      "flight_id": "EK623",
+      "flight_iata": "EK623",
+      "flight_icao": "UAE623",
+      "airline": "Emirates",
+      "flight_status": "scheduled",
+      "flight_type": "International",
+      "route": {
+        "source": "LHE",
+        "source_icao": "OPLA",
+        "destination": "DXB",
+        "destination_icao": "OMDB",
+        "details": {
+          "origin_name": "Alama Iqbal International",
+          "terminal": "T2",
+          "gate_id": "T2-G4 (Dummy)"
+        }
+      },
+      "aircraft": {
+        "type": "B77W",
+        "type_source": "CSV_DB",
+        "capacity": "180 (Simulated)",
+        "manufacturer": "Boeing",
+        "registration": "A6-EPT",
+        "owner": "Emirates Airline",
+        "type_long": "777 300ER"
+      },
+      "payload_stats": {
+        "total_passengers": "143 (Simulated)",
+        "estimated_groups": "60 (Simulated)",
+        "total_bags": "172 (Simulated)",
+        "priority_pax": "17 (Simulated)",
+        "prm_pax": "1 (Simulated)",
+        "service_multiplier": 1.4,
+        "assigned_resources": {
+          "baggage_belt": "14"
+        }
+      }
+    },
+    {
+      "flight_id": "AC7617",
+      "flight_iata": "AC7617",
+      "flight_icao": "ACA7617",
+      "airline": "Air Canada",
+      "flight_status": "scheduled",
+      "flight_type": "International",
+      "route": {
+        "source": "LHE",
+        "source_icao": "OPLA",
+        "destination": "DXB",
+        "destination_icao": "OMDB",
+        "details": {
+          "origin_name": "Alama Iqbal International",
+          "terminal": "T2",
+          "gate_id": "T2-G8 (Dummy)"
+        }
+      },
+      "aircraft": {
+        "type": "B77W",
+        "type_source": "CSV_DB",
+        "capacity": "180 (Simulated)",
+        "manufacturer": "Boeing",
+        "registration": "A6-EPT",
+        "owner": "Emirates Airline",
+        "type_long": "777 300ER"
+      },
+      "payload_stats": {
+        "total_passengers": "141 (Simulated)",
+        "estimated_groups": "59 (Simulated)",
+        "total_bags": "169 (Simulated)",
+        "priority_pax": "17 (Simulated)",
+        "prm_pax": "0 (Simulated)",
+        "service_multiplier": 1.4,
+        "assigned_resources": {
+          "baggage_belt": "6"
+        }
+      }
+    },
+    {
+      "flight_id": "EK619",
+      "flight_iata": "EK619",
+      "flight_icao": "UAE619",
+      "airline": "Emirates",
+      "flight_status": "scheduled",
+      "flight_type": "International",
+      "route": {
+        "source": "SKT",
+        "source_icao": "OPST",
+        "destination": "DXB",
+        "destination_icao": "OMDB",
+        "details": {
+          "origin_name": "Sialkot International",
+          "terminal": "T2",
+          "gate_id": "T2-G2 (Dummy)"
+        }
+      },
+      "aircraft": {
+        "type": "B77W",
+        "type_source": "CSV_DB",
+        "capacity": "180 (Simulated)",
+        "manufacturer": "The Boeing Co.",
+        "registration": "A6-EPR",
+        "owner": "Emirates",
+        "type_long": "777-31H"
+      },
+      "payload_stats": {
+        "total_passengers": "152 (Simulated)",
+        "estimated_groups": "64 (Simulated)",
+        "total_bags": "182 (Simulated)",
+        "priority_pax": "18 (Simulated)",
+        "prm_pax": "2 (Simulated)",
+        "service_multiplier": 1.4,
+        "assigned_resources": {
+          "baggage_belt": "2"
+        }
+      }
+    },
+    {
+      "flight_id": "KU677",
+      "flight_iata": "KU677",
+      "flight_icao": "KAC677",
+      "airline": "Kuwait Airways",
+      "flight_status": "scheduled",
+      "flight_type": "International",
+      "route": {
+        "source": "KWI",
+        "source_icao": "OKKK",
+        "destination": "DXB",
+        "destination_icao": "OMDB",
+        "details": {
+          "origin_name": "Kuwait International",
+          "terminal": "T2",
+          "gate_id": "T2-G3 (Dummy)"
+        }
+      },
+      "aircraft": {
+        "type": "A320 (Dummy)",
+        "type_source": "Dummy",
+        "capacity": "180 (Simulated)"
+      },
+      "payload_stats": {
+        "total_passengers": "148 (Simulated)",
+        "estimated_groups": "62 (Simulated)",
+        "total_bags": "178 (Simulated)",
+        "priority_pax": "18 (Simulated)",
+        "prm_pax": "0 (Simulated)",
+        "service_multiplier": 1.4,
+        "assigned_resources": {
+          "baggage_belt": "B3 (Dummy)"
+        }
+      }
+    },
+    {
+      "flight_id": "AZ2890",
+      "flight_iata": "AZ2890",
+      "flight_icao": "AZA2890",
+      "airline": "Alitalia",
+      "flight_status": "scheduled",
+      "flight_type": "International",
+      "route": {
+        "source": "KWI",
+        "source_icao": "OKKK",
+        "destination": "DXB",
+        "destination_icao": "OMDB",
+        "details": {
+          "origin_name": "Kuwait International",
+          "terminal": "T2",
+          "gate_id": "T2-G10 (Dummy)"
+        }
+      },
+      "aircraft": {
+        "type": "A320 (Dummy)",
+        "type_source": "Dummy",
+        "capacity": "180 (Simulated)"
+      },
+      "payload_stats": {
+        "total_passengers": "150 (Simulated)",
+        "estimated_groups": "63 (Simulated)",
+        "total_bags": "180 (Simulated)",
+        "priority_pax": "18 (Simulated)",
+        "prm_pax": "2 (Simulated)",
+        "service_multiplier": 1.4,
+        "assigned_resources": {
+          "baggage_belt": "B1 (Dummy)"
+        }
+      }
+    },
+    {
+      "flight_id": "4O4454",
+      "flight_iata": "4O4454",
+      "flight_icao": "MNE4454",
+      "airline": "Air Montenegro",
+      "flight_status": "scheduled",
+      "flight_type": "International",
+      "route": {
+        "source": "IST",
+        "source_icao": "LTFM",
+        "destination": "DXB",
+        "destination_icao": "OMDB",
+        "details": {
+          "origin_name": "Istanbul Airport",
+          "terminal": "T2",
+          "gate_id": "T2-G1 (Dummy)"
+        }
+      },
+      "aircraft": {
+        "type": "A320 (Dummy)",
+        "type_source": "Dummy",
+        "capacity": "180 (Simulated)"
+      },
+      "payload_stats": {
+        "total_passengers": "137 (Simulated)",
+        "estimated_groups": "58 (Simulated)",
+        "total_bags": "164 (Simulated)",
+        "priority_pax": "16 (Simulated)",
+        "prm_pax": "2 (Simulated)",
+        "service_multiplier": 1.4,
+        "assigned_resources": {
+          "baggage_belt": "B4 (Dummy)"
+        }
+      }
+    },
+    {
+      "flight_id": "TP6355",
+      "flight_iata": "TP6355",
+      "flight_icao": "TAP6355",
+      "airline": "TAP Air Portugal",
       "flight_status": "active",
       "flight_type": "International",
       "route": {
-        "source": "RUH",
-        "source_icao": "OERK",
-        "destination": "HBE",
-        "destination_icao": "HEAX",
+        "source": "KUL",
+        "source_icao": "WMKK",
+        "destination": "DXB",
+        "destination_icao": "OMDB",
         "details": {
-          "origin_name": "King Khaled International",
+          "origin_name": "Kuala Lumpur International Airport (klia)",
+          "terminal": "T2",
+          "gate_id": "T2-G2 (Dummy)"
+        }
+      },
+      "aircraft": {
+        "type": "A388",
+        "type_source": "CSV_DB",
+        "capacity": "180 (Simulated)",
+        "manufacturer": "Airbus",
+        "registration": "A6-EUP",
+        "owner": "Emirates Airline",
+        "type_long": "A380 842"
+      },
+      "payload_stats": {
+        "total_passengers": "148 (Simulated)",
+        "estimated_groups": "62 (Simulated)",
+        "total_bags": "178 (Simulated)",
+        "priority_pax": "18 (Simulated)",
+        "prm_pax": "2 (Simulated)",
+        "service_multiplier": 1.4,
+        "assigned_resources": {
+          "baggage_belt": "6"
+        }
+      }
+    },
+    {
+      "flight_id": "DE5966",
+      "flight_iata": "DE5966",
+      "flight_icao": "CFG5966",
+      "airline": "Condor",
+      "flight_status": "active",
+      "flight_type": "International",
+      "route": {
+        "source": "KUL",
+        "source_icao": "WMKK",
+        "destination": "DXB",
+        "destination_icao": "OMDB",
+        "details": {
+          "origin_name": "Kuala Lumpur International Airport (klia)",
+          "terminal": "T2",
+          "gate_id": "T2-G9 (Dummy)"
+        }
+      },
+      "aircraft": {
+        "type": "A388",
+        "type_source": "CSV_DB",
+        "capacity": "180 (Simulated)",
+        "manufacturer": "Airbus",
+        "registration": "A6-EUP",
+        "owner": "Emirates Airline",
+        "type_long": "A380 842"
+      },
+      "payload_stats": {
+        "total_passengers": "137 (Simulated)",
+        "estimated_groups": "58 (Simulated)",
+        "total_bags": "164 (Simulated)",
+        "priority_pax": "16 (Simulated)",
+        "prm_pax": "2 (Simulated)",
+        "service_multiplier": 1.4,
+        "assigned_resources": {
+          "baggage_belt": "6"
+        }
+      }
+    },
+    {
+      "flight_id": "FZ828",
+      "flight_iata": "FZ828",
+      "flight_icao": "FDB828",
+      "airline": "flydubai",
+      "flight_status": "scheduled",
+      "flight_type": "International",
+      "route": {
+        "source": "MED",
+        "source_icao": "OEMA",
+        "destination": "DXB",
+        "destination_icao": "OMDB",
+        "details": {
+          "origin_name": "Mohammad Bin Abdulaziz",
+          "terminal": "T2",
+          "gate_id": "T2-G4 (Dummy)"
+        }
+      },
+      "aircraft": {
+        "type": "B38M (Dummy)",
+        "type_source": "Dummy",
+        "capacity": "189 (Simulated)"
+      },
+      "payload_stats": {
+        "total_passengers": "149 (Simulated)",
+        "estimated_groups": "63 (Simulated)",
+        "total_bags": "179 (Simulated)",
+        "priority_pax": "18 (Simulated)",
+        "prm_pax": "0 (Simulated)",
+        "service_multiplier": 1.4,
+        "assigned_resources": {
+          "baggage_belt": "5"
+        }
+      }
+    },
+    {
+      "flight_id": "EK2337",
+      "flight_iata": "EK2337",
+      "flight_icao": "UAE2337",
+      "airline": "Emirates",
+      "flight_status": "scheduled",
+      "flight_type": "International",
+      "route": {
+        "source": "MED",
+        "source_icao": "OEMA",
+        "destination": "DXB",
+        "destination_icao": "OMDB",
+        "details": {
+          "origin_name": "Mohammad Bin Abdulaziz",
+          "terminal": "T2",
+          "gate_id": "T2-G3 (Dummy)"
+        }
+      },
+      "aircraft": {
+        "type": "A320 (Dummy)",
+        "type_source": "Dummy",
+        "capacity": "180 (Simulated)"
+      },
+      "payload_stats": {
+        "total_passengers": "145 (Simulated)",
+        "estimated_groups": "61 (Simulated)",
+        "total_bags": "174 (Simulated)",
+        "priority_pax": "17 (Simulated)",
+        "prm_pax": "1 (Simulated)",
+        "service_multiplier": 1.4,
+        "assigned_resources": {
+          "baggage_belt": "5"
+        }
+      }
+    },
+    {
+      "flight_id": "FZ454",
+      "flight_iata": "FZ454",
+      "flight_icao": "FDB454",
+      "airline": "flydubai",
+      "flight_status": "scheduled",
+      "flight_type": "International",
+      "route": {
+        "source": "COK",
+        "source_icao": "VOCI",
+        "destination": "DXB",
+        "destination_icao": "OMDB",
+        "details": {
+          "origin_name": "Cochin International",
+          "terminal": "T2",
+          "gate_id": "T2-G1 (Dummy)"
+        }
+      },
+      "aircraft": {
+        "type": "B38M (Dummy)",
+        "type_source": "Dummy",
+        "capacity": "189 (Simulated)"
+      },
+      "payload_stats": {
+        "total_passengers": "141 (Simulated)",
+        "estimated_groups": "59 (Simulated)",
+        "total_bags": "169 (Simulated)",
+        "priority_pax": "17 (Simulated)",
+        "prm_pax": "1 (Simulated)",
+        "service_multiplier": 1.4,
+        "assigned_resources": {
+          "baggage_belt": "6"
+        }
+      }
+    },
+    {
+      "flight_id": "EK2251",
+      "flight_iata": "EK2251",
+      "flight_icao": "UAE2251",
+      "airline": "Emirates",
+      "flight_status": "scheduled",
+      "flight_type": "International",
+      "route": {
+        "source": "COK",
+        "source_icao": "VOCI",
+        "destination": "DXB",
+        "destination_icao": "OMDB",
+        "details": {
+          "origin_name": "Cochin International",
+          "terminal": "T2",
+          "gate_id": "T2-G9 (Dummy)"
+        }
+      },
+      "aircraft": {
+        "type": "A320 (Dummy)",
+        "type_source": "Dummy",
+        "capacity": "180 (Simulated)"
+      },
+      "payload_stats": {
+        "total_passengers": "136 (Simulated)",
+        "estimated_groups": "57 (Simulated)",
+        "total_bags": "163 (Simulated)",
+        "priority_pax": "16 (Simulated)",
+        "prm_pax": "0 (Simulated)",
+        "service_multiplier": 1.4,
+        "assigned_resources": {
+          "baggage_belt": "6"
+        }
+      }
+    },
+    {
+      "flight_id": "EK649",
+      "flight_iata": "EK649",
+      "flight_icao": "UAE649",
+      "airline": "Emirates",
+      "flight_status": "active",
+      "flight_type": "International",
+      "route": {
+        "source": "CMB",
+        "source_icao": "VCBI",
+        "destination": "DXB",
+        "destination_icao": "OMDB",
+        "details": {
+          "origin_name": "Bandaranaike International",
+          "terminal": "T2",
+          "gate_id": "T2-G10 (Dummy)"
+        }
+      },
+      "aircraft": {
+        "type": "B77W",
+        "type_source": "CSV_DB",
+        "capacity": "180 (Simulated)",
+        "manufacturer": "Boeing",
+        "registration": "A6-ENR",
+        "owner": "Emirates Airline",
+        "type_long": "777 31HER"
+      },
+      "payload_stats": {
+        "total_passengers": "146 (Simulated)",
+        "estimated_groups": "61 (Simulated)",
+        "total_bags": "175 (Simulated)",
+        "priority_pax": "18 (Simulated)",
+        "prm_pax": "0 (Simulated)",
+        "service_multiplier": 1.4,
+        "assigned_resources": {
+          "baggage_belt": "8"
+        }
+      }
+    },
+    {
+      "flight_id": "MK9935",
+      "flight_iata": "MK9935",
+      "flight_icao": "MAU9935",
+      "airline": "Air Mauritius",
+      "flight_status": "active",
+      "flight_type": "International",
+      "route": {
+        "source": "CMB",
+        "source_icao": "VCBI",
+        "destination": "DXB",
+        "destination_icao": "OMDB",
+        "details": {
+          "origin_name": "Bandaranaike International",
           "terminal": "T2",
           "gate_id": "T2-G11 (Dummy)"
         }
       },
       "aircraft": {
-        "type": "A321",
-        "type_source": "HexDB",
-        "capacity": "220 (Simulated)",
-        "manufacturer": "Airbus",
-        "registration": "HZ-ASR",
-        "owner": "Saudi Arabian Airlines",
-        "type_long": "A321 211"
+        "type": "B77W",
+        "type_source": "CSV_DB",
+        "capacity": "180 (Simulated)",
+        "manufacturer": "Boeing",
+        "registration": "A6-ENR",
+        "owner": "Emirates Airline",
+        "type_long": "777 31HER"
       },
       "payload_stats": {
-        "total_passengers": "187 (Simulated)",
-        "estimated_groups": "78 (Simulated)",
-        "total_bags": "224 (Simulated)",
-        "priority_pax": "22 (Simulated)",
-        "prm_pax": "0 (Simulated)",
+        "total_passengers": "145 (Simulated)",
+        "estimated_groups": "61 (Simulated)",
+        "total_bags": "174 (Simulated)",
+        "priority_pax": "17 (Simulated)",
+        "prm_pax": "1 (Simulated)",
+        "service_multiplier": 1.4,
+        "assigned_resources": {
+          "baggage_belt": "8"
+        }
+      }
+    },
+    {
+      "flight_id": "DE5923",
+      "flight_iata": "DE5923",
+      "flight_icao": "CFG5923",
+      "airline": "Condor",
+      "flight_status": "active",
+      "flight_type": "International",
+      "route": {
+        "source": "CMB",
+        "source_icao": "VCBI",
+        "destination": "DXB",
+        "destination_icao": "OMDB",
+        "details": {
+          "origin_name": "Bandaranaike International",
+          "terminal": "T2",
+          "gate_id": "T2-G8 (Dummy)"
+        }
+      },
+      "aircraft": {
+        "type": "B77W",
+        "type_source": "CSV_DB",
+        "capacity": "180 (Simulated)",
+        "manufacturer": "Boeing",
+        "registration": "A6-ENR",
+        "owner": "Emirates Airline",
+        "type_long": "777 31HER"
+      },
+      "payload_stats": {
+        "total_passengers": "139 (Simulated)",
+        "estimated_groups": "58 (Simulated)",
+        "total_bags": "167 (Simulated)",
+        "priority_pax": "17 (Simulated)",
+        "prm_pax": "2 (Simulated)",
+        "service_multiplier": 1.4,
+        "assigned_resources": {
+          "baggage_belt": "8"
+        }
+      }
+    },
+    {
+      "flight_id": "FZ436",
+      "flight_iata": "FZ436",
+      "flight_icao": "FDB436",
+      "airline": "flydubai",
+      "flight_status": "scheduled",
+      "flight_type": "International",
+      "route": {
+        "source": "HYD",
+        "source_icao": "VOHS",
+        "destination": "DXB",
+        "destination_icao": "OMDB",
+        "details": {
+          "origin_name": "Hyderabad Airport",
+          "terminal": "T2",
+          "gate_id": "T2-G2 (Dummy)"
+        }
+      },
+      "aircraft": {
+        "type": "B38M (Dummy)",
+        "type_source": "Dummy",
+        "capacity": "189 (Simulated)"
+      },
+      "payload_stats": {
+        "total_passengers": "175 (Simulated)",
+        "estimated_groups": "73 (Simulated)",
+        "total_bags": "210 (Simulated)",
+        "priority_pax": "21 (Simulated)",
+        "prm_pax": "1 (Simulated)",
+        "service_multiplier": 1.4,
+        "assigned_resources": {
+          "baggage_belt": "6"
+        }
+      }
+    },
+    {
+      "flight_id": "EK2247",
+      "flight_iata": "EK2247",
+      "flight_icao": "UAE2247",
+      "airline": "Emirates",
+      "flight_status": "scheduled",
+      "flight_type": "International",
+      "route": {
+        "source": "HYD",
+        "source_icao": "VOHS",
+        "destination": "DXB",
+        "destination_icao": "OMDB",
+        "details": {
+          "origin_name": "Hyderabad Airport",
+          "terminal": "T2",
+          "gate_id": "T2-G7 (Dummy)"
+        }
+      },
+      "aircraft": {
+        "type": "A320 (Dummy)",
+        "type_source": "Dummy",
+        "capacity": "180 (Simulated)"
+      },
+      "payload_stats": {
+        "total_passengers": "146 (Simulated)",
+        "estimated_groups": "61 (Simulated)",
+        "total_bags": "175 (Simulated)",
+        "priority_pax": "18 (Simulated)",
+        "prm_pax": "2 (Simulated)",
+        "service_multiplier": 1.4,
+        "assigned_resources": {
+          "baggage_belt": "6"
+        }
+      }
+    },
+    {
+      "flight_id": "PA410",
+      "flight_iata": "PA410",
+      "flight_icao": "ABQ410",
+      "airline": "Airblue",
+      "flight_status": "scheduled",
+      "flight_type": "International",
+      "route": {
+        "source": "LHE",
+        "source_icao": "OPLA",
+        "destination": "DXB",
+        "destination_icao": "OMDB",
+        "details": {
+          "origin_name": "Alama Iqbal International",
+          "terminal": "T2",
+          "gate_id": "T2-G3 (Dummy)"
+        }
+      },
+      "aircraft": {
+        "type": "A320 (Dummy)",
+        "type_source": "Dummy",
+        "capacity": "180 (Simulated)"
+      },
+      "payload_stats": {
+        "total_passengers": "170 (Simulated)",
+        "estimated_groups": "71 (Simulated)",
+        "total_bags": "204 (Simulated)",
+        "priority_pax": "20 (Simulated)",
+        "prm_pax": "1 (Simulated)",
         "service_multiplier": 1.4,
         "assigned_resources": {
           "baggage_belt": "B1 (Dummy)"
         }
-      },
-      "personas": {
-        "p1": 0,
-        "p2": 0,
-        "p3": 0,
-        "p4": 70,
-        "p5": 0,
-        "p6": 20,
-        "p7": 10
       }
     },
     {
-      "flight_id": "SM212",
-      "flight_iata": "SM212",
-      "flight_icao": "MSC212",
-      "airline": "Air Cairo",
+      "flight_id": "FZ340",
+      "flight_iata": "FZ340",
+      "flight_icao": "FDB340",
+      "airline": "flydubai",
       "flight_status": "scheduled",
       "flight_type": "International",
       "route": {
-        "source": "AMM",
-        "source_icao": "OJAI",
-        "destination": "HBE",
-        "destination_icao": "HEAX",
+        "source": "MUX",
+        "source_icao": "OPMT",
+        "destination": "DXB",
+        "destination_icao": "OMDB",
         "details": {
-          "origin_name": "Queen Alia International",
+          "origin_name": "Multan International",
+          "terminal": "T2",
+          "gate_id": "T2-G8 (Dummy)"
+        }
+      },
+      "aircraft": {
+        "type": "B38M (Dummy)",
+        "type_source": "Dummy",
+        "capacity": "189 (Simulated)"
+      },
+      "payload_stats": {
+        "total_passengers": "170 (Simulated)",
+        "estimated_groups": "71 (Simulated)",
+        "total_bags": "204 (Simulated)",
+        "priority_pax": "20 (Simulated)",
+        "prm_pax": "2 (Simulated)",
+        "service_multiplier": 1.4,
+        "assigned_resources": {
+          "baggage_belt": "4"
+        }
+      }
+    },
+    {
+      "flight_id": "EK2117",
+      "flight_iata": "EK2117",
+      "flight_icao": "UAE2117",
+      "airline": "Emirates",
+      "flight_status": "scheduled",
+      "flight_type": "International",
+      "route": {
+        "source": "MUX",
+        "source_icao": "OPMT",
+        "destination": "DXB",
+        "destination_icao": "OMDB",
+        "details": {
+          "origin_name": "Multan International",
+          "terminal": "T2",
+          "gate_id": "T2-G12 (Dummy)"
+        }
+      },
+      "aircraft": {
+        "type": "A320 (Dummy)",
+        "type_source": "Dummy",
+        "capacity": "180 (Simulated)"
+      },
+      "payload_stats": {
+        "total_passengers": "147 (Simulated)",
+        "estimated_groups": "62 (Simulated)",
+        "total_bags": "176 (Simulated)",
+        "priority_pax": "18 (Simulated)",
+        "prm_pax": "0 (Simulated)",
+        "service_multiplier": 1.4,
+        "assigned_resources": {
+          "baggage_belt": "4"
+        }
+      }
+    },
+    {
+      "flight_id": "EK371",
+      "flight_iata": "EK371",
+      "flight_icao": "UAE371",
+      "airline": "Emirates",
+      "flight_status": "active",
+      "flight_type": "International",
+      "route": {
+        "source": "BKK",
+        "source_icao": "VTBS",
+        "destination": "DXB",
+        "destination_icao": "OMDB",
+        "details": {
+          "origin_name": "Suvarnabhumi International",
+          "terminal": "T2",
+          "gate_id": "T2-G4 (Dummy)"
+        }
+      },
+      "aircraft": {
+        "type": "B77W",
+        "type_source": "CSV_DB",
+        "capacity": "180 (Simulated)",
+        "manufacturer": "Boeing",
+        "registration": "A6-ENW",
+        "owner": "Emirates Airline",
+        "type_long": "777 31HER"
+      },
+      "payload_stats": {
+        "total_passengers": "153 (Simulated)",
+        "estimated_groups": "64 (Simulated)",
+        "total_bags": "184 (Simulated)",
+        "priority_pax": "18 (Simulated)",
+        "prm_pax": "2 (Simulated)",
+        "service_multiplier": 1.4,
+        "assigned_resources": {
+          "baggage_belt": "B3 (Dummy)"
+        }
+      }
+    },
+    {
+      "flight_id": "FZ376",
+      "flight_iata": "FZ376",
+      "flight_icao": "FDB376",
+      "airline": "flydubai",
+      "flight_status": "active",
+      "flight_type": "International",
+      "route": {
+        "source": "PEW",
+        "source_icao": "OPPS",
+        "destination": "DXB",
+        "destination_icao": "OMDB",
+        "details": {
+          "origin_name": "Peshawar",
+          "terminal": "T2",
+          "gate_id": "T2-G2 (Dummy)"
+        }
+      },
+      "aircraft": {
+        "type": "B38M (Dummy)",
+        "type_source": "Dummy",
+        "capacity": "189 (Simulated)"
+      },
+      "payload_stats": {
+        "total_passengers": "154 (Simulated)",
+        "estimated_groups": "65 (Simulated)",
+        "total_bags": "185 (Simulated)",
+        "priority_pax": "18 (Simulated)",
+        "prm_pax": "2 (Simulated)",
+        "service_multiplier": 1.4,
+        "assigned_resources": {
+          "baggage_belt": "6"
+        }
+      }
+    },
+    {
+      "flight_id": "FZ570",
+      "flight_iata": "FZ570",
+      "flight_icao": "FDB570",
+      "airline": "flydubai",
+      "flight_status": "active",
+      "flight_type": "International",
+      "route": {
+        "source": "CMB",
+        "source_icao": "VCBI",
+        "destination": "DXB",
+        "destination_icao": "OMDB",
+        "details": {
+          "origin_name": "Bandaranaike International",
           "terminal": "T2",
           "gate_id": "T2-G1 (Dummy)"
+        }
+      },
+      "aircraft": {
+        "type": "B38M (Dummy)",
+        "type_source": "Dummy",
+        "capacity": "189 (Simulated)"
+      },
+      "payload_stats": {
+        "total_passengers": "163 (Simulated)",
+        "estimated_groups": "68 (Simulated)",
+        "total_bags": "196 (Simulated)",
+        "priority_pax": "20 (Simulated)",
+        "prm_pax": "1 (Simulated)",
+        "service_multiplier": 1.4,
+        "assigned_resources": {
+          "baggage_belt": "4"
+        }
+      }
+    },
+    {
+      "flight_id": "EK2041",
+      "flight_iata": "EK2041",
+      "flight_icao": "UAE2041",
+      "airline": "Emirates",
+      "flight_status": "active",
+      "flight_type": "International",
+      "route": {
+        "source": "CMB",
+        "source_icao": "VCBI",
+        "destination": "DXB",
+        "destination_icao": "OMDB",
+        "details": {
+          "origin_name": "Bandaranaike International",
+          "terminal": "T2",
+          "gate_id": "T2-G4 (Dummy)"
+        }
+      },
+      "aircraft": {
+        "type": "A320 (Dummy)",
+        "type_source": "Dummy",
+        "capacity": "180 (Simulated)"
+      },
+      "payload_stats": {
+        "total_passengers": "151 (Simulated)",
+        "estimated_groups": "63 (Simulated)",
+        "total_bags": "181 (Simulated)",
+        "priority_pax": "18 (Simulated)",
+        "prm_pax": "1 (Simulated)",
+        "service_multiplier": 1.4,
+        "assigned_resources": {
+          "baggage_belt": "4"
+        }
+      }
+    },
+    {
+      "flight_id": "EK585",
+      "flight_iata": "EK585",
+      "flight_icao": "UAE585",
+      "airline": "Emirates",
+      "flight_status": "active",
+      "flight_type": "International",
+      "route": {
+        "source": "DAC",
+        "source_icao": "VGHS",
+        "destination": "DXB",
+        "destination_icao": "OMDB",
+        "details": {
+          "origin_name": "Zia International",
+          "terminal": "T2",
+          "gate_id": "T2-G11 (Dummy)"
+        }
+      },
+      "aircraft": {
+        "type": "B77W",
+        "type_source": "CSV_DB",
+        "capacity": "180 (Simulated)",
+        "manufacturer": "Boeing",
+        "registration": "A6-ENF",
+        "owner": "Emirates Airline",
+        "type_long": "777 31HER"
+      },
+      "payload_stats": {
+        "total_passengers": "165 (Simulated)",
+        "estimated_groups": "69 (Simulated)",
+        "total_bags": "198 (Simulated)",
+        "priority_pax": "20 (Simulated)",
+        "prm_pax": "2 (Simulated)",
+        "service_multiplier": 1.4,
+        "assigned_resources": {
+          "baggage_belt": "4"
+        }
+      }
+    },
+    {
+      "flight_id": "FZ6585",
+      "flight_iata": "FZ6585",
+      "flight_icao": "FDB6585",
+      "airline": "flydubai",
+      "flight_status": "active",
+      "flight_type": "International",
+      "route": {
+        "source": "DAC",
+        "source_icao": "VGHS",
+        "destination": "DXB",
+        "destination_icao": "OMDB",
+        "details": {
+          "origin_name": "Zia International",
+          "terminal": "T2",
+          "gate_id": "T2-G6 (Dummy)"
+        }
+      },
+      "aircraft": {
+        "type": "B77W",
+        "type_source": "CSV_DB",
+        "capacity": "180 (Simulated)",
+        "manufacturer": "Boeing",
+        "registration": "A6-ENF",
+        "owner": "Emirates Airline",
+        "type_long": "777 31HER"
+      },
+      "payload_stats": {
+        "total_passengers": "170 (Simulated)",
+        "estimated_groups": "71 (Simulated)",
+        "total_bags": "204 (Simulated)",
+        "priority_pax": "20 (Simulated)",
+        "prm_pax": "0 (Simulated)",
+        "service_multiplier": 1.4,
+        "assigned_resources": {
+          "baggage_belt": "4"
+        }
+      }
+    },
+    {
+      "flight_id": "FZ462",
+      "flight_iata": "FZ462",
+      "flight_icao": "FDB462",
+      "airline": "flydubai",
+      "flight_status": "active",
+      "flight_type": "International",
+      "route": {
+        "source": "CCU",
+        "source_icao": "VECC",
+        "destination": "DXB",
+        "destination_icao": "OMDB",
+        "details": {
+          "origin_name": "Netaji Subhas Chandra",
+          "terminal": "T2",
+          "gate_id": "T2-G9 (Dummy)"
+        }
+      },
+      "aircraft": {
+        "type": "B38M (Dummy)",
+        "type_source": "Dummy",
+        "capacity": "189 (Simulated)"
+      },
+      "payload_stats": {
+        "total_passengers": "166 (Simulated)",
+        "estimated_groups": "70 (Simulated)",
+        "total_bags": "199 (Simulated)",
+        "priority_pax": "20 (Simulated)",
+        "prm_pax": "0 (Simulated)",
+        "service_multiplier": 1.4,
+        "assigned_resources": {
+          "baggage_belt": "6"
+        }
+      }
+    },
+    {
+      "flight_id": "EK2261",
+      "flight_iata": "EK2261",
+      "flight_icao": "UAE2261",
+      "airline": "Emirates",
+      "flight_status": "active",
+      "flight_type": "International",
+      "route": {
+        "source": "CCU",
+        "source_icao": "VECC",
+        "destination": "DXB",
+        "destination_icao": "OMDB",
+        "details": {
+          "origin_name": "Netaji Subhas Chandra",
+          "terminal": "T2",
+          "gate_id": "T2-G11 (Dummy)"
+        }
+      },
+      "aircraft": {
+        "type": "A320 (Dummy)",
+        "type_source": "Dummy",
+        "capacity": "180 (Simulated)"
+      },
+      "payload_stats": {
+        "total_passengers": "140 (Simulated)",
+        "estimated_groups": "59 (Simulated)",
+        "total_bags": "168 (Simulated)",
+        "priority_pax": "17 (Simulated)",
+        "prm_pax": "0 (Simulated)",
+        "service_multiplier": 1.4,
+        "assigned_resources": {
+          "baggage_belt": "6"
+        }
+      }
+    },
+    {
+      "flight_id": "EK395",
+      "flight_iata": "EK395",
+      "flight_icao": "UAE395",
+      "airline": "Emirates",
+      "flight_status": "active",
+      "flight_type": "International",
+      "route": {
+        "source": "HAN",
+        "source_icao": "VVNB",
+        "destination": "DXB",
+        "destination_icao": "OMDB",
+        "details": {
+          "origin_name": "Noibai International",
+          "terminal": "T2",
+          "gate_id": "T2-G10 (Dummy)"
+        }
+      },
+      "aircraft": {
+        "type": "B77W",
+        "type_source": "CSV_DB",
+        "capacity": "180 (Simulated)",
+        "manufacturer": "Boeing",
+        "registration": "A6-END",
+        "owner": "Emirates Airline",
+        "type_long": "777 31HER"
+      },
+      "payload_stats": {
+        "total_passengers": "161 (Simulated)",
+        "estimated_groups": "68 (Simulated)",
+        "total_bags": "193 (Simulated)",
+        "priority_pax": "19 (Simulated)",
+        "prm_pax": "1 (Simulated)",
+        "service_multiplier": 1.4,
+        "assigned_resources": {
+          "baggage_belt": "10"
+        }
+      }
+    },
+    {
+      "flight_id": "TP6747",
+      "flight_iata": "TP6747",
+      "flight_icao": "TAP6747",
+      "airline": "TAP Air Portugal",
+      "flight_status": "active",
+      "flight_type": "International",
+      "route": {
+        "source": "HAN",
+        "source_icao": "VVNB",
+        "destination": "DXB",
+        "destination_icao": "OMDB",
+        "details": {
+          "origin_name": "Noibai International",
+          "terminal": "T2",
+          "gate_id": "T2-G11 (Dummy)"
+        }
+      },
+      "aircraft": {
+        "type": "B77W",
+        "type_source": "CSV_DB",
+        "capacity": "180 (Simulated)",
+        "manufacturer": "Boeing",
+        "registration": "A6-END",
+        "owner": "Emirates Airline",
+        "type_long": "777 31HER"
+      },
+      "payload_stats": {
+        "total_passengers": "135 (Simulated)",
+        "estimated_groups": "57 (Simulated)",
+        "total_bags": "162 (Simulated)",
+        "priority_pax": "16 (Simulated)",
+        "prm_pax": "0 (Simulated)",
+        "service_multiplier": 1.4,
+        "assigned_resources": {
+          "baggage_belt": "10"
+        }
+      }
+    },
+    {
+      "flight_id": "GF5409",
+      "flight_iata": "GF5409",
+      "flight_icao": "GFA5409",
+      "airline": "Gulf Air",
+      "flight_status": "active",
+      "flight_type": "International",
+      "route": {
+        "source": "HAN",
+        "source_icao": "VVNB",
+        "destination": "DXB",
+        "destination_icao": "OMDB",
+        "details": {
+          "origin_name": "Noibai International",
+          "terminal": "T2",
+          "gate_id": "T2-G1 (Dummy)"
+        }
+      },
+      "aircraft": {
+        "type": "B77W",
+        "type_source": "CSV_DB",
+        "capacity": "180 (Simulated)",
+        "manufacturer": "Boeing",
+        "registration": "A6-END",
+        "owner": "Emirates Airline",
+        "type_long": "777 31HER"
+      },
+      "payload_stats": {
+        "total_passengers": "144 (Simulated)",
+        "estimated_groups": "60 (Simulated)",
+        "total_bags": "173 (Simulated)",
+        "priority_pax": "17 (Simulated)",
+        "prm_pax": "1 (Simulated)",
+        "service_multiplier": 1.4,
+        "assigned_resources": {
+          "baggage_belt": "10"
+        }
+      }
+    },
+    {
+      "flight_id": "DE5925",
+      "flight_iata": "DE5925",
+      "flight_icao": "CFG5925",
+      "airline": "Condor",
+      "flight_status": "active",
+      "flight_type": "International",
+      "route": {
+        "source": "HAN",
+        "source_icao": "VVNB",
+        "destination": "DXB",
+        "destination_icao": "OMDB",
+        "details": {
+          "origin_name": "Noibai International",
+          "terminal": "T2",
+          "gate_id": "T2-G2 (Dummy)"
+        }
+      },
+      "aircraft": {
+        "type": "B77W",
+        "type_source": "CSV_DB",
+        "capacity": "180 (Simulated)",
+        "manufacturer": "Boeing",
+        "registration": "A6-END",
+        "owner": "Emirates Airline",
+        "type_long": "777 31HER"
+      },
+      "payload_stats": {
+        "total_passengers": "142 (Simulated)",
+        "estimated_groups": "60 (Simulated)",
+        "total_bags": "170 (Simulated)",
+        "priority_pax": "17 (Simulated)",
+        "prm_pax": "0 (Simulated)",
+        "service_multiplier": 1.4,
+        "assigned_resources": {
+          "baggage_belt": "10"
+        }
+      }
+    },
+    {
+      "flight_id": "AC7605",
+      "flight_iata": "AC7605",
+      "flight_icao": "ACA7605",
+      "airline": "Air Canada",
+      "flight_status": "active",
+      "flight_type": "International",
+      "route": {
+        "source": "HAN",
+        "source_icao": "VVNB",
+        "destination": "DXB",
+        "destination_icao": "OMDB",
+        "details": {
+          "origin_name": "Noibai International",
+          "terminal": "T2",
+          "gate_id": "T2-G3 (Dummy)"
+        }
+      },
+      "aircraft": {
+        "type": "B77W",
+        "type_source": "CSV_DB",
+        "capacity": "180 (Simulated)",
+        "manufacturer": "Boeing",
+        "registration": "A6-END",
+        "owner": "Emirates Airline",
+        "type_long": "777 31HER"
+      },
+      "payload_stats": {
+        "total_passengers": "165 (Simulated)",
+        "estimated_groups": "69 (Simulated)",
+        "total_bags": "198 (Simulated)",
+        "priority_pax": "20 (Simulated)",
+        "prm_pax": "0 (Simulated)",
+        "service_multiplier": 1.4,
+        "assigned_resources": {
+          "baggage_belt": "10"
+        }
+      }
+    },
+    {
+      "flight_id": "GA8853",
+      "flight_iata": "GA8853",
+      "flight_icao": "GIA8853",
+      "airline": "Garuda Indonesia",
+      "flight_status": "active",
+      "flight_type": "International",
+      "route": {
+        "source": "CGK",
+        "source_icao": "WIII",
+        "destination": "DXB",
+        "destination_icao": "OMDB",
+        "details": {
+          "origin_name": "Soekarno-Hatta International",
+          "terminal": "T2",
+          "gate_id": "T2-G8 (Dummy)"
+        }
+      },
+      "aircraft": {
+        "type": "B77W",
+        "type_source": "CSV_DB",
+        "capacity": "180 (Simulated)",
+        "manufacturer": "Boeing",
+        "registration": "A6-ECW",
+        "owner": "Emirates Airline",
+        "type_long": "Boeing 777-31H(ER)"
+      },
+      "payload_stats": {
+        "total_passengers": "138 (Simulated)",
+        "estimated_groups": "58 (Simulated)",
+        "total_bags": "166 (Simulated)",
+        "priority_pax": "17 (Simulated)",
+        "prm_pax": "1 (Simulated)",
+        "service_multiplier": 1.4,
+        "assigned_resources": {
+          "baggage_belt": "14"
+        }
+      }
+    },
+    {
+      "flight_id": "FZ6359",
+      "flight_iata": "FZ6359",
+      "flight_icao": "FDB6359",
+      "airline": "flydubai",
+      "flight_status": "active",
+      "flight_type": "International",
+      "route": {
+        "source": "CGK",
+        "source_icao": "WIII",
+        "destination": "DXB",
+        "destination_icao": "OMDB",
+        "details": {
+          "origin_name": "Soekarno-Hatta International",
+          "terminal": "T2",
+          "gate_id": "T2-G11 (Dummy)"
+        }
+      },
+      "aircraft": {
+        "type": "B77W",
+        "type_source": "CSV_DB",
+        "capacity": "180 (Simulated)",
+        "manufacturer": "Boeing",
+        "registration": "A6-ECW",
+        "owner": "Emirates Airline",
+        "type_long": "Boeing 777-31H(ER)"
+      },
+      "payload_stats": {
+        "total_passengers": "139 (Simulated)",
+        "estimated_groups": "58 (Simulated)",
+        "total_bags": "167 (Simulated)",
+        "priority_pax": "17 (Simulated)",
+        "prm_pax": "2 (Simulated)",
+        "service_multiplier": 1.4,
+        "assigned_resources": {
+          "baggage_belt": "14"
+        }
+      }
+    },
+    {
+      "flight_id": "DE5964",
+      "flight_iata": "DE5964",
+      "flight_icao": "CFG5964",
+      "airline": "Condor",
+      "flight_status": "active",
+      "flight_type": "International",
+      "route": {
+        "source": "CGK",
+        "source_icao": "WIII",
+        "destination": "DXB",
+        "destination_icao": "OMDB",
+        "details": {
+          "origin_name": "Soekarno-Hatta International",
+          "terminal": "T2",
+          "gate_id": "T2-G6 (Dummy)"
+        }
+      },
+      "aircraft": {
+        "type": "B77W",
+        "type_source": "CSV_DB",
+        "capacity": "180 (Simulated)",
+        "manufacturer": "Boeing",
+        "registration": "A6-ECW",
+        "owner": "Emirates Airline",
+        "type_long": "Boeing 777-31H(ER)"
+      },
+      "payload_stats": {
+        "total_passengers": "166 (Simulated)",
+        "estimated_groups": "70 (Simulated)",
+        "total_bags": "199 (Simulated)",
+        "priority_pax": "20 (Simulated)",
+        "prm_pax": "0 (Simulated)",
+        "service_multiplier": 1.4,
+        "assigned_resources": {
+          "baggage_belt": "14"
+        }
+      }
+    },
+    {
+      "flight_id": "BT5808",
+      "flight_iata": "BT5808",
+      "flight_icao": "BTI5808",
+      "airline": "Air Baltic",
+      "flight_status": "active",
+      "flight_type": "International",
+      "route": {
+        "source": "CGK",
+        "source_icao": "WIII",
+        "destination": "DXB",
+        "destination_icao": "OMDB",
+        "details": {
+          "origin_name": "Soekarno-Hatta International",
+          "terminal": "T2",
+          "gate_id": "T2-G1 (Dummy)"
+        }
+      },
+      "aircraft": {
+        "type": "B77W",
+        "type_source": "CSV_DB",
+        "capacity": "180 (Simulated)",
+        "manufacturer": "Boeing",
+        "registration": "A6-ECW",
+        "owner": "Emirates Airline",
+        "type_long": "Boeing 777-31H(ER)"
+      },
+      "payload_stats": {
+        "total_passengers": "156 (Simulated)",
+        "estimated_groups": "65 (Simulated)",
+        "total_bags": "187 (Simulated)",
+        "priority_pax": "19 (Simulated)",
+        "prm_pax": "0 (Simulated)",
+        "service_multiplier": 1.4,
+        "assigned_resources": {
+          "baggage_belt": "14"
+        }
+      }
+    },
+    {
+      "flight_id": "JL5093",
+      "flight_iata": "JL5093",
+      "flight_icao": "JTL5093",
+      "airline": "Japan Airlines",
+      "flight_status": "active",
+      "flight_type": "International",
+      "route": {
+        "source": "HND",
+        "source_icao": "RJTT",
+        "destination": "DXB",
+        "destination_icao": "OMDB",
+        "details": {
+          "origin_name": "Haneda Airport",
+          "terminal": "T2",
+          "gate_id": "T2-G7 (Dummy)"
+        }
+      },
+      "aircraft": {
+        "type": "B77W",
+        "type_source": "CSV_DB",
+        "capacity": "180 (Simulated)",
+        "manufacturer": null,
+        "registration": "A6-EQN",
+        "owner": "Emirates Airlines",
+        "type_long": "Boeing 777-300(ER)"
+      },
+      "payload_stats": {
+        "total_passengers": "138 (Simulated)",
+        "estimated_groups": "58 (Simulated)",
+        "total_bags": "166 (Simulated)",
+        "priority_pax": "17 (Simulated)",
+        "prm_pax": "1 (Simulated)",
+        "service_multiplier": 1.4,
+        "assigned_resources": {
+          "baggage_belt": "6"
+        }
+      }
+    },
+    {
+      "flight_id": "FZ574",
+      "flight_iata": "FZ574",
+      "flight_icao": "FDB574",
+      "airline": "flydubai",
+      "flight_status": "active",
+      "flight_type": "International",
+      "route": {
+        "source": "KTM",
+        "source_icao": "VNKT",
+        "destination": "DXB",
+        "destination_icao": "OMDB",
+        "details": {
+          "origin_name": "Tribhuvan International",
+          "terminal": "T2",
+          "gate_id": "T2-G9 (Dummy)"
+        }
+      },
+      "aircraft": {
+        "type": "B38M (Dummy)",
+        "type_source": "Dummy",
+        "capacity": "189 (Simulated)"
+      },
+      "payload_stats": {
+        "total_passengers": "152 (Simulated)",
+        "estimated_groups": "64 (Simulated)",
+        "total_bags": "182 (Simulated)",
+        "priority_pax": "18 (Simulated)",
+        "prm_pax": "1 (Simulated)",
+        "service_multiplier": 1.4,
+        "assigned_resources": {
+          "baggage_belt": "4"
+        }
+      }
+    },
+    {
+      "flight_id": "EK2154",
+      "flight_iata": "EK2154",
+      "flight_icao": "UAE2154",
+      "airline": "Emirates",
+      "flight_status": "active",
+      "flight_type": "International",
+      "route": {
+        "source": "KTM",
+        "source_icao": "VNKT",
+        "destination": "DXB",
+        "destination_icao": "OMDB",
+        "details": {
+          "origin_name": "Tribhuvan International",
+          "terminal": "T2",
+          "gate_id": "T2-G12 (Dummy)"
         }
       },
       "aircraft": {
@@ -1315,184 +3482,273 @@
         "estimated_groups": "71 (Simulated)",
         "total_bags": "203 (Simulated)",
         "priority_pax": "20 (Simulated)",
-        "prm_pax": "0 (Simulated)",
+        "prm_pax": "1 (Simulated)",
         "service_multiplier": 1.4,
         "assigned_resources": {
-          "baggage_belt": "B4 (Dummy)"
+          "baggage_belt": "4"
         }
-      },
-      "personas": {
-        "p1": 0,
-        "p2": 0,
-        "p3": 0,
-        "p4": 70,
-        "p5": 0,
-        "p6": 20,
-        "p7": 10
       }
     },
     {
-      "flight_id": "NB400",
-      "flight_iata": "NB400",
-      "flight_icao": "BNL400",
-      "airline": "Berniq Airways",
+      "flight_id": "EK385",
+      "flight_iata": "EK385",
+      "flight_icao": "UAE385",
+      "airline": "Emirates",
       "flight_status": "active",
       "flight_type": "International",
       "route": {
-        "source": "BEN",
-        "source_icao": "HLLB",
-        "destination": "HBE",
-        "destination_icao": "HEAX",
+        "source": "BKK",
+        "source_icao": "VTBS",
+        "destination": "DXB",
+        "destination_icao": "OMDB",
         "details": {
-          "origin_name": "Benina International",
+          "origin_name": "Suvarnabhumi International",
           "terminal": "T2",
           "gate_id": "T2-G4 (Dummy)"
         }
       },
       "aircraft": {
-        "type": "A320",
-        "type_source": "HexDB",
+        "type": "A388",
+        "type_source": "CSV_DB",
         "capacity": "180 (Simulated)",
         "manufacturer": "Airbus",
-        "registration": "5A-BRA",
-        "owner": "Berniq Airways",
-        "type_long": "A320 214"
+        "registration": "A6-EOO",
+        "owner": "Emirates Airline",
+        "type_long": "A380 861"
       },
       "payload_stats": {
-        "total_passengers": "150 (Simulated)",
+        "total_passengers": "149 (Simulated)",
         "estimated_groups": "63 (Simulated)",
-        "total_bags": "180 (Simulated)",
+        "total_bags": "179 (Simulated)",
         "priority_pax": "18 (Simulated)",
         "prm_pax": "0 (Simulated)",
         "service_multiplier": 1.4,
         "assigned_resources": {
           "baggage_belt": "B4 (Dummy)"
         }
-      },
-      "personas": {
-        "p1": 0,
-        "p2": 0,
-        "p3": 0,
-        "p4": 70,
-        "p5": 0,
-        "p6": 20,
-        "p7": 10
       }
     },
     {
-      "flight_id": "SM452",
-      "flight_iata": "SM452",
-      "flight_icao": "MSC452",
-      "airline": "Air Cairo",
-      "flight_status": "scheduled",
+      "flight_id": "EK359",
+      "flight_iata": "EK359",
+      "flight_icao": "UAE359",
+      "airline": "Emirates",
+      "flight_status": "active",
       "flight_type": "International",
       "route": {
-        "source": "JED",
-        "source_icao": "OEJN",
-        "destination": "HBE",
-        "destination_icao": "HEAX",
+        "source": "CGK",
+        "source_icao": "WIII",
+        "destination": "DXB",
+        "destination_icao": "OMDB",
         "details": {
-          "origin_name": "King Abdulaziz International",
+          "origin_name": "Soekarno-Hatta International",
           "terminal": "T2",
-          "gate_id": "T2-G1 (Dummy)"
+          "gate_id": "T2-G12 (Dummy)"
         }
       },
       "aircraft": {
-        "type": "A320 (Dummy)",
-        "type_source": "Dummy",
-        "capacity": "180 (Simulated)"
+        "type": "B77W",
+        "type_source": "CSV_DB",
+        "capacity": "180 (Simulated)",
+        "manufacturer": "Boeing",
+        "registration": "A6-ECW",
+        "owner": "Emirates Airline",
+        "type_long": "Boeing 777-31H(ER)"
       },
       "payload_stats": {
-        "total_passengers": "160 (Simulated)",
-        "estimated_groups": "67 (Simulated)",
-        "total_bags": "192 (Simulated)",
+        "total_passengers": "162 (Simulated)",
+        "estimated_groups": "68 (Simulated)",
+        "total_bags": "194 (Simulated)",
         "priority_pax": "19 (Simulated)",
+        "prm_pax": "0 (Simulated)",
+        "service_multiplier": 1.4,
+        "assigned_resources": {
+          "baggage_belt": "12"
+        }
+      }
+    },
+    {
+      "flight_id": "EK343",
+      "flight_iata": "EK343",
+      "flight_icao": "UAE343",
+      "airline": "Emirates",
+      "flight_status": "active",
+      "flight_type": "International",
+      "route": {
+        "source": "KUL",
+        "source_icao": "WMKK",
+        "destination": "DXB",
+        "destination_icao": "OMDB",
+        "details": {
+          "origin_name": "Kuala Lumpur International Airport (klia)",
+          "terminal": "T2",
+          "gate_id": "T2-G11 (Dummy)"
+        }
+      },
+      "aircraft": {
+        "type": "A388",
+        "type_source": "CSV_DB",
+        "capacity": "180 (Simulated)",
+        "manufacturer": "Airbus",
+        "registration": "A6-EUP",
+        "owner": "Emirates Airline",
+        "type_long": "A380 842"
+      },
+      "payload_stats": {
+        "total_passengers": "135 (Simulated)",
+        "estimated_groups": "57 (Simulated)",
+        "total_bags": "162 (Simulated)",
+        "priority_pax": "16 (Simulated)",
         "prm_pax": "1 (Simulated)",
         "service_multiplier": 1.4,
         "assigned_resources": {
-          "baggage_belt": "B4 (Dummy)"
+          "baggage_belt": "6"
         }
-      },
-      "personas": {
-        "p1": 0,
-        "p2": 0,
-        "p3": 0,
-        "p4": 70,
-        "p5": 0,
-        "p6": 20,
-        "p7": 10
       }
     },
     {
-      "flight_id": "J93725",
-      "flight_iata": "J93725",
-      "flight_icao": "JZR3725",
-      "airline": "Jazeera Airways",
-      "flight_status": "scheduled",
+      "flight_id": "EK399",
+      "flight_iata": "EK399",
+      "flight_icao": "UAE399",
+      "airline": "Emirates",
+      "flight_status": "active",
       "flight_type": "International",
       "route": {
-        "source": "DMM",
-        "source_icao": "OEDF",
-        "destination": "HBE",
-        "destination_icao": "HEAX",
+        "source": "DPS",
+        "source_icao": "WADD",
+        "destination": "DXB",
+        "destination_icao": "OMDB",
         "details": {
-          "origin_name": "King Fahd International Airport",
+          "origin_name": "Ngurah Rai International",
           "terminal": "T2",
-          "gate_id": "T2-G10 (Dummy)"
+          "gate_id": "T2-G2 (Dummy)"
         }
       },
       "aircraft": {
-        "type": "A320 (Dummy)",
-        "type_source": "Dummy",
-        "capacity": "180 (Simulated)"
+        "type": "B77W",
+        "type_source": "CSV_DB",
+        "capacity": "180 (Simulated)",
+        "manufacturer": "Boeing",
+        "registration": "A6-ENI",
+        "owner": "Emirates Airline",
+        "type_long": "777 31HER"
       },
       "payload_stats": {
-        "total_passengers": "145 (Simulated)",
-        "estimated_groups": "61 (Simulated)",
-        "total_bags": "174 (Simulated)",
-        "priority_pax": "17 (Simulated)",
+        "total_passengers": "170 (Simulated)",
+        "estimated_groups": "71 (Simulated)",
+        "total_bags": "204 (Simulated)",
+        "priority_pax": "20 (Simulated)",
+        "prm_pax": "1 (Simulated)",
+        "service_multiplier": 1.4,
+        "assigned_resources": {
+          "baggage_belt": "10"
+        }
+      }
+    },
+    {
+      "flight_id": "GA8855",
+      "flight_iata": "GA8855",
+      "flight_icao": "GIA8855",
+      "airline": "Garuda Indonesia",
+      "flight_status": "active",
+      "flight_type": "International",
+      "route": {
+        "source": "DPS",
+        "source_icao": "WADD",
+        "destination": "DXB",
+        "destination_icao": "OMDB",
+        "details": {
+          "origin_name": "Ngurah Rai International",
+          "terminal": "T2",
+          "gate_id": "T2-G8 (Dummy)"
+        }
+      },
+      "aircraft": {
+        "type": "B77W",
+        "type_source": "CSV_DB",
+        "capacity": "180 (Simulated)",
+        "manufacturer": "Boeing",
+        "registration": "A6-ENI",
+        "owner": "Emirates Airline",
+        "type_long": "777 31HER"
+      },
+      "payload_stats": {
+        "total_passengers": "154 (Simulated)",
+        "estimated_groups": "65 (Simulated)",
+        "total_bags": "185 (Simulated)",
+        "priority_pax": "18 (Simulated)",
         "prm_pax": "2 (Simulated)",
         "service_multiplier": 1.4,
         "assigned_resources": {
-          "baggage_belt": "B1 (Dummy)"
+          "baggage_belt": "10"
         }
-      },
-      "personas": {
-        "p1": 0,
-        "p2": 0,
-        "p3": 0,
-        "p4": 70,
-        "p5": 0,
-        "p6": 20,
-        "p7": 10
       }
     },
     {
-      "flight_id": "A3936",
-      "flight_iata": "A3936",
-      "flight_icao": "AEE936",
-      "airline": "Aegean Airlines",
-      "flight_status": "landed",
+      "flight_id": "FZ6399",
+      "flight_iata": "FZ6399",
+      "flight_icao": "FDB6399",
+      "airline": "flydubai",
+      "flight_status": "active",
       "flight_type": "International",
       "route": {
-        "source": "ATH",
-        "source_icao": "LGAV",
-        "destination": "HBE",
-        "destination_icao": "HEAX",
+        "source": "DPS",
+        "source_icao": "WADD",
+        "destination": "DXB",
+        "destination_icao": "OMDB",
         "details": {
-          "origin_name": "Athens International Airport \"Eleftherios Venizelos\"",
+          "origin_name": "Ngurah Rai International",
           "terminal": "T2",
-          "gate_id": "T2-G3 (Dummy)"
+          "gate_id": "T2-G2 (Dummy)"
         }
       },
       "aircraft": {
-        "type": "A320",
-        "type_source": "HexDB",
+        "type": "B77W",
+        "type_source": "CSV_DB",
         "capacity": "180 (Simulated)",
-        "manufacturer": "Airbus",
-        "registration": "SX-DNE",
-        "owner": "Aegean Airlines",
-        "type_long": "A320 232SL"
+        "manufacturer": "Boeing",
+        "registration": "A6-ENI",
+        "owner": "Emirates Airline",
+        "type_long": "777 31HER"
+      },
+      "payload_stats": {
+        "total_passengers": "141 (Simulated)",
+        "estimated_groups": "59 (Simulated)",
+        "total_bags": "169 (Simulated)",
+        "priority_pax": "17 (Simulated)",
+        "prm_pax": "0 (Simulated)",
+        "service_multiplier": 1.4,
+        "assigned_resources": {
+          "baggage_belt": "10"
+        }
+      }
+    },
+    {
+      "flight_id": "DE5963",
+      "flight_iata": "DE5963",
+      "flight_icao": "CFG5963",
+      "airline": "Condor",
+      "flight_status": "active",
+      "flight_type": "International",
+      "route": {
+        "source": "DPS",
+        "source_icao": "WADD",
+        "destination": "DXB",
+        "destination_icao": "OMDB",
+        "details": {
+          "origin_name": "Ngurah Rai International",
+          "terminal": "T2",
+          "gate_id": "T2-G5 (Dummy)"
+        }
+      },
+      "aircraft": {
+        "type": "B77W",
+        "type_source": "CSV_DB",
+        "capacity": "180 (Simulated)",
+        "manufacturer": "Boeing",
+        "registration": "A6-ENI",
+        "owner": "Emirates Airline",
+        "type_long": "777 31HER"
       },
       "payload_stats": {
         "total_passengers": "143 (Simulated)",
@@ -1502,65 +3758,8 @@
         "prm_pax": "1 (Simulated)",
         "service_multiplier": 1.4,
         "assigned_resources": {
-          "baggage_belt": "B2 (Dummy)"
+          "baggage_belt": "10"
         }
-      },
-      "personas": {
-        "p1": 0,
-        "p2": 0,
-        "p3": 0,
-        "p4": 70,
-        "p5": 0,
-        "p6": 20,
-        "p7": 10
-      }
-    },
-    {
-      "flight_id": "MS9242",
-      "flight_iata": "MS9242",
-      "flight_icao": "MSR9242",
-      "airline": "EgyptAir",
-      "flight_status": "landed",
-      "flight_type": "International",
-      "route": {
-        "source": "ATH",
-        "source_icao": "LGAV",
-        "destination": "HBE",
-        "destination_icao": "HEAX",
-        "details": {
-          "origin_name": "Athens International Airport \"Eleftherios Venizelos\"",
-          "terminal": "T1",
-          "gate_id": "T1-G12 (Dummy)"
-        }
-      },
-      "aircraft": {
-        "type": "A320",
-        "type_source": "HexDB",
-        "capacity": "180 (Simulated)",
-        "manufacturer": "Airbus",
-        "registration": "SX-DNE",
-        "owner": "Aegean Airlines",
-        "type_long": "A320 232SL"
-      },
-      "payload_stats": {
-        "total_passengers": "151 (Simulated)",
-        "estimated_groups": "63 (Simulated)",
-        "total_bags": "181 (Simulated)",
-        "priority_pax": "18 (Simulated)",
-        "prm_pax": "2 (Simulated)",
-        "service_multiplier": 1.4,
-        "assigned_resources": {
-          "baggage_belt": "B1 (Dummy)"
-        }
-      },
-      "personas": {
-        "p1": 0,
-        "p2": 0,
-        "p3": 0,
-        "p4": 70,
-        "p5": 0,
-        "p6": 20,
-        "p7": 10
       }
     }
   ]
