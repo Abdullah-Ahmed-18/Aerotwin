@@ -14,8 +14,8 @@ const PORT = process.env.PORT || 5000;
 // ==========================================
 const API_KEY = process.env.AVIATIONSTACK_API_KEY;
 const TARGET_AIRPORT = process.env.TARGET_AIRPORT || "HBE";
-const API_URL = "http://api.aviationstack.com/v1/flights";
-const AIRPORTS_URL = "http://api.aviationstack.com/v1/airports";
+const API_URL = "https://api.aviationstack.com/v1/flights";
+const AIRPORTS_URL = "https://api.aviationstack.com/v1/airports";
 const DOMESTIC_EGYPT_AIRPORTS = ["CAI", "SSH", "HRG", "LXR", "ASW", "HBE", "ALY", "TCP", "RMF"];
 const AIRCRAFT_CAPACITIES = { "B738": 189, "A320": 180, "A220": 135, "B38M": 189, "A321": 220, "A333": 300, "A21N": 240, "AT72": 72 };
 const AIRPORT_COORDINATES = {
@@ -716,6 +716,9 @@ app.get('/api/fetch-active-flights', async (req, res) => {
                 flight_iata: flightIata,
                 flight_icao: flightIcao,
                 airline: airlineName,
+                airline_iata: f.airline?.iata || null,
+                airline_icao: f.airline?.icao || null,
+                airline_logo: f.airline?.iata ? `/airline-logos/${f.airline.iata}.png` : null,
                 flight_status: f.flight_status || "unknown",
                 flight_type: flightType,
                 
@@ -727,7 +730,13 @@ app.get('/api/fetch-active-flights', async (req, res) => {
                     details: {
                         origin_name: f.departure?.airport || "Unknown Departure",
                         terminal: terminal,
-                        gate_id: gate
+                        gate_id: gate,
+                        scheduled_arrival: f.arrival?.scheduled || null,
+                        estimated_arrival: f.arrival?.estimated || null,
+                        actual_arrival: f.arrival?.actual || null,
+                        scheduled_departure: f.departure?.scheduled || null,
+                        estimated_departure: f.departure?.estimated || null,
+                        actual_departure: f.departure?.actual || null,
                     }
                 },
                 
@@ -751,7 +760,10 @@ app.get('/api/fetch-active-flights', async (req, res) => {
                     prm_pax: `${Math.floor(Math.random() * 3)} (Simulated)`,
                     service_multiplier: isDomestic ? 1.0 : 1.4,
                     assigned_resources: { baggage_belt: belt }
-                }
+                },
+
+                origin_coords: AIRPORT_COORDINATES[sourceIata]?.coords || null,
+                dest_coords: AIRPORT_COORDINATES[destinationIata]?.coords || null,
             };
 
             // Attach live OpenSky position if matched

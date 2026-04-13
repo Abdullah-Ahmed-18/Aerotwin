@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from 'react';
 import dynamic from 'next/dynamic';
 import { Plane, Info, Globe, Activity, Navigation, ChevronDown, Users, Radar, Repeat, Crown, Clock, X, PieChart, Save } from 'lucide-react';
 import FlightSelector from '@/components/FlightSelector';
+import { lerpCoords, calculateBearing } from '@/lib/geo';
 
 const FlightMap = dynamic(() => import('@/components/FlightMap'), {
     ssr: false,
@@ -64,6 +65,17 @@ const AIRPORT_NAMES: Record<string, string> = {
     MED: 'Mohammad Bin Abdulaziz'
 };
 
+const AIRPORT_COORDS: Record<string, [number, number]> = {
+    HBE: [30.9177, 29.6964], CAI: [30.1219, 31.4056], DXB: [25.2532, 55.3657],
+    JFK: [40.6413, -73.7781], LHR: [51.4700, -0.4543], IST: [41.2753, 28.7519],
+    AUH: [24.4330, 54.6511], MED: [24.5534, 39.7051], DOH: [25.2731, 51.6086],
+    SSH: [27.9773, 34.3950], HRG: [27.1783, 33.7994], LXR: [25.6710, 32.7066],
+    ASW: [23.9644, 32.8200], JED: [21.6796, 39.1565], RUH: [24.9576, 46.6988],
+    KWI: [29.2266, 47.9689], AMM: [31.7226, 35.9932], BEY: [33.8209, 35.4884],
+    TUN: [36.8510, 10.2272], CDG: [49.0097, 2.5479], FRA: [50.0379, 8.5622],
+    MJI: [32.8889, 13.2764], BEN: [32.0970, 20.2695],
+};
+
 const DEFAULT_AIRCRAFT_MAX_CAP = 180;
 const DEFAULT_PERSONAS: Record<PersonaKey, number> = { p1: 0, p2: 0, p3: 0, p4: 70, p5: 0, p6: 20, p7: 10 };
 
@@ -117,12 +129,15 @@ export default function ActiveFlightsPage() {
     const [mounted, setMounted] = useState(false);
     const [showCard, setShowCard] = useState(false);
     const [mapFlights, setMapFlights] = useState<any[]>([]);
+    const [mapAirports, setMapAirports] = useState<any[]>([]);
+    const [focusTarget, setFocusTarget] = useState<[number, number] | null>(null);
 
     const [flights, setFlights] = useState([
         {
             id: 'MS-441', status: 'ON FINAL', statusClass: 'text-emerald-600 bg-emerald-50 border-emerald-100',
             origin: 'DXB', originName: 'Dubai', dest: 'HBE', destName: 'Alexandria',
             eta: 12, progress: 92, coords: [30.9500, 29.6500] as [number, number],
+            heading: 290, originCoords: AIRPORT_COORDS['DXB'], destCoords: AIRPORT_COORDS['HBE'],
             passengers: 150, aircraft: 'Boeing 737-800',
             personas: { p1: 0, p2: 0, p3: 0, p4: 70, p5: 0, p6: 20, p7: 10 }
         },
@@ -130,6 +145,7 @@ export default function ActiveFlightsPage() {
             id: 'QR-1301', status: 'APPROACH', statusClass: 'text-blue-600 bg-blue-50 border-blue-100',
             origin: 'DOH', originName: 'Doha', dest: 'HBE', destName: 'Alexandria',
             eta: 45, progress: 75, coords: [30.8800, 29.8500] as [number, number],
+            heading: 300, originCoords: AIRPORT_COORDS['DOH'], destCoords: AIRPORT_COORDS['HBE'],
             passengers: 140, aircraft: 'Airbus A320neo',
             personas: { p1: 0, p2: 0, p3: 0, p4: 60, p5: 0, p6: 25, p7: 15 }
         },
@@ -137,6 +153,7 @@ export default function ActiveFlightsPage() {
             id: 'TU-512', status: 'DEPARTED', statusClass: 'text-slate-500 bg-slate-100 border-slate-200',
             origin: 'HBE', originName: 'Alexandria', dest: 'TUN', destName: 'Tunis',
             eta: 140, progress: 15, coords: [31.1000, 29.5000] as [number, number],
+            heading: 280, originCoords: AIRPORT_COORDS['HBE'], destCoords: AIRPORT_COORDS['TUN'],
             passengers: 80, aircraft: 'Embraer E190',
             personas: { p1: 0, p2: 0, p3: 80, p4: 0, p5: 0, p6: 10, p7: 10 }
         }
@@ -201,6 +218,33 @@ export default function ActiveFlightsPage() {
                 maxCap
             );
 
+            const eta = 30 + (idx * 7) % 90;
+            const progress = 25 + (idx * 9) % 65;
+
+            const originCoords = f?.origin_coords
+                ? (f.origin_coords as [number, number])
+                : AIRPORT_COORDS[originCode] || null;
+            const destCoords = f?.dest_coords
+                ? (f.dest_coords as [number, number])
+                : AIRPORT_COORDS[destinationCode] || null;
+
+            let coords: [number, number];
+            let heading: number;
+
+            if (f?.opensky_live && f.opensky_live.latitude != null && f.opensky_live.longitude != null) {
+                coords = [f.opensky_live.latitude, f.opensky_live.longitude];
+                heading = f.opensky_live.heading ?? 0;
+            } else if (originCoords && destCoords) {
+                coords = lerpCoords(originCoords, destCoords, progress / 100);
+                heading = calculateBearing(coords, destCoords);
+            } else {
+                coords = [
+                    selectedAirportCenter[0] + (Math.sin(idx) * 0.3),
+                    selectedAirportCenter[1] + (Math.cos(idx) * 0.3)
+                ];
+                heading = (idx * 120) % 360;
+            }
+
             return {
                 id: f.flight_id,
                 status: formatFlightStatus(f?.flight_status),
@@ -209,13 +253,14 @@ export default function ActiveFlightsPage() {
                 originName: f?.route?.details?.origin_name || AIRPORT_NAMES[originCode] || 'Unknown Origin',
                 dest: destinationCode,
                 destName: AIRPORT_NAMES[destinationCode] || destinationCode,
-                eta: 30 + (idx * 7) % 90,
-                progress: 25 + (idx * 9) % 65,
-                coords: [
-                    selectedAirportCenter[0] + (Math.sin(idx) * 0.3),
-                    selectedAirportCenter[1] + (Math.cos(idx) * 0.3)
-                ] as [number, number],
-                heading: (idx * 120) % 360,
+                eta,
+                progress,
+                coords,
+                heading,
+                originCoords,
+                destCoords,
+                airlineIata: f?.airline_iata || null,
+                airlineLogo: f?.airline_logo || null,
                 passengers: passengerCount,
                 aircraft: aircraftType,
                 personas: { ...DEFAULT_PERSONAS }
@@ -223,7 +268,20 @@ export default function ActiveFlightsPage() {
         });
 
         setFlights(mappedFlights);
-        setMapFlights(mappedFlights.map(({ id, coords, heading }) => ({ id, coords, heading })));
+        setMapFlights(mappedFlights.map(({ id, coords, heading, airlineLogo }) => ({ id, coords, heading, airlineLogo })));
+
+        // Build unique airport list from flights
+        const airportSet = new Map<string, { code: string; name: string; coords: [number, number] }>();
+        mappedFlights.forEach((f) => {
+            if (f.originCoords) {
+                airportSet.set(f.origin, { code: f.origin, name: f.originName, coords: f.originCoords });
+            }
+            if (f.destCoords) {
+                airportSet.set(f.dest, { code: f.dest, name: f.destName, coords: f.destCoords });
+            }
+        });
+        setMapAirports(Array.from(airportSet.values()));
+
         setSelectedId((currentId) => {
             if (currentId && mappedFlights.some((flight) => flight.id === currentId)) {
                 return currentId;
@@ -344,7 +402,17 @@ export default function ActiveFlightsPage() {
         setMounted(true);
         const timer = setInterval(() => {
             setTime(new Date());
-            setFlights(prev => prev.map(f => ({ ...f, eta: f.eta > 0 ? f.eta - 0.1 : 0, progress: f.progress < 100 ? f.progress + 0.05 : 100 })));
+        setFlights(prev => prev.map(f => {
+            const newEta = f.eta > 0 ? f.eta - 0.1 : 0;
+            const newProgress = f.progress < 100 ? f.progress + 0.05 : 100;
+            let newCoords = f.coords;
+            let newHeading = f.heading;
+            if (f.originCoords && f.destCoords) {
+                newCoords = lerpCoords(f.originCoords, f.destCoords, newProgress / 100);
+                newHeading = calculateBearing(newCoords, f.destCoords);
+            }
+            return { ...f, eta: newEta, progress: newProgress, coords: newCoords, heading: newHeading };
+        }));
         }, 1000);
         return () => clearInterval(timer);
     }, []);
@@ -416,7 +484,8 @@ export default function ActiveFlightsPage() {
                                     key={`flight-${idx}-${f.id}`}
                                     onClick={() => {
                                         setSelectedId(f.id);
-                                        setShowCard(true); 
+                                        setShowCard(true);
+                                        setFocusTarget(f.coords);
                                     }}
                                     className={`group rounded-[28px] border transition-all duration-500 cursor-pointer overflow-hidden ${selectedId === f.id
                                         ? 'bg-white border-blue-600 shadow-2xl shadow-blue-600/10 scale-[1.01]'
@@ -550,7 +619,7 @@ export default function ActiveFlightsPage() {
 
                     {/* FULL SCREEN MAP */}
                     <div className="absolute inset-0 z-0">
-                        <FlightMap center={selectedAirportCenter} selectedId={selectedId} flights={mapFlights} />
+                        <FlightMap center={selectedAirportCenter} selectedId={selectedId} flights={mapFlights} airports={mapAirports} focusTarget={focusTarget} />
                     </div>
 
                     {/* TOP LEFT RADAR BADGE */}
