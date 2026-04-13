@@ -37,23 +37,6 @@ export default function FlightMap({ center, selectedId, flights = [], airports =
         <div className="w-full h-full relative holographic-radar overflow-hidden">
             <Map center={mapCenter} zoom={mapZoom} animate={true} dprs={[1, 2]}>
 
-                {/* Airport Markers */}
-                {airports.map((airport) => (
-                    <Overlay key={`airport-${airport.code}`} anchor={airport.coords} offset={[24, 24]}>
-                        <div className="flex flex-col items-center group cursor-pointer">
-                            <div className="relative">
-                                <div className="absolute inset-0 rounded-full bg-orange-400/40 blur-xl scale-100" />
-                                <div className="w-12 h-12 flex items-center justify-center rounded-full border-2 bg-orange-500 border-orange-200 opacity-90 group-hover:opacity-100 shadow-[0_0_15px_rgba(249,115,22,0.4)] transition-all">
-                                    <MapPin size={24} fill="white" strokeWidth={0} className="text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.8)]" />
-                                </div>
-                            </div>
-                            <div className={`mt-4 px-3 py-1.5 rounded-xl text-[10px] font-black transition-all shadow-xl bg-white text-orange-600 border border-orange-100`}>
-                                {airport.code}
-                            </div>
-                        </div>
-                    </Overlay>
-                ))}
-
                 {/* Selected Airport Center */}
                 <Overlay anchor={center} offset={[40, 40]}>
                     <div className="relative flex items-center justify-center w-20 h-20">
@@ -68,7 +51,7 @@ export default function FlightMap({ center, selectedId, flights = [], airports =
                     const logoUrl = f.airlineLogo;
                     return (
                         <Overlay key={`map-flight-${idx}-${f.id}`} anchor={f.pos} offset={[24, 24]}>
-                            <div className="flex flex-col items-center group cursor-pointer">
+                            <div className="relative z-[40] flex flex-col items-center group cursor-pointer">
 
                                 <div className="relative">
                                     {/* Neon Aura */}
@@ -113,6 +96,23 @@ export default function FlightMap({ center, selectedId, flights = [], airports =
                         </Overlay>
                     );
                 })}
+
+                {/* Airport Markers (rendered last so they stay above flights) */}
+                {airports.map((airport) => (
+                    <Overlay key={`airport-${airport.code}`} anchor={airport.coords} offset={[24, 24]}>
+                        <div className="relative z-[90] flex flex-col items-center group cursor-pointer">
+                            <div className="relative">
+                                <div className="absolute inset-0 rounded-full bg-orange-400/40 blur-xl scale-100" />
+                                <div className="w-12 h-12 flex items-center justify-center rounded-full border-2 bg-orange-500 border-orange-200 opacity-95 group-hover:opacity-100 shadow-[0_0_20px_rgba(249,115,22,0.55)] transition-all">
+                                    <MapPin size={24} fill="white" strokeWidth={0} className="text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.8)]" />
+                                </div>
+                            </div>
+                            <div className={`mt-4 px-3 py-1.5 rounded-xl text-[10px] font-black transition-all shadow-xl bg-white text-orange-600 border border-orange-100 relative z-[91]`}>
+                                {airport.code}
+                            </div>
+                        </div>
+                    </Overlay>
+                ))}
             </Map>
         </div>
     );

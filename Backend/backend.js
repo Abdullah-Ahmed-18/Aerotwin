@@ -28,6 +28,45 @@ const AIRPORT_COORDINATES = {
     AUH: { code: "AUH", name: "Abu Dhabi International Airport", coords: [24.433, 54.6511] },
     MED: { code: "MED", name: "Prince Mohammad Bin Abdulaziz Airport", coords: [24.5534, 39.7051] }
 };
+const airportLookupCache = new Map(Object.entries(AIRPORT_COORDINATES).map(([code, data]) => [code, data]));
+
+async function resolveAirportLocation(airportCodeRaw) {
+    const airportCode = String(airportCodeRaw || '').trim().toUpperCase();
+    if (!airportCode) return null;
+
+    const cached = airportLookupCache.get(airportCode);
+    if (cached) return cached;
+
+    try {
+        const response = await axios.get(AIRPORTS_URL, {
+            params: {
+                access_key: API_KEY,
+                iata_code: airportCode,
+                limit: 1
+            }
+        });
+
+        const airport = response.data?.data?.[0];
+        const latitude = Number(airport?.latitude);
+        const longitude = Number(airport?.longitude);
+
+        if (!Number.isFinite(latitude) || !Number.isFinite(longitude)) {
+            return null;
+        }
+
+        const resolved = {
+            code: airportCode,
+            name: airport?.airport_name || airport?.airport || airportCode,
+            coords: [latitude, longitude]
+        };
+
+        airportLookupCache.set(airportCode, resolved);
+        return resolved;
+    } catch (error) {
+        console.error(`Airport lookup error for ${airportCode}:`, error.message);
+        return null;
+    }
+}
 
 // ==========================================
 // OPENSKY NETWORK API (OAuth2 Client Credentials)
@@ -326,6 +365,100 @@ function normalizeFlightCode(code) {
     return /^[A-Z0-9]{3,8}$/.test(normalized) ? normalized : null;
 }
 
+function normalizeActiveFlightsPayload(input, fallbackAirport = TARGET_AIRPORT) {
+    const nowIso = new Date().toISOString();
+
+    function resolveFlightSchedule(flight) {
+        const schedule = flight?.schedule && typeof flight.schedule === 'object' ? flight.schedule : {};
+        const routeDetails = flight?.route?.details && typeof flight.route.details === 'object' ? flight.route.details : {};
+
+        return {
+            departure: {
+                scheduled:
+                    schedule.departure?.scheduled ??
+                    routeDetails.scheduled_departure ??
+                    flight?.departure?.scheduled ??
+                    null,
+                estimated:
+                    schedule.departure?.estimated ??
+                    routeDetails.estimated_departure ??
+                    flight?.departure?.estimated ??
+                    null,
+                actual:
+                    schedule.departure?.actual ??
+                    routeDetails.actual_departure ??
+                    flight?.departure?.actual ??
+                    null,
+            },
+            arrival: {
+                scheduled:
+                    schedule.arrival?.scheduled ??
+                    routeDetails.scheduled_arrival ??
+                    flight?.arrival?.scheduled ??
+                    null,
+                estimated:
+                    schedule.arrival?.estimated ??
+                    routeDetails.estimated_arrival ??
+                    flight?.arrival?.estimated ??
+                    null,
+                actual:
+                    schedule.arrival?.actual ??
+                    routeDetails.actual_arrival ??
+                    flight?.arrival?.actual ??
+                    null,
+            },
+        };
+    }
+
+    function enrichFlight(flight) {
+        if (!flight || typeof flight !== 'object') return flight;
+
+        const preservedFlight = { ...flight };
+        preservedFlight.schedule = resolveFlightSchedule(flight);
+        return preservedFlight;
+    }
+
+    if (Array.isArray(input)) {
+        return {
+            meta: {
+                updated: nowIso,
+                airport: normalizeIata(fallbackAirport, TARGET_AIRPORT),
+                airport_icao: normalizeIcao(fallbackAirport, "UNK"),
+                count: input.length,
+            },
+            flights: input.map(enrichFlight),
+        };
+    }
+
+    if (!input || typeof input !== 'object') {
+        return null;
+    }
+
+    const flights = Array.isArray(input.flights)
+        ? input.flights.map(enrichFlight)
+        : Array.isArray(input.data?.flights)
+            ? input.data.flights.map(enrichFlight)
+            : [];
+
+    const meta = {
+        ...(input.meta && typeof input.meta === 'object' ? input.meta : {}),
+        updated: nowIso,
+        airport: normalizeIata(input.meta?.airport || input.airport || fallbackAirport, TARGET_AIRPORT),
+        airport_icao: normalizeIcao(input.meta?.airport_icao || input.airport_icao || input.airport || fallbackAirport, "UNK"),
+        count: flights.length,
+    };
+
+    const preservedTopLevel = { ...input };
+    delete preservedTopLevel.meta;
+    delete preservedTopLevel.flights;
+
+    return {
+        ...preservedTopLevel,
+        meta,
+        flights,
+    };
+}
+
 // Load the key mapping configuration for transforming frontend data
 const keyMapping = require('./KeyMapping.json');
 
@@ -603,22 +736,27 @@ app.get('/api/fetch-active-flights', async (req, res) => {
         const airportIata = requestedIata || TARGET_AIRPORT;
         const airportIcao = requestedIcao || "UNK";
 
-        const params = { access_key: API_KEY };
+        const buildFlightQueryParams = (direction) => {
+            const params = { access_key: API_KEY };
 
-        if (requestedIcao) {
-            params.arr_icao = requestedIcao;
-        } else {
-            params.arr_iata = airportIata;
-        }
-        
-        if (flightStatus !== 'all') {
-            params.flight_status = flightStatus;
-        }
+            if (requestedIcao) {
+                params[`${direction}_icao`] = requestedIcao;
+            } else {
+                params[`${direction}_iata`] = airportIata;
+            }
+
+            if (flightStatus !== 'all') {
+                params.flight_status = flightStatus;
+            }
+
+            return params;
+        };
         
         // Fetch AviationStack + ALL OpenSky sources in parallel
         const airportCoords = AIRPORT_COORDINATES[airportIata];
-        const [aviationStackRes, openskyStates, openskyArrivals, openskyRecentFlights] = await Promise.all([
-            axios.get(API_URL, { params }),
+        const [aviationStackArrivalsRes, aviationStackDeparturesRes, openskyStates, openskyArrivals, openskyRecentFlights] = await Promise.all([
+            axios.get(API_URL, { params: buildFlightQueryParams('arr') }),
+            axios.get(API_URL, { params: buildFlightQueryParams('dep') }),
             airportCoords
                 ? fetchOpenSkyLiveNearAirport(airportIata, airportCoords)
                 : Promise.resolve([]),
@@ -626,7 +764,23 @@ app.get('/api/fetch-active-flights', async (req, res) => {
             fetchOpenSkyRecentFlights().catch(() => []),
         ]);
 
-        const rawFlights = aviationStackRes.data.data || [];
+        const arrivalsRaw = aviationStackArrivalsRes.data?.data || [];
+        const departuresRaw = aviationStackDeparturesRes.data?.data || [];
+        const dedupeKeys = new Set();
+        const rawFlights = [];
+
+        for (const flight of [...arrivalsRaw, ...departuresRaw]) {
+            const depCode = (flight?.departure?.icao || flight?.departure?.iata || 'UNK').toUpperCase();
+            const arrCode = (flight?.arrival?.icao || flight?.arrival?.iata || 'UNK').toUpperCase();
+            const arrTime = flight?.arrival?.estimated || flight?.arrival?.scheduled || flight?.arrival?.actual || 'UNK';
+
+            // Operational-flight signature: source + destination + ETA collapses codeshares with different IDs.
+            const key = [depCode, arrCode, arrTime].join('|');
+
+            if (dedupeKeys.has(key)) continue;
+            dedupeKeys.add(key);
+            rawFlights.push(flight);
+        }
 
         // Build lookups from ALL OpenSky sources
         const callsignLookup = buildCallsignLookup(openskyStates); // for live position data
@@ -701,8 +855,8 @@ app.get('/api/fetch-active-flights', async (req, res) => {
 
             const sourceIata = normalizeIata(f.departure?.iata);
             const sourceIcao = normalizeIcao(f.departure?.icao);
-            const destinationIata = normalizeIata(f.arrival?.iata, airportIata);
-            const destinationIcao = normalizeIcao(f.arrival?.icao, airportIcao);
+            const destinationIata = normalizeIata(f.arrival?.iata);
+            const destinationIcao = normalizeIcao(f.arrival?.icao);
             const isDomestic = DOMESTIC_EGYPT_AIRPORTS.includes(sourceIata);
             const flightType = isDomestic ? "Domestic" : "International";
 
@@ -823,6 +977,8 @@ app.get('/api/fetch-active-flights', async (req, res) => {
                 airport: airportIata,
                 airport_icao: airportIcao,
                 count: formattedFlights.length,
+                arrivals_fetched: arrivalsRaw.length,
+                departures_fetched: departuresRaw.length,
                 status_counts: statusCountsSimple,
                 flight_status_breakdown: statusCounts,
                 opensky_enriched: openskyMatches,
@@ -836,10 +992,6 @@ app.get('/api/fetch-active-flights', async (req, res) => {
             flights: formattedFlights
         };
 
-        // Save enriched data to disk
-        fs.writeFileSync('active_flights.json', JSON.stringify(finalPayload, null, 2));
-        console.log(`💾 Saved ${formattedFlights.length} enriched flights to active_flights.json`);
-
         res.status(200).json(finalPayload);
 
     } catch (error) {
@@ -851,31 +1003,50 @@ app.get('/api/fetch-active-flights', async (req, res) => {
 app.post('/api/save-active-flights', (req, res) => {
     try {
         const airport = String(req.body?.airport || TARGET_AIRPORT).trim().toUpperCase();
-        const incomingFlights = Array.isArray(req.body?.flights) ? req.body.flights : [];
+        const payload = normalizeActiveFlightsPayload(req.body, airport);
 
-        if (incomingFlights.length === 0) {
+        if (!payload || !Array.isArray(payload.flights) || payload.flights.length === 0) {
             return res.status(400).json({ error: 'No flights provided for export.' });
         }
 
-        const airportIata = normalizeIata(airport, TARGET_AIRPORT);
-        const airportIcao = normalizeIcao(airport, "UNK");
-
-        const payload = {
-            meta: {
-                updated: new Date().toISOString(),
-                airport: airportIata,
-                airport_icao: airportIcao,
-                count: incomingFlights.length,
-                source: "frontend-export"
-            },
-            flights: incomingFlights
+        payload.meta = {
+            ...(payload.meta || {}),
+            source: payload.meta?.source || "frontend-export",
         };
 
         fs.writeFileSync("active_flights.json", JSON.stringify(payload, null, 2));
-        return res.status(200).json({ success: true, path: "active_flights.json", count: incomingFlights.length });
+        return res.status(200).json({ success: true, path: "active_flights.json", count: payload.flights.length });
     } catch (error) {
         console.error("Save active flights error:", error.message);
         return res.status(500).json({ error: 'Failed to save active flights JSON.' });
+    }
+});
+
+app.post('/api/airports-batch', async (req, res) => {
+    try {
+        const incomingCodes = Array.isArray(req.body?.codes) ? req.body.codes : [];
+        const normalizedCodes = Array.from(new Set(
+            incomingCodes
+                .map((code) => String(code || '').trim().toUpperCase())
+                .filter((code) => code.length >= 3)
+        ));
+
+        if (normalizedCodes.length === 0) {
+            return res.status(200).json({ count: 0, airports: {} });
+        }
+
+        const resolvedAirports = await Promise.all(normalizedCodes.map((code) => resolveAirportLocation(code)));
+        const airports = resolvedAirports
+            .filter((airport) => airport && Array.isArray(airport.coords) && airport.coords.length === 2)
+            .reduce((acc, airport) => {
+                acc[airport.code] = airport;
+                return acc;
+            }, {});
+
+        return res.status(200).json({ count: Object.keys(airports).length, airports });
+    } catch (error) {
+        console.error('Batch airport lookup error:', error.message);
+        return res.status(500).json({ error: 'Failed to fetch airport batch.' });
     }
 });
 
@@ -887,32 +1058,12 @@ app.get('/api/airport-location', async (req, res) => {
             return res.status(400).json({ error: 'Airport code is required.' });
         }
 
-        const fallbackAirport = AIRPORT_COORDINATES[airportCode];
-        if (fallbackAirport) {
-            return res.status(200).json(fallbackAirport);
-        }
-
-        const response = await axios.get(AIRPORTS_URL, {
-            params: {
-                access_key: API_KEY,
-                iata_code: airportCode,
-                limit: 1
-            }
-        });
-
-        const airport = response.data?.data?.[0];
-        const latitude = Number(airport?.latitude);
-        const longitude = Number(airport?.longitude);
-
-        if (!Number.isFinite(latitude) || !Number.isFinite(longitude)) {
+        const resolvedAirport = await resolveAirportLocation(airportCode);
+        if (!resolvedAirport) {
             return res.status(404).json({ error: `No coordinates found for ${airportCode}.` });
         }
 
-        return res.status(200).json({
-            code: airportCode,
-            name: airport?.airport_name || airport?.airport || airportCode,
-            coords: [latitude, longitude]
-        });
+        return res.status(200).json(resolvedAirport);
     } catch (error) {
         console.error('Airport lookup error:', error.message);
         res.status(500).json({ error: 'Failed to fetch airport location.' });

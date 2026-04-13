@@ -1,95 +1,37 @@
 {
+  "airport": "HBE",
   "meta": {
-    "updated": "2026-04-13T16:51:05.669Z",
+    "updated": "2026-04-13T18:30:58.918Z",
     "airport": "HBE",
     "airport_icao": "UNK",
-    "count": 54,
-    "status_counts": {
-      "scheduled": 20,
-      "active": 28,
-      "landed": 0,
-      "cancelled": 0,
-      "incident": 0,
-      "diverted": 0,
-      "unknown": 6
-    },
-    "flight_status_breakdown": {
-      "scheduled": {
-        "count": 20,
-        "csv_db": 7,
-        "aviationstack": 1,
-        "dummy": 12
-      },
-      "active": {
-        "count": 28,
-        "csv_db": 20,
-        "aviationstack": 1,
-        "dummy": 7
-      },
-      "landed": {
-        "count": 0,
-        "csv_db": 0,
-        "aviationstack": 0,
-        "dummy": 0
-      },
-      "cancelled": {
-        "count": 0,
-        "csv_db": 0,
-        "aviationstack": 0,
-        "dummy": 0
-      },
-      "incident": {
-        "count": 0,
-        "csv_db": 0,
-        "aviationstack": 0,
-        "dummy": 0
-      },
-      "diverted": {
-        "count": 0,
-        "csv_db": 0,
-        "aviationstack": 0,
-        "dummy": 0
-      },
-      "unknown": {
-        "count": 6,
-        "csv_db": 3,
-        "aviationstack": 0,
-        "dummy": 3
-      }
-    },
-    "opensky_enriched": 43,
-    "opensky_aircraft_nearby": 1,
-    "aircraft_sources": {
-      "csv_db": 30,
-      "aviationstack": 2,
-      "dummy": 22
-    }
+    "count": 45,
+    "source": "frontend-export"
   },
   "flights": [
     {
-      "flight_id": "TG7564",
-      "flight_iata": "TG7564",
-      "flight_icao": "THA7564",
-      "airline": "Thai Airways International",
-      "airline_iata": "TG",
-      "airline_icao": "THA",
-      "airline_logo": "/airline-logos/TG.png",
+      "flight_id": "UZ130",
+      "flight_iata": "UZ130",
+      "flight_icao": "BRQ130",
+      "airline": "Buraq Air",
+      "airline_iata": "UZ",
+      "airline_icao": "BRQ",
+      "airline_logo": "/airline-logos/UZ.png",
       "flight_status": "scheduled",
       "flight_type": "International",
       "route": {
-        "source": "IST",
-        "source_icao": "LTFM",
+        "source": "MJI",
+        "source_icao": "HLLM",
         "destination": "HBE",
         "destination_icao": "HEAX",
         "details": {
-          "origin_name": "Istanbul Airport",
+          "origin_name": "Mitiga",
           "terminal": "T2",
-          "gate_id": "T2-G8 (Dummy)",
-          "scheduled_arrival": "2026-04-14T01:50:00+00:00",
+          "gate_id": "T2-G11 (Dummy)",
+          "scheduled_arrival": "2026-04-14T04:29:00+00:00",
           "estimated_arrival": null,
           "actual_arrival": null,
-          "scheduled_departure": "2026-04-14T00:40:00+00:00",
-          "estimated_departure": "2026-04-14T00:40:00+00:00",
+          "scheduled_departure": "2026-04-14T01:24:00+00:00",
+          "estimated_departure": "2026-04-14T01:24:00+00:00",
           "actual_departure": null
         }
       },
@@ -99,14 +41,162 @@
         "capacity": "180 (Simulated)"
       },
       "payload_stats": {
-        "total_passengers": "159 (Simulated)",
-        "estimated_groups": "67 (Simulated)",
-        "total_bags": "191 (Simulated)",
+        "total_passengers": "154 (Simulated)",
+        "estimated_groups": "65 (Simulated)",
+        "total_bags": "185 (Simulated)",
+        "priority_pax": "18 (Simulated)",
+        "prm_pax": "1 (Simulated)",
+        "service_multiplier": 1.4,
+        "assigned_resources": {
+          "baggage_belt": "B3 (Dummy)"
+        }
+      },
+      "origin_coords": null,
+      "dest_coords": [
+        30.9177,
+        29.6964
+      ],
+      "personas": {
+        "p1": 0,
+        "p2": 0,
+        "p3": 0,
+        "p4": 70,
+        "p5": 0,
+        "p6": 20,
+        "p7": 10
+      },
+      "schedule": {
+        "departure": {
+          "scheduled": "2026-04-14T01:24:00+00:00",
+          "estimated": "2026-04-14T01:24:00+00:00",
+          "actual": null
+        },
+        "arrival": {
+          "scheduled": "2026-04-14T04:29:00+00:00",
+          "estimated": null,
+          "actual": null
+        }
+      }
+    },
+    {
+      "flight_id": "E5322",
+      "flight_iata": "E5322",
+      "flight_icao": "RBG322",
+      "airline": "Air Arabia Egypt",
+      "airline_iata": "E5",
+      "airline_icao": "RBG",
+      "airline_logo": "/airline-logos/E5.png",
+      "flight_status": "scheduled",
+      "flight_type": "International",
+      "route": {
+        "source": "JED",
+        "source_icao": "OEJN",
+        "destination": "HBE",
+        "destination_icao": "HEAX",
+        "details": {
+          "origin_name": "King Abdulaziz International",
+          "terminal": "T2",
+          "gate_id": "T2-G6 (Dummy)",
+          "scheduled_arrival": "2026-04-12T07:55:00+00:00",
+          "estimated_arrival": null,
+          "actual_arrival": null,
+          "scheduled_departure": "2026-04-12T06:30:00+00:00",
+          "estimated_departure": "2026-04-12T06:30:00+00:00",
+          "actual_departure": null
+        }
+      },
+      "aircraft": {
+        "type": "A320",
+        "type_source": "CSV_DB",
+        "capacity": "180 (Simulated)",
+        "manufacturer": null,
+        "registration": "SU-AAD",
+        "owner": null,
+        "type_long": null
+      },
+      "payload_stats": {
+        "total_passengers": "156 (Simulated)",
+        "estimated_groups": "65 (Simulated)",
+        "total_bags": "187 (Simulated)",
         "priority_pax": "19 (Simulated)",
-        "prm_pax": "2 (Simulated)",
+        "prm_pax": "1 (Simulated)",
         "service_multiplier": 1.4,
         "assigned_resources": {
           "baggage_belt": "B4 (Dummy)"
+        }
+      },
+      "origin_coords": null,
+      "dest_coords": [
+        30.9177,
+        29.6964
+      ],
+      "personas": {
+        "p1": 0,
+        "p2": 0,
+        "p3": 0,
+        "p4": 70,
+        "p5": 0,
+        "p6": 20,
+        "p7": 10
+      },
+      "schedule": {
+        "departure": {
+          "scheduled": "2026-04-12T06:30:00+00:00",
+          "estimated": "2026-04-12T06:30:00+00:00",
+          "actual": null
+        },
+        "arrival": {
+          "scheduled": "2026-04-12T07:55:00+00:00",
+          "estimated": null,
+          "actual": null
+        }
+      }
+    },
+    {
+      "flight_id": "TG7564",
+      "flight_iata": "TG7564",
+      "flight_icao": "THA7564",
+      "airline": "Thai Airways International",
+      "airline_iata": "TG",
+      "airline_icao": "THA",
+      "airline_logo": "/airline-logos/TG.png",
+      "flight_status": "unknown",
+      "flight_type": "International",
+      "route": {
+        "source": "IST",
+        "source_icao": "LTFM",
+        "destination": "HBE",
+        "destination_icao": "HEAX",
+        "details": {
+          "origin_name": "Istanbul Airport",
+          "terminal": "T2",
+          "gate_id": "T2-G3 (Dummy)",
+          "scheduled_arrival": "2026-04-12T01:50:00+00:00",
+          "estimated_arrival": "2026-04-12T01:30:00+00:00",
+          "actual_arrival": null,
+          "scheduled_departure": "2026-04-12T00:40:00+00:00",
+          "estimated_departure": "2026-04-12T00:40:00+00:00",
+          "actual_departure": "2026-04-12T00:51:00+00:00"
+        }
+      },
+      "aircraft": {
+        "type": "A21N",
+        "type_source": "CSV_DB",
+        "capacity": "240 (Simulated)",
+        "manufacturer": null,
+        "registration": "TC-LSL",
+        "owner": null,
+        "type_long": null
+      },
+      "payload_stats": {
+        "total_passengers": "184 (Simulated)",
+        "estimated_groups": "77 (Simulated)",
+        "total_bags": "221 (Simulated)",
+        "priority_pax": "22 (Simulated)",
+        "prm_pax": "0 (Simulated)",
+        "service_multiplier": 1.4,
+        "assigned_resources": {
+          "baggage_belt": "B2 (Dummy)"
         }
       },
       "origin_coords": [
@@ -116,7 +206,28 @@
       "dest_coords": [
         30.9177,
         29.6964
-      ]
+      ],
+      "personas": {
+        "p1": 0,
+        "p2": 0,
+        "p3": 0,
+        "p4": 70,
+        "p5": 0,
+        "p6": 20,
+        "p7": 10
+      },
+      "schedule": {
+        "departure": {
+          "scheduled": "2026-04-12T00:40:00+00:00",
+          "estimated": "2026-04-12T00:40:00+00:00",
+          "actual": "2026-04-12T00:51:00+00:00"
+        },
+        "arrival": {
+          "scheduled": "2026-04-12T01:50:00+00:00",
+          "estimated": "2026-04-12T01:30:00+00:00",
+          "actual": null
+        }
+      }
     },
     {
       "flight_id": "MS9296",
@@ -126,7 +237,7 @@
       "airline_iata": "MS",
       "airline_icao": "MSR",
       "airline_logo": "/airline-logos/MS.png",
-      "flight_status": "scheduled",
+      "flight_status": "unknown",
       "flight_type": "International",
       "route": {
         "source": "IST",
@@ -136,29 +247,33 @@
         "details": {
           "origin_name": "Istanbul Airport",
           "terminal": "T1",
-          "gate_id": "T1-G3 (Dummy)",
-          "scheduled_arrival": "2026-04-14T01:50:00+00:00",
-          "estimated_arrival": null,
+          "gate_id": "T1-G7 (Dummy)",
+          "scheduled_arrival": "2026-04-12T01:50:00+00:00",
+          "estimated_arrival": "2026-04-12T01:30:00+00:00",
           "actual_arrival": null,
-          "scheduled_departure": "2026-04-14T00:40:00+00:00",
-          "estimated_departure": "2026-04-14T00:40:00+00:00",
-          "actual_departure": null
+          "scheduled_departure": "2026-04-12T00:40:00+00:00",
+          "estimated_departure": "2026-04-12T00:40:00+00:00",
+          "actual_departure": "2026-04-12T00:51:00+00:00"
         }
       },
       "aircraft": {
-        "type": "B738 (Dummy)",
-        "type_source": "Dummy",
-        "capacity": "189 (Simulated)"
+        "type": "A21N",
+        "type_source": "CSV_DB",
+        "capacity": "240 (Simulated)",
+        "manufacturer": null,
+        "registration": "TC-LSL",
+        "owner": null,
+        "type_long": null
       },
       "payload_stats": {
-        "total_passengers": "160 (Simulated)",
-        "estimated_groups": "67 (Simulated)",
-        "total_bags": "192 (Simulated)",
-        "priority_pax": "19 (Simulated)",
+        "total_passengers": "207 (Simulated)",
+        "estimated_groups": "87 (Simulated)",
+        "total_bags": "248 (Simulated)",
+        "priority_pax": "25 (Simulated)",
         "prm_pax": "2 (Simulated)",
         "service_multiplier": 1.4,
         "assigned_resources": {
-          "baggage_belt": "B4 (Dummy)"
+          "baggage_belt": "B2 (Dummy)"
         }
       },
       "origin_coords": [
@@ -168,7 +283,28 @@
       "dest_coords": [
         30.9177,
         29.6964
-      ]
+      ],
+      "personas": {
+        "p1": 0,
+        "p2": 0,
+        "p3": 0,
+        "p4": 70,
+        "p5": 0,
+        "p6": 20,
+        "p7": 10
+      },
+      "schedule": {
+        "departure": {
+          "scheduled": "2026-04-12T00:40:00+00:00",
+          "estimated": "2026-04-12T00:40:00+00:00",
+          "actual": "2026-04-12T00:51:00+00:00"
+        },
+        "arrival": {
+          "scheduled": "2026-04-12T01:50:00+00:00",
+          "estimated": "2026-04-12T01:30:00+00:00",
+          "actual": null
+        }
+      }
     },
     {
       "flight_id": "TK696",
@@ -178,7 +314,7 @@
       "airline_iata": "TK",
       "airline_icao": "THY",
       "airline_logo": "/airline-logos/TK.png",
-      "flight_status": "scheduled",
+      "flight_status": "unknown",
       "flight_type": "International",
       "route": {
         "source": "IST",
@@ -188,26 +324,30 @@
         "details": {
           "origin_name": "Istanbul Airport",
           "terminal": "T2",
-          "gate_id": "T2-G4 (Dummy)",
-          "scheduled_arrival": "2026-04-14T01:50:00+00:00",
-          "estimated_arrival": null,
+          "gate_id": "T2-G7 (Dummy)",
+          "scheduled_arrival": "2026-04-12T01:50:00+00:00",
+          "estimated_arrival": "2026-04-12T01:30:00+00:00",
           "actual_arrival": null,
-          "scheduled_departure": "2026-04-14T00:40:00+00:00",
-          "estimated_departure": "2026-04-14T00:40:00+00:00",
-          "actual_departure": null
+          "scheduled_departure": "2026-04-12T00:40:00+00:00",
+          "estimated_departure": "2026-04-12T00:40:00+00:00",
+          "actual_departure": "2026-04-12T00:51:00+00:00"
         }
       },
       "aircraft": {
-        "type": "A320 (Dummy)",
-        "type_source": "Dummy",
-        "capacity": "180 (Simulated)"
+        "type": "A21N",
+        "type_source": "CSV_DB",
+        "capacity": "240 (Simulated)",
+        "manufacturer": null,
+        "registration": "TC-LSL",
+        "owner": null,
+        "type_long": null
       },
       "payload_stats": {
-        "total_passengers": "160 (Simulated)",
-        "estimated_groups": "67 (Simulated)",
-        "total_bags": "192 (Simulated)",
-        "priority_pax": "19 (Simulated)",
-        "prm_pax": "1 (Simulated)",
+        "total_passengers": "182 (Simulated)",
+        "estimated_groups": "76 (Simulated)",
+        "total_bags": "218 (Simulated)",
+        "priority_pax": "22 (Simulated)",
+        "prm_pax": "2 (Simulated)",
         "service_multiplier": 1.4,
         "assigned_resources": {
           "baggage_belt": "B3 (Dummy)"
@@ -220,7 +360,102 @@
       "dest_coords": [
         30.9177,
         29.6964
-      ]
+      ],
+      "personas": {
+        "p1": 0,
+        "p2": 0,
+        "p3": 0,
+        "p4": 70,
+        "p5": 0,
+        "p6": 20,
+        "p7": 10
+      },
+      "schedule": {
+        "departure": {
+          "scheduled": "2026-04-12T00:40:00+00:00",
+          "estimated": "2026-04-12T00:40:00+00:00",
+          "actual": "2026-04-12T00:51:00+00:00"
+        },
+        "arrival": {
+          "scheduled": "2026-04-12T01:50:00+00:00",
+          "estimated": "2026-04-12T01:30:00+00:00",
+          "actual": null
+        }
+      }
+    },
+    {
+      "flight_id": "G9522",
+      "flight_iata": "G9522",
+      "flight_icao": "ABY522",
+      "airline": "Air Arabia",
+      "airline_iata": "G9",
+      "airline_icao": "ABY",
+      "airline_logo": "/airline-logos/G9.png",
+      "flight_status": "active",
+      "flight_type": "International",
+      "route": {
+        "source": "AMM",
+        "source_icao": "OJAI",
+        "destination": "HBE",
+        "destination_icao": "HEAX",
+        "details": {
+          "origin_name": "Queen Alia International",
+          "terminal": "T2",
+          "gate_id": "T2-G5 (Dummy)",
+          "scheduled_arrival": "2026-04-13T22:05:00+00:00",
+          "estimated_arrival": null,
+          "actual_arrival": null,
+          "scheduled_departure": "2026-04-13T21:20:00+00:00",
+          "estimated_departure": "2026-04-13T21:20:00+00:00",
+          "actual_departure": null
+        }
+      },
+      "aircraft": {
+        "type": "A320",
+        "type_source": "CSV_DB",
+        "capacity": "180 (Simulated)",
+        "manufacturer": null,
+        "registration": "SU-AAD",
+        "owner": null,
+        "type_long": null
+      },
+      "payload_stats": {
+        "total_passengers": "152 (Simulated)",
+        "estimated_groups": "64 (Simulated)",
+        "total_bags": "182 (Simulated)",
+        "priority_pax": "18 (Simulated)",
+        "prm_pax": "0 (Simulated)",
+        "service_multiplier": 1.4,
+        "assigned_resources": {
+          "baggage_belt": "B1 (Dummy)"
+        }
+      },
+      "origin_coords": null,
+      "dest_coords": [
+        30.9177,
+        29.6964
+      ],
+      "personas": {
+        "p1": 0,
+        "p2": 0,
+        "p3": 0,
+        "p4": 70,
+        "p5": 0,
+        "p6": 20,
+        "p7": 10
+      },
+      "schedule": {
+        "departure": {
+          "scheduled": "2026-04-13T21:20:00+00:00",
+          "estimated": "2026-04-13T21:20:00+00:00",
+          "actual": null
+        },
+        "arrival": {
+          "scheduled": "2026-04-13T22:05:00+00:00",
+          "estimated": null,
+          "actual": null
+        }
+      }
     },
     {
       "flight_id": "LN210",
@@ -240,7 +475,7 @@
         "details": {
           "origin_name": "Mitiga",
           "terminal": "T2",
-          "gate_id": "T2-G7 (Dummy)",
+          "gate_id": "T2-G5 (Dummy)",
           "scheduled_arrival": "2026-04-14T01:00:00+00:00",
           "estimated_arrival": null,
           "actual_arrival": null,
@@ -255,21 +490,42 @@
         "capacity": "180 (Simulated)"
       },
       "payload_stats": {
-        "total_passengers": "165 (Simulated)",
-        "estimated_groups": "69 (Simulated)",
-        "total_bags": "198 (Simulated)",
-        "priority_pax": "20 (Simulated)",
-        "prm_pax": "0 (Simulated)",
+        "total_passengers": "155 (Simulated)",
+        "estimated_groups": "65 (Simulated)",
+        "total_bags": "186 (Simulated)",
+        "priority_pax": "19 (Simulated)",
+        "prm_pax": "1 (Simulated)",
         "service_multiplier": 1.4,
         "assigned_resources": {
-          "baggage_belt": "B3 (Dummy)"
+          "baggage_belt": "B2 (Dummy)"
         }
       },
       "origin_coords": null,
       "dest_coords": [
         30.9177,
         29.6964
-      ]
+      ],
+      "personas": {
+        "p1": 0,
+        "p2": 0,
+        "p3": 0,
+        "p4": 70,
+        "p5": 0,
+        "p6": 20,
+        "p7": 10
+      },
+      "schedule": {
+        "departure": {
+          "scheduled": "2026-04-13T22:30:00+00:00",
+          "estimated": "2026-04-13T22:30:00+00:00",
+          "actual": null
+        },
+        "arrival": {
+          "scheduled": "2026-04-14T01:00:00+00:00",
+          "estimated": null,
+          "actual": null
+        }
+      }
     },
     {
       "flight_id": "5F400",
@@ -279,7 +535,7 @@
       "airline_iata": "5F",
       "airline_icao": "FIA",
       "airline_logo": "/airline-logos/5F.png",
-      "flight_status": "active",
+      "flight_status": "landed",
       "flight_type": "International",
       "route": {
         "source": "BEN",
@@ -289,10 +545,10 @@
         "details": {
           "origin_name": "Benina International",
           "terminal": "T2",
-          "gate_id": "T2-G10 (Dummy)",
+          "gate_id": "T2-G2 (Dummy)",
           "scheduled_arrival": "2026-04-13T16:00:00+00:00",
-          "estimated_arrival": "2026-04-13T16:04:00+00:00",
-          "actual_arrival": null,
+          "estimated_arrival": "2026-04-13T16:06:00+00:00",
+          "actual_arrival": "2026-04-13T16:07:00+00:00",
           "scheduled_departure": "2026-04-13T14:25:00+00:00",
           "estimated_departure": "2026-04-13T14:25:00+00:00",
           "actual_departure": "2026-04-13T14:48:00+00:00"
@@ -304,21 +560,42 @@
         "capacity": "180 (Simulated)"
       },
       "payload_stats": {
-        "total_passengers": "153 (Simulated)",
-        "estimated_groups": "64 (Simulated)",
-        "total_bags": "184 (Simulated)",
-        "priority_pax": "18 (Simulated)",
-        "prm_pax": "1 (Simulated)",
+        "total_passengers": "170 (Simulated)",
+        "estimated_groups": "71 (Simulated)",
+        "total_bags": "204 (Simulated)",
+        "priority_pax": "20 (Simulated)",
+        "prm_pax": "2 (Simulated)",
         "service_multiplier": 1.4,
         "assigned_resources": {
-          "baggage_belt": "B2 (Dummy)"
+          "baggage_belt": "B3 (Dummy)"
         }
       },
       "origin_coords": null,
       "dest_coords": [
         30.9177,
         29.6964
-      ]
+      ],
+      "personas": {
+        "p1": 0,
+        "p2": 0,
+        "p3": 0,
+        "p4": 70,
+        "p5": 0,
+        "p6": 20,
+        "p7": 10
+      },
+      "schedule": {
+        "departure": {
+          "scheduled": "2026-04-13T14:25:00+00:00",
+          "estimated": "2026-04-13T14:25:00+00:00",
+          "actual": "2026-04-13T14:48:00+00:00"
+        },
+        "arrival": {
+          "scheduled": "2026-04-13T16:00:00+00:00",
+          "estimated": "2026-04-13T16:06:00+00:00",
+          "actual": "2026-04-13T16:07:00+00:00"
+        }
+      }
     },
     {
       "flight_id": "E5522",
@@ -338,7 +615,7 @@
         "details": {
           "origin_name": "Queen Alia International",
           "terminal": "T2",
-          "gate_id": "T2-G2 (Dummy)",
+          "gate_id": "T2-G9 (Dummy)",
           "scheduled_arrival": "2026-04-13T22:05:00+00:00",
           "estimated_arrival": null,
           "actual_arrival": null,
@@ -353,11 +630,11 @@
         "capacity": "180 (Simulated)"
       },
       "payload_stats": {
-        "total_passengers": "135 (Simulated)",
-        "estimated_groups": "57 (Simulated)",
-        "total_bags": "162 (Simulated)",
-        "priority_pax": "16 (Simulated)",
-        "prm_pax": "1 (Simulated)",
+        "total_passengers": "169 (Simulated)",
+        "estimated_groups": "71 (Simulated)",
+        "total_bags": "203 (Simulated)",
+        "priority_pax": "20 (Simulated)",
+        "prm_pax": "2 (Simulated)",
         "service_multiplier": 1.4,
         "assigned_resources": {
           "baggage_belt": "B2 (Dummy)"
@@ -367,7 +644,28 @@
       "dest_coords": [
         30.9177,
         29.6964
-      ]
+      ],
+      "personas": {
+        "p1": 0,
+        "p2": 0,
+        "p3": 0,
+        "p4": 70,
+        "p5": 0,
+        "p6": 20,
+        "p7": 10
+      },
+      "schedule": {
+        "departure": {
+          "scheduled": "2026-04-13T21:20:00+00:00",
+          "estimated": "2026-04-13T21:20:00+00:00",
+          "actual": null
+        },
+        "arrival": {
+          "scheduled": "2026-04-13T22:05:00+00:00",
+          "estimated": null,
+          "actual": null
+        }
+      }
     },
     {
       "flight_id": "G9338",
@@ -387,9 +685,9 @@
         "details": {
           "origin_name": "King Khaled International",
           "terminal": "T2",
-          "gate_id": "T2-G1 (Dummy)",
+          "gate_id": "T2-G2 (Dummy)",
           "scheduled_arrival": "2026-04-13T17:10:00+00:00",
-          "estimated_arrival": "2026-04-13T17:06:00+00:00",
+          "estimated_arrival": "2026-04-13T17:01:00+00:00",
           "actual_arrival": null,
           "scheduled_departure": "2026-04-13T15:10:00+00:00",
           "estimated_departure": "2026-04-13T15:10:00+00:00",
@@ -406,21 +704,42 @@
         "type_long": null
       },
       "payload_stats": {
-        "total_passengers": "140 (Simulated)",
-        "estimated_groups": "59 (Simulated)",
-        "total_bags": "168 (Simulated)",
-        "priority_pax": "17 (Simulated)",
-        "prm_pax": "0 (Simulated)",
+        "total_passengers": "167 (Simulated)",
+        "estimated_groups": "70 (Simulated)",
+        "total_bags": "200 (Simulated)",
+        "priority_pax": "20 (Simulated)",
+        "prm_pax": "1 (Simulated)",
         "service_multiplier": 1.4,
         "assigned_resources": {
-          "baggage_belt": "B2 (Dummy)"
+          "baggage_belt": "B3 (Dummy)"
         }
       },
       "origin_coords": null,
       "dest_coords": [
         30.9177,
         29.6964
-      ]
+      ],
+      "personas": {
+        "p1": 0,
+        "p2": 0,
+        "p3": 0,
+        "p4": 70,
+        "p5": 0,
+        "p6": 20,
+        "p7": 10
+      },
+      "schedule": {
+        "departure": {
+          "scheduled": "2026-04-13T15:10:00+00:00",
+          "estimated": "2026-04-13T15:10:00+00:00",
+          "actual": "2026-04-13T15:15:00+00:00"
+        },
+        "arrival": {
+          "scheduled": "2026-04-13T17:10:00+00:00",
+          "estimated": "2026-04-13T17:01:00+00:00",
+          "actual": null
+        }
+      }
     },
     {
       "flight_id": "SV333",
@@ -440,9 +759,9 @@
         "details": {
           "origin_name": "King Khaled International",
           "terminal": "T2",
-          "gate_id": "T2-G4 (Dummy)",
+          "gate_id": "T2-G12 (Dummy)",
           "scheduled_arrival": "2026-04-13T20:40:00+00:00",
-          "estimated_arrival": "2026-04-13T20:54:00+00:00",
+          "estimated_arrival": "2026-04-13T20:50:00+00:00",
           "actual_arrival": null,
           "scheduled_departure": "2026-04-13T18:45:00+00:00",
           "estimated_departure": "2026-04-13T18:45:00+00:00",
@@ -459,21 +778,42 @@
         "type_long": "A321 211"
       },
       "payload_stats": {
-        "total_passengers": "170 (Simulated)",
-        "estimated_groups": "71 (Simulated)",
-        "total_bags": "204 (Simulated)",
-        "priority_pax": "20 (Simulated)",
-        "prm_pax": "0 (Simulated)",
+        "total_passengers": "201 (Simulated)",
+        "estimated_groups": "84 (Simulated)",
+        "total_bags": "241 (Simulated)",
+        "priority_pax": "24 (Simulated)",
+        "prm_pax": "1 (Simulated)",
         "service_multiplier": 1.4,
         "assigned_resources": {
-          "baggage_belt": "B1 (Dummy)"
+          "baggage_belt": "B4 (Dummy)"
         }
       },
       "origin_coords": null,
       "dest_coords": [
         30.9177,
         29.6964
-      ]
+      ],
+      "personas": {
+        "p1": 0,
+        "p2": 0,
+        "p3": 0,
+        "p4": 70,
+        "p5": 0,
+        "p6": 20,
+        "p7": 10
+      },
+      "schedule": {
+        "departure": {
+          "scheduled": "2026-04-13T18:45:00+00:00",
+          "estimated": "2026-04-13T18:45:00+00:00",
+          "actual": "2026-04-13T19:09:00+00:00"
+        },
+        "arrival": {
+          "scheduled": "2026-04-13T20:40:00+00:00",
+          "estimated": "2026-04-13T20:50:00+00:00",
+          "actual": null
+        }
+      }
     },
     {
       "flight_id": "KL3937",
@@ -493,9 +833,9 @@
         "details": {
           "origin_name": "King Khaled International",
           "terminal": "T2",
-          "gate_id": "T2-G11 (Dummy)",
+          "gate_id": "T2-G6 (Dummy)",
           "scheduled_arrival": "2026-04-13T20:40:00+00:00",
-          "estimated_arrival": "2026-04-13T20:54:00+00:00",
+          "estimated_arrival": "2026-04-13T20:50:00+00:00",
           "actual_arrival": null,
           "scheduled_departure": "2026-04-13T18:45:00+00:00",
           "estimated_departure": "2026-04-13T18:45:00+00:00",
@@ -512,11 +852,11 @@
         "type_long": "A321 211"
       },
       "payload_stats": {
-        "total_passengers": "199 (Simulated)",
-        "estimated_groups": "83 (Simulated)",
-        "total_bags": "239 (Simulated)",
-        "priority_pax": "24 (Simulated)",
-        "prm_pax": "1 (Simulated)",
+        "total_passengers": "195 (Simulated)",
+        "estimated_groups": "82 (Simulated)",
+        "total_bags": "234 (Simulated)",
+        "priority_pax": "23 (Simulated)",
+        "prm_pax": "2 (Simulated)",
         "service_multiplier": 1.4,
         "assigned_resources": {
           "baggage_belt": "B2 (Dummy)"
@@ -526,7 +866,28 @@
       "dest_coords": [
         30.9177,
         29.6964
-      ]
+      ],
+      "personas": {
+        "p1": 0,
+        "p2": 0,
+        "p3": 0,
+        "p4": 70,
+        "p5": 0,
+        "p6": 20,
+        "p7": 10
+      },
+      "schedule": {
+        "departure": {
+          "scheduled": "2026-04-13T18:45:00+00:00",
+          "estimated": "2026-04-13T18:45:00+00:00",
+          "actual": "2026-04-13T19:09:00+00:00"
+        },
+        "arrival": {
+          "scheduled": "2026-04-13T20:40:00+00:00",
+          "estimated": "2026-04-13T20:50:00+00:00",
+          "actual": null
+        }
+      }
     },
     {
       "flight_id": "EY3393",
@@ -546,9 +907,9 @@
         "details": {
           "origin_name": "King Khaled International",
           "terminal": "T2",
-          "gate_id": "T2-G9 (Dummy)",
+          "gate_id": "T2-G7 (Dummy)",
           "scheduled_arrival": "2026-04-13T20:40:00+00:00",
-          "estimated_arrival": "2026-04-13T20:54:00+00:00",
+          "estimated_arrival": "2026-04-13T20:50:00+00:00",
           "actual_arrival": null,
           "scheduled_departure": "2026-04-13T18:45:00+00:00",
           "estimated_departure": "2026-04-13T18:45:00+00:00",
@@ -565,21 +926,42 @@
         "type_long": "A321 211"
       },
       "payload_stats": {
-        "total_passengers": "186 (Simulated)",
-        "estimated_groups": "78 (Simulated)",
-        "total_bags": "223 (Simulated)",
-        "priority_pax": "22 (Simulated)",
-        "prm_pax": "1 (Simulated)",
+        "total_passengers": "188 (Simulated)",
+        "estimated_groups": "79 (Simulated)",
+        "total_bags": "226 (Simulated)",
+        "priority_pax": "23 (Simulated)",
+        "prm_pax": "0 (Simulated)",
         "service_multiplier": 1.4,
         "assigned_resources": {
-          "baggage_belt": "B1 (Dummy)"
+          "baggage_belt": "B2 (Dummy)"
         }
       },
       "origin_coords": null,
       "dest_coords": [
         30.9177,
         29.6964
-      ]
+      ],
+      "personas": {
+        "p1": 0,
+        "p2": 0,
+        "p3": 0,
+        "p4": 70,
+        "p5": 0,
+        "p6": 20,
+        "p7": 10
+      },
+      "schedule": {
+        "departure": {
+          "scheduled": "2026-04-13T18:45:00+00:00",
+          "estimated": "2026-04-13T18:45:00+00:00",
+          "actual": "2026-04-13T19:09:00+00:00"
+        },
+        "arrival": {
+          "scheduled": "2026-04-13T20:40:00+00:00",
+          "estimated": "2026-04-13T20:50:00+00:00",
+          "actual": null
+        }
+      }
     },
     {
       "flight_id": "G9594",
@@ -599,40 +981,61 @@
         "details": {
           "origin_name": "Sharjah",
           "terminal": "T2",
-          "gate_id": "T2-G8 (Dummy)",
-          "scheduled_arrival": "2026-04-13T22:55:00+00:00",
-          "estimated_arrival": "2026-04-13T22:41:00+00:00",
+          "gate_id": "T2-G6 (Dummy)",
+          "scheduled_arrival": "2026-04-12T22:55:00+00:00",
+          "estimated_arrival": "2026-04-12T22:26:00+00:00",
           "actual_arrival": null,
-          "scheduled_departure": "2026-04-13T19:55:00+00:00",
-          "estimated_departure": "2026-04-13T19:55:00+00:00",
-          "actual_departure": "2026-04-13T20:10:00+00:00"
+          "scheduled_departure": "2026-04-12T19:55:00+00:00",
+          "estimated_departure": "2026-04-12T19:55:00+00:00",
+          "actual_departure": "2026-04-12T20:10:00+00:00"
         }
       },
       "aircraft": {
         "type": "A320",
         "type_source": "CSV_DB",
         "capacity": "180 (Simulated)",
-        "manufacturer": null,
-        "registration": "A6-ANE",
-        "owner": null,
-        "type_long": null
+        "manufacturer": "Airbus",
+        "registration": "A6-ANQ",
+        "owner": "Air Arabia",
+        "type_long": "A320 214SL"
       },
       "payload_stats": {
-        "total_passengers": "147 (Simulated)",
-        "estimated_groups": "62 (Simulated)",
-        "total_bags": "176 (Simulated)",
-        "priority_pax": "18 (Simulated)",
-        "prm_pax": "0 (Simulated)",
+        "total_passengers": "141 (Simulated)",
+        "estimated_groups": "59 (Simulated)",
+        "total_bags": "169 (Simulated)",
+        "priority_pax": "17 (Simulated)",
+        "prm_pax": "2 (Simulated)",
         "service_multiplier": 1.4,
         "assigned_resources": {
-          "baggage_belt": "B4 (Dummy)"
+          "baggage_belt": "B3 (Dummy)"
         }
       },
       "origin_coords": null,
       "dest_coords": [
         30.9177,
         29.6964
-      ]
+      ],
+      "personas": {
+        "p1": 0,
+        "p2": 0,
+        "p3": 0,
+        "p4": 70,
+        "p5": 0,
+        "p6": 20,
+        "p7": 10
+      },
+      "schedule": {
+        "departure": {
+          "scheduled": "2026-04-12T19:55:00+00:00",
+          "estimated": "2026-04-12T19:55:00+00:00",
+          "actual": "2026-04-12T20:10:00+00:00"
+        },
+        "arrival": {
+          "scheduled": "2026-04-12T22:55:00+00:00",
+          "estimated": "2026-04-12T22:26:00+00:00",
+          "actual": null
+        }
+      }
     },
     {
       "flight_id": "SV411",
@@ -652,40 +1055,61 @@
         "details": {
           "origin_name": "King Abdulaziz International",
           "terminal": "T2",
-          "gate_id": "T2-G7 (Dummy)",
-          "scheduled_arrival": "2026-04-13T18:30:00+00:00",
-          "estimated_arrival": "2026-04-13T18:34:00+00:00",
+          "gate_id": "T2-G5 (Dummy)",
+          "scheduled_arrival": "2026-04-12T18:30:00+00:00",
+          "estimated_arrival": "2026-04-12T18:28:00+00:00",
           "actual_arrival": null,
-          "scheduled_departure": "2026-04-13T17:10:00+00:00",
-          "estimated_departure": "2026-04-13T17:10:00+00:00",
-          "actual_departure": "2026-04-13T17:24:00+00:00"
+          "scheduled_departure": "2026-04-12T17:10:00+00:00",
+          "estimated_departure": "2026-04-12T17:10:00+00:00",
+          "actual_departure": "2026-04-12T17:14:00+00:00"
         }
       },
       "aircraft": {
-        "type": "A321",
+        "type": "A320",
         "type_source": "CSV_DB",
-        "capacity": "220 (Simulated)",
+        "capacity": "180 (Simulated)",
         "manufacturer": "Airbus",
-        "registration": "HZ-ASJ",
+        "registration": "HZ-AS51",
         "owner": "Saudi Arabian Airlines",
-        "type_long": "A321 211"
+        "type_long": "A320 214SL"
       },
       "payload_stats": {
-        "total_passengers": "179 (Simulated)",
-        "estimated_groups": "75 (Simulated)",
-        "total_bags": "215 (Simulated)",
-        "priority_pax": "21 (Simulated)",
+        "total_passengers": "138 (Simulated)",
+        "estimated_groups": "58 (Simulated)",
+        "total_bags": "166 (Simulated)",
+        "priority_pax": "17 (Simulated)",
         "prm_pax": "2 (Simulated)",
         "service_multiplier": 1.4,
         "assigned_resources": {
-          "baggage_belt": "B4 (Dummy)"
+          "baggage_belt": "B2 (Dummy)"
         }
       },
       "origin_coords": null,
       "dest_coords": [
         30.9177,
         29.6964
-      ]
+      ],
+      "personas": {
+        "p1": 0,
+        "p2": 0,
+        "p3": 0,
+        "p4": 70,
+        "p5": 0,
+        "p6": 20,
+        "p7": 10
+      },
+      "schedule": {
+        "departure": {
+          "scheduled": "2026-04-12T17:10:00+00:00",
+          "estimated": "2026-04-12T17:10:00+00:00",
+          "actual": "2026-04-12T17:14:00+00:00"
+        },
+        "arrival": {
+          "scheduled": "2026-04-12T18:30:00+00:00",
+          "estimated": "2026-04-12T18:28:00+00:00",
+          "actual": null
+        }
+      }
     },
     {
       "flight_id": "EY3389",
@@ -705,40 +1129,61 @@
         "details": {
           "origin_name": "King Abdulaziz International",
           "terminal": "T2",
-          "gate_id": "T2-G6 (Dummy)",
-          "scheduled_arrival": "2026-04-13T18:30:00+00:00",
-          "estimated_arrival": "2026-04-13T18:34:00+00:00",
+          "gate_id": "T2-G11 (Dummy)",
+          "scheduled_arrival": "2026-04-12T18:30:00+00:00",
+          "estimated_arrival": "2026-04-12T18:28:00+00:00",
           "actual_arrival": null,
-          "scheduled_departure": "2026-04-13T17:10:00+00:00",
-          "estimated_departure": "2026-04-13T17:10:00+00:00",
-          "actual_departure": "2026-04-13T17:24:00+00:00"
+          "scheduled_departure": "2026-04-12T17:10:00+00:00",
+          "estimated_departure": "2026-04-12T17:10:00+00:00",
+          "actual_departure": "2026-04-12T17:14:00+00:00"
         }
       },
       "aircraft": {
-        "type": "A321",
+        "type": "A320",
         "type_source": "CSV_DB",
-        "capacity": "220 (Simulated)",
+        "capacity": "180 (Simulated)",
         "manufacturer": "Airbus",
-        "registration": "HZ-ASJ",
+        "registration": "HZ-AS51",
         "owner": "Saudi Arabian Airlines",
-        "type_long": "A321 211"
+        "type_long": "A320 214SL"
       },
       "payload_stats": {
-        "total_passengers": "168 (Simulated)",
-        "estimated_groups": "70 (Simulated)",
-        "total_bags": "202 (Simulated)",
-        "priority_pax": "20 (Simulated)",
-        "prm_pax": "1 (Simulated)",
+        "total_passengers": "162 (Simulated)",
+        "estimated_groups": "68 (Simulated)",
+        "total_bags": "194 (Simulated)",
+        "priority_pax": "19 (Simulated)",
+        "prm_pax": "2 (Simulated)",
         "service_multiplier": 1.4,
         "assigned_resources": {
-          "baggage_belt": "B3 (Dummy)"
+          "baggage_belt": "B2 (Dummy)"
         }
       },
       "origin_coords": null,
       "dest_coords": [
         30.9177,
         29.6964
-      ]
+      ],
+      "personas": {
+        "p1": 0,
+        "p2": 0,
+        "p3": 0,
+        "p4": 70,
+        "p5": 0,
+        "p6": 20,
+        "p7": 10
+      },
+      "schedule": {
+        "departure": {
+          "scheduled": "2026-04-12T17:10:00+00:00",
+          "estimated": "2026-04-12T17:10:00+00:00",
+          "actual": "2026-04-12T17:14:00+00:00"
+        },
+        "arrival": {
+          "scheduled": "2026-04-12T18:30:00+00:00",
+          "estimated": "2026-04-12T18:28:00+00:00",
+          "actual": null
+        }
+      }
     },
     {
       "flight_id": "SM212",
@@ -758,7 +1203,7 @@
         "details": {
           "origin_name": "Queen Alia International",
           "terminal": "T2",
-          "gate_id": "T2-G7 (Dummy)",
+          "gate_id": "T2-G8 (Dummy)",
           "scheduled_arrival": "2026-04-13T17:15:00+00:00",
           "estimated_arrival": "2026-04-13T16:44:00+00:00",
           "actual_arrival": null,
@@ -773,21 +1218,42 @@
         "capacity": "180 (Simulated)"
       },
       "payload_stats": {
-        "total_passengers": "149 (Simulated)",
-        "estimated_groups": "63 (Simulated)",
-        "total_bags": "179 (Simulated)",
+        "total_passengers": "152 (Simulated)",
+        "estimated_groups": "64 (Simulated)",
+        "total_bags": "182 (Simulated)",
         "priority_pax": "18 (Simulated)",
         "prm_pax": "2 (Simulated)",
         "service_multiplier": 1.4,
         "assigned_resources": {
-          "baggage_belt": "B1 (Dummy)"
+          "baggage_belt": "B3 (Dummy)"
         }
       },
       "origin_coords": null,
       "dest_coords": [
         30.9177,
         29.6964
-      ]
+      ],
+      "personas": {
+        "p1": 0,
+        "p2": 0,
+        "p3": 0,
+        "p4": 70,
+        "p5": 0,
+        "p6": 20,
+        "p7": 10
+      },
+      "schedule": {
+        "departure": {
+          "scheduled": "2026-04-13T16:30:00+00:00",
+          "estimated": "2026-04-13T16:30:00+00:00",
+          "actual": "2026-04-13T16:23:00+00:00"
+        },
+        "arrival": {
+          "scheduled": "2026-04-13T17:15:00+00:00",
+          "estimated": "2026-04-13T16:44:00+00:00",
+          "actual": null
+        }
+      }
     },
     {
       "flight_id": "UNKNOWN_FLIGHT",
@@ -797,22 +1263,22 @@
       "airline_iata": null,
       "airline_icao": null,
       "airline_logo": null,
-      "flight_status": "active",
+      "flight_status": "unknown",
       "flight_type": "International",
       "route": {
-        "source": "BEN",
-        "source_icao": "HLLB",
+        "source": "MRA",
+        "source_icao": "HLMS",
         "destination": "HBE",
         "destination_icao": "HEAX",
         "details": {
-          "origin_name": "Benina International",
+          "origin_name": "Unknown Departure",
           "terminal": "T2",
-          "gate_id": "T2-G10 (Dummy)",
-          "scheduled_arrival": "2026-04-13T16:00:00+00:00",
+          "gate_id": "T2-G9 (Dummy)",
+          "scheduled_arrival": "2026-04-12T12:45:00+00:00",
           "estimated_arrival": null,
           "actual_arrival": null,
-          "scheduled_departure": "2026-04-13T14:25:00+00:00",
-          "estimated_departure": "2026-04-13T14:25:00+00:00",
+          "scheduled_departure": "2026-04-12T10:35:00+00:00",
+          "estimated_departure": "2026-04-12T10:35:00+00:00",
           "actual_departure": null
         }
       },
@@ -822,21 +1288,42 @@
         "capacity": "180 (Simulated)"
       },
       "payload_stats": {
-        "total_passengers": "139 (Simulated)",
-        "estimated_groups": "58 (Simulated)",
-        "total_bags": "167 (Simulated)",
-        "priority_pax": "17 (Simulated)",
+        "total_passengers": "165 (Simulated)",
+        "estimated_groups": "69 (Simulated)",
+        "total_bags": "198 (Simulated)",
+        "priority_pax": "20 (Simulated)",
         "prm_pax": "0 (Simulated)",
         "service_multiplier": 1.4,
         "assigned_resources": {
-          "baggage_belt": "B1 (Dummy)"
+          "baggage_belt": "B3 (Dummy)"
         }
       },
       "origin_coords": null,
       "dest_coords": [
         30.9177,
         29.6964
-      ]
+      ],
+      "personas": {
+        "p1": 0,
+        "p2": 0,
+        "p3": 0,
+        "p4": 70,
+        "p5": 0,
+        "p6": 20,
+        "p7": 10
+      },
+      "schedule": {
+        "departure": {
+          "scheduled": "2026-04-12T10:35:00+00:00",
+          "estimated": "2026-04-12T10:35:00+00:00",
+          "actual": null
+        },
+        "arrival": {
+          "scheduled": "2026-04-12T12:45:00+00:00",
+          "estimated": null,
+          "actual": null
+        }
+      }
     },
     {
       "flight_id": "E5338",
@@ -856,7 +1343,7 @@
         "details": {
           "origin_name": "King Khaled International",
           "terminal": "T2",
-          "gate_id": "T2-G3 (Dummy)",
+          "gate_id": "T2-G9 (Dummy)",
           "scheduled_arrival": "2026-04-13T17:10:00+00:00",
           "estimated_arrival": null,
           "actual_arrival": null,
@@ -875,21 +1362,42 @@
         "type_long": null
       },
       "payload_stats": {
-        "total_passengers": "136 (Simulated)",
-        "estimated_groups": "57 (Simulated)",
-        "total_bags": "163 (Simulated)",
-        "priority_pax": "16 (Simulated)",
-        "prm_pax": "1 (Simulated)",
+        "total_passengers": "147 (Simulated)",
+        "estimated_groups": "62 (Simulated)",
+        "total_bags": "176 (Simulated)",
+        "priority_pax": "18 (Simulated)",
+        "prm_pax": "2 (Simulated)",
         "service_multiplier": 1.4,
         "assigned_resources": {
-          "baggage_belt": "B4 (Dummy)"
+          "baggage_belt": "B2 (Dummy)"
         }
       },
       "origin_coords": null,
       "dest_coords": [
         30.9177,
         29.6964
-      ]
+      ],
+      "personas": {
+        "p1": 0,
+        "p2": 0,
+        "p3": 0,
+        "p4": 70,
+        "p5": 0,
+        "p6": 20,
+        "p7": 10
+      },
+      "schedule": {
+        "departure": {
+          "scheduled": "2026-04-13T15:10:00+00:00",
+          "estimated": "2026-04-13T15:10:00+00:00",
+          "actual": null
+        },
+        "arrival": {
+          "scheduled": "2026-04-13T17:10:00+00:00",
+          "estimated": null,
+          "actual": null
+        }
+      }
     },
     {
       "flight_id": "G9404",
@@ -909,7 +1417,7 @@
         "details": {
           "origin_name": "Abu Dhabi International",
           "terminal": "T2",
-          "gate_id": "T2-G6 (Dummy)",
+          "gate_id": "T2-G12 (Dummy)",
           "scheduled_arrival": "2026-04-13T12:00:00+00:00",
           "estimated_arrival": "2026-04-13T11:50:00+00:00",
           "actual_arrival": null,
@@ -924,10 +1432,10 @@
         "capacity": "180 (Simulated)"
       },
       "payload_stats": {
-        "total_passengers": "159 (Simulated)",
-        "estimated_groups": "67 (Simulated)",
-        "total_bags": "191 (Simulated)",
-        "priority_pax": "19 (Simulated)",
+        "total_passengers": "163 (Simulated)",
+        "estimated_groups": "68 (Simulated)",
+        "total_bags": "196 (Simulated)",
+        "priority_pax": "20 (Simulated)",
         "prm_pax": "2 (Simulated)",
         "service_multiplier": 1.4,
         "assigned_resources": {
@@ -941,7 +1449,28 @@
       "dest_coords": [
         30.9177,
         29.6964
-      ]
+      ],
+      "personas": {
+        "p1": 0,
+        "p2": 0,
+        "p3": 0,
+        "p4": 70,
+        "p5": 0,
+        "p6": 20,
+        "p7": 10
+      },
+      "schedule": {
+        "departure": {
+          "scheduled": "2026-04-13T09:05:00+00:00",
+          "estimated": "2026-04-13T09:05:00+00:00",
+          "actual": "2026-04-13T09:41:00+00:00"
+        },
+        "arrival": {
+          "scheduled": "2026-04-13T12:00:00+00:00",
+          "estimated": "2026-04-13T11:50:00+00:00",
+          "actual": null
+        }
+      }
     },
     {
       "flight_id": "NB400",
@@ -951,7 +1480,7 @@
       "airline_iata": "NB",
       "airline_icao": "BNL",
       "airline_logo": "/airline-logos/NB.png",
-      "flight_status": "active",
+      "flight_status": "scheduled",
       "flight_type": "International",
       "route": {
         "source": "BEN",
@@ -961,7 +1490,7 @@
         "details": {
           "origin_name": "Benina International",
           "terminal": "T2",
-          "gate_id": "T2-G11 (Dummy)",
+          "gate_id": "T2-G6 (Dummy)",
           "scheduled_arrival": "2026-04-13T14:00:00+00:00",
           "estimated_arrival": null,
           "actual_arrival": null,
@@ -976,21 +1505,42 @@
         "capacity": "180 (Simulated)"
       },
       "payload_stats": {
-        "total_passengers": "170 (Simulated)",
-        "estimated_groups": "71 (Simulated)",
-        "total_bags": "204 (Simulated)",
-        "priority_pax": "20 (Simulated)",
+        "total_passengers": "146 (Simulated)",
+        "estimated_groups": "61 (Simulated)",
+        "total_bags": "175 (Simulated)",
+        "priority_pax": "18 (Simulated)",
         "prm_pax": "0 (Simulated)",
         "service_multiplier": 1.4,
         "assigned_resources": {
-          "baggage_belt": "B1 (Dummy)"
+          "baggage_belt": "B3 (Dummy)"
         }
       },
       "origin_coords": null,
       "dest_coords": [
         30.9177,
         29.6964
-      ]
+      ],
+      "personas": {
+        "p1": 0,
+        "p2": 0,
+        "p3": 0,
+        "p4": 70,
+        "p5": 0,
+        "p6": 20,
+        "p7": 10
+      },
+      "schedule": {
+        "departure": {
+          "scheduled": "2026-04-13T11:25:00+00:00",
+          "estimated": "2026-04-13T11:25:00+00:00",
+          "actual": null
+        },
+        "arrival": {
+          "scheduled": "2026-04-13T14:00:00+00:00",
+          "estimated": null,
+          "actual": null
+        }
+      }
     },
     {
       "flight_id": "TOY526",
@@ -1010,7 +1560,7 @@
         "details": {
           "origin_name": "Unknown Departure",
           "terminal": "T2",
-          "gate_id": "T2-G4 (Dummy)",
+          "gate_id": "T2-G2 (Dummy)",
           "scheduled_arrival": "2026-04-13T11:55:00+00:00",
           "estimated_arrival": "2026-04-13T12:34:00+00:00",
           "actual_arrival": null,
@@ -1029,21 +1579,42 @@
         "type_long": null
       },
       "payload_stats": {
-        "total_passengers": "151 (Simulated)",
+        "total_passengers": "149 (Simulated)",
         "estimated_groups": "63 (Simulated)",
-        "total_bags": "181 (Simulated)",
+        "total_bags": "179 (Simulated)",
         "priority_pax": "18 (Simulated)",
         "prm_pax": "1 (Simulated)",
         "service_multiplier": 1.4,
         "assigned_resources": {
-          "baggage_belt": "B1 (Dummy)"
+          "baggage_belt": "B4 (Dummy)"
         }
       },
       "origin_coords": null,
       "dest_coords": [
         30.9177,
         29.6964
-      ]
+      ],
+      "personas": {
+        "p1": 0,
+        "p2": 0,
+        "p3": 0,
+        "p4": 70,
+        "p5": 0,
+        "p6": 20,
+        "p7": 10
+      },
+      "schedule": {
+        "departure": {
+          "scheduled": "2026-04-13T11:00:00+00:00",
+          "estimated": "2026-04-13T11:00:00+00:00",
+          "actual": "2026-04-13T11:46:00+00:00"
+        },
+        "arrival": {
+          "scheduled": "2026-04-13T11:55:00+00:00",
+          "estimated": "2026-04-13T12:34:00+00:00",
+          "actual": null
+        }
+      }
     },
     {
       "flight_id": "SM452",
@@ -1053,6 +1624,149 @@
       "airline_iata": "SM",
       "airline_icao": "MSC",
       "airline_logo": "/airline-logos/SM.png",
+      "flight_status": "active",
+      "flight_type": "International",
+      "route": {
+        "source": "JED",
+        "source_icao": "OEJN",
+        "destination": "HBE",
+        "destination_icao": "HEAX",
+        "details": {
+          "origin_name": "King Abdulaziz International",
+          "terminal": "T2",
+          "gate_id": "T2-G3 (Dummy)",
+          "scheduled_arrival": "2026-04-12T09:00:00+00:00",
+          "estimated_arrival": "2026-04-12T08:54:00+00:00",
+          "actual_arrival": null,
+          "scheduled_departure": "2026-04-12T07:40:00+00:00",
+          "estimated_departure": "2026-04-12T07:40:00+00:00",
+          "actual_departure": "2026-04-12T07:52:00+00:00"
+        }
+      },
+      "aircraft": {
+        "type": "A320 (Dummy)",
+        "type_source": "Dummy",
+        "capacity": "180 (Simulated)"
+      },
+      "payload_stats": {
+        "total_passengers": "137 (Simulated)",
+        "estimated_groups": "58 (Simulated)",
+        "total_bags": "164 (Simulated)",
+        "priority_pax": "16 (Simulated)",
+        "prm_pax": "2 (Simulated)",
+        "service_multiplier": 1.4,
+        "assigned_resources": {
+          "baggage_belt": "B2 (Dummy)"
+        }
+      },
+      "origin_coords": null,
+      "dest_coords": [
+        30.9177,
+        29.6964
+      ],
+      "personas": {
+        "p1": 0,
+        "p2": 0,
+        "p3": 0,
+        "p4": 70,
+        "p5": 0,
+        "p6": 20,
+        "p7": 10
+      },
+      "schedule": {
+        "departure": {
+          "scheduled": "2026-04-12T07:40:00+00:00",
+          "estimated": "2026-04-12T07:40:00+00:00",
+          "actual": "2026-04-12T07:52:00+00:00"
+        },
+        "arrival": {
+          "scheduled": "2026-04-12T09:00:00+00:00",
+          "estimated": "2026-04-12T08:54:00+00:00",
+          "actual": null
+        }
+      }
+    },
+    {
+      "flight_id": "3L404",
+      "flight_iata": "3L404",
+      "flight_icao": "ADY404",
+      "airline": "Air Arabia Abu Dhabi",
+      "airline_iata": "3L",
+      "airline_icao": "ADY",
+      "airline_logo": "/airline-logos/3L.png",
+      "flight_status": "scheduled",
+      "flight_type": "International",
+      "route": {
+        "source": "AUH",
+        "source_icao": "OMAA",
+        "destination": "HBE",
+        "destination_icao": "HEAX",
+        "details": {
+          "origin_name": "Abu Dhabi International",
+          "terminal": "T2",
+          "gate_id": "T2-G6 (Dummy)",
+          "scheduled_arrival": "2026-04-13T12:00:00+00:00",
+          "estimated_arrival": null,
+          "actual_arrival": null,
+          "scheduled_departure": "2026-04-13T09:05:00+00:00",
+          "estimated_departure": "2026-04-13T09:05:00+00:00",
+          "actual_departure": null
+        }
+      },
+      "aircraft": {
+        "type": "A320",
+        "type_source": "AviationStack",
+        "capacity": "180 (Simulated)"
+      },
+      "payload_stats": {
+        "total_passengers": "139 (Simulated)",
+        "estimated_groups": "58 (Simulated)",
+        "total_bags": "167 (Simulated)",
+        "priority_pax": "17 (Simulated)",
+        "prm_pax": "2 (Simulated)",
+        "service_multiplier": 1.4,
+        "assigned_resources": {
+          "baggage_belt": "B4 (Dummy)"
+        }
+      },
+      "origin_coords": [
+        24.433,
+        54.6511
+      ],
+      "dest_coords": [
+        30.9177,
+        29.6964
+      ],
+      "personas": {
+        "p1": 0,
+        "p2": 0,
+        "p3": 0,
+        "p4": 70,
+        "p5": 0,
+        "p6": 20,
+        "p7": 10
+      },
+      "schedule": {
+        "departure": {
+          "scheduled": "2026-04-13T09:05:00+00:00",
+          "estimated": "2026-04-13T09:05:00+00:00",
+          "actual": null
+        },
+        "arrival": {
+          "scheduled": "2026-04-13T12:00:00+00:00",
+          "estimated": null,
+          "actual": null
+        }
+      }
+    },
+    {
+      "flight_id": "SV6670",
+      "flight_iata": "SV6670",
+      "flight_icao": "SVA6670",
+      "airline": "Saudia",
+      "airline_iata": "SV",
+      "airline_icao": "SVA",
+      "airline_logo": "/airline-logos/SV.png",
       "flight_status": "scheduled",
       "flight_type": "International",
       "route": {
@@ -1063,13 +1777,379 @@
         "details": {
           "origin_name": "King Abdulaziz International",
           "terminal": "T2",
-          "gate_id": "T2-G11 (Dummy)",
-          "scheduled_arrival": "2026-04-13T09:30:00+00:00",
+          "gate_id": "T2-G3 (Dummy)",
+          "scheduled_arrival": "2026-04-13T07:10:00+00:00",
+          "estimated_arrival": "2026-04-13T07:32:00+00:00",
+          "actual_arrival": null,
+          "scheduled_departure": "2026-04-13T05:40:00+00:00",
+          "estimated_departure": "2026-04-13T05:40:00+00:00",
+          "actual_departure": "2026-04-13T05:50:00+00:00"
+        }
+      },
+      "aircraft": {
+        "type": "A320",
+        "type_source": "CSV_DB",
+        "capacity": "180 (Simulated)",
+        "manufacturer": null,
+        "registration": "HZ-FAH",
+        "owner": null,
+        "type_long": null
+      },
+      "payload_stats": {
+        "total_passengers": "148 (Simulated)",
+        "estimated_groups": "62 (Simulated)",
+        "total_bags": "178 (Simulated)",
+        "priority_pax": "18 (Simulated)",
+        "prm_pax": "2 (Simulated)",
+        "service_multiplier": 1.4,
+        "assigned_resources": {
+          "baggage_belt": "B1 (Dummy)"
+        }
+      },
+      "origin_coords": null,
+      "dest_coords": [
+        30.9177,
+        29.6964
+      ],
+      "personas": {
+        "p1": 0,
+        "p2": 0,
+        "p3": 0,
+        "p4": 70,
+        "p5": 0,
+        "p6": 20,
+        "p7": 10
+      },
+      "schedule": {
+        "departure": {
+          "scheduled": "2026-04-13T05:40:00+00:00",
+          "estimated": "2026-04-13T05:40:00+00:00",
+          "actual": "2026-04-13T05:50:00+00:00"
+        },
+        "arrival": {
+          "scheduled": "2026-04-13T07:10:00+00:00",
+          "estimated": "2026-04-13T07:32:00+00:00",
+          "actual": null
+        }
+      }
+    },
+    {
+      "flight_id": "F3773",
+      "flight_iata": "F3773",
+      "flight_icao": "FAD773",
+      "airline": "Flyadeal",
+      "airline_iata": "F3",
+      "airline_icao": "FAD",
+      "airline_logo": "/airline-logos/F3.png",
+      "flight_status": "scheduled",
+      "flight_type": "International",
+      "route": {
+        "source": "JED",
+        "source_icao": "OEJN",
+        "destination": "HBE",
+        "destination_icao": "HEAX",
+        "details": {
+          "origin_name": "King Abdulaziz International",
+          "terminal": "T2",
+          "gate_id": "T2-G8 (Dummy)",
+          "scheduled_arrival": "2026-04-13T07:10:00+00:00",
+          "estimated_arrival": "2026-04-13T07:32:00+00:00",
+          "actual_arrival": null,
+          "scheduled_departure": "2026-04-13T05:40:00+00:00",
+          "estimated_departure": "2026-04-13T05:40:00+00:00",
+          "actual_departure": "2026-04-13T05:50:00+00:00"
+        }
+      },
+      "aircraft": {
+        "type": "A320",
+        "type_source": "CSV_DB",
+        "capacity": "180 (Simulated)",
+        "manufacturer": null,
+        "registration": "HZ-FAH",
+        "owner": null,
+        "type_long": null
+      },
+      "payload_stats": {
+        "total_passengers": "137 (Simulated)",
+        "estimated_groups": "58 (Simulated)",
+        "total_bags": "164 (Simulated)",
+        "priority_pax": "16 (Simulated)",
+        "prm_pax": "1 (Simulated)",
+        "service_multiplier": 1.4,
+        "assigned_resources": {
+          "baggage_belt": "B4 (Dummy)"
+        }
+      },
+      "origin_coords": null,
+      "dest_coords": [
+        30.9177,
+        29.6964
+      ],
+      "personas": {
+        "p1": 0,
+        "p2": 0,
+        "p3": 0,
+        "p4": 70,
+        "p5": 0,
+        "p6": 20,
+        "p7": 10
+      },
+      "schedule": {
+        "departure": {
+          "scheduled": "2026-04-13T05:40:00+00:00",
+          "estimated": "2026-04-13T05:40:00+00:00",
+          "actual": "2026-04-13T05:50:00+00:00"
+        },
+        "arrival": {
+          "scheduled": "2026-04-13T07:10:00+00:00",
+          "estimated": "2026-04-13T07:32:00+00:00",
+          "actual": null
+        }
+      }
+    },
+    {
+      "flight_id": "J93725",
+      "flight_iata": "J93725",
+      "flight_icao": "JZR3725",
+      "airline": "Jazeera Airways",
+      "airline_iata": "J9",
+      "airline_icao": "JZR",
+      "airline_logo": "/airline-logos/J9.png",
+      "flight_status": "scheduled",
+      "flight_type": "International",
+      "route": {
+        "source": "DMM",
+        "source_icao": "OEDF",
+        "destination": "HBE",
+        "destination_icao": "HEAX",
+        "details": {
+          "origin_name": "King Fahd International Airport",
+          "terminal": "T2",
+          "gate_id": "T2-G10 (Dummy)",
+          "scheduled_arrival": "2026-04-13T06:50:00+00:00",
           "estimated_arrival": null,
           "actual_arrival": null,
-          "scheduled_departure": "2026-04-13T08:10:00+00:00",
-          "estimated_departure": "2026-04-13T08:10:00+00:00",
-          "actual_departure": "2026-04-13T10:10:00+00:00"
+          "scheduled_departure": "2026-04-13T04:20:00+00:00",
+          "estimated_departure": "2026-04-13T04:20:00+00:00",
+          "actual_departure": null
+        }
+      },
+      "aircraft": {
+        "type": "A320 (Dummy)",
+        "type_source": "Dummy",
+        "capacity": "180 (Simulated)"
+      },
+      "payload_stats": {
+        "total_passengers": "147 (Simulated)",
+        "estimated_groups": "62 (Simulated)",
+        "total_bags": "176 (Simulated)",
+        "priority_pax": "18 (Simulated)",
+        "prm_pax": "1 (Simulated)",
+        "service_multiplier": 1.4,
+        "assigned_resources": {
+          "baggage_belt": "B3 (Dummy)"
+        }
+      },
+      "origin_coords": null,
+      "dest_coords": [
+        30.9177,
+        29.6964
+      ],
+      "personas": {
+        "p1": 0,
+        "p2": 0,
+        "p3": 0,
+        "p4": 70,
+        "p5": 0,
+        "p6": 20,
+        "p7": 10
+      },
+      "schedule": {
+        "departure": {
+          "scheduled": "2026-04-13T04:20:00+00:00",
+          "estimated": "2026-04-13T04:20:00+00:00",
+          "actual": null
+        },
+        "arrival": {
+          "scheduled": "2026-04-13T06:50:00+00:00",
+          "estimated": null,
+          "actual": null
+        }
+      }
+    },
+    {
+      "flight_id": "A3936",
+      "flight_iata": "A3936",
+      "flight_icao": "AEE936",
+      "airline": "Aegean Airlines",
+      "airline_iata": "A3",
+      "airline_icao": "AEE",
+      "airline_logo": "/airline-logos/A3.png",
+      "flight_status": "active",
+      "flight_type": "International",
+      "route": {
+        "source": "ATH",
+        "source_icao": "LGAV",
+        "destination": "HBE",
+        "destination_icao": "HEAX",
+        "details": {
+          "origin_name": "Athens International Airport \"Eleftherios Venizelos\"",
+          "terminal": "T2",
+          "gate_id": "T2-G8 (Dummy)",
+          "scheduled_arrival": "2026-04-13T01:05:00+00:00",
+          "estimated_arrival": "2026-04-13T00:45:00+00:00",
+          "actual_arrival": null,
+          "scheduled_departure": "2026-04-13T00:20:00+00:00",
+          "estimated_departure": "2026-04-13T00:20:00+00:00",
+          "actual_departure": "2026-04-13T00:29:00+00:00"
+        }
+      },
+      "aircraft": {
+        "type": "A320",
+        "type_source": "CSV_DB",
+        "capacity": "180 (Simulated)",
+        "manufacturer": "Airbus",
+        "registration": "SX-DVN",
+        "owner": "Aegean Airlines",
+        "type_long": "A320 232"
+      },
+      "payload_stats": {
+        "total_passengers": "170 (Simulated)",
+        "estimated_groups": "71 (Simulated)",
+        "total_bags": "204 (Simulated)",
+        "priority_pax": "20 (Simulated)",
+        "prm_pax": "1 (Simulated)",
+        "service_multiplier": 1.4,
+        "assigned_resources": {
+          "baggage_belt": "B1 (Dummy)"
+        }
+      },
+      "origin_coords": null,
+      "dest_coords": [
+        30.9177,
+        29.6964
+      ],
+      "personas": {
+        "p1": 0,
+        "p2": 0,
+        "p3": 0,
+        "p4": 70,
+        "p5": 0,
+        "p6": 20,
+        "p7": 10
+      },
+      "schedule": {
+        "departure": {
+          "scheduled": "2026-04-13T00:20:00+00:00",
+          "estimated": "2026-04-13T00:20:00+00:00",
+          "actual": "2026-04-13T00:29:00+00:00"
+        },
+        "arrival": {
+          "scheduled": "2026-04-13T01:05:00+00:00",
+          "estimated": "2026-04-13T00:45:00+00:00",
+          "actual": null
+        }
+      }
+    },
+    {
+      "flight_id": "MS9242",
+      "flight_iata": "MS9242",
+      "flight_icao": "MSR9242",
+      "airline": "EgyptAir",
+      "airline_iata": "MS",
+      "airline_icao": "MSR",
+      "airline_logo": "/airline-logos/MS.png",
+      "flight_status": "active",
+      "flight_type": "International",
+      "route": {
+        "source": "ATH",
+        "source_icao": "LGAV",
+        "destination": "HBE",
+        "destination_icao": "HEAX",
+        "details": {
+          "origin_name": "Athens International Airport \"Eleftherios Venizelos\"",
+          "terminal": "T1",
+          "gate_id": "T1-G4 (Dummy)",
+          "scheduled_arrival": "2026-04-13T01:05:00+00:00",
+          "estimated_arrival": "2026-04-13T00:45:00+00:00",
+          "actual_arrival": null,
+          "scheduled_departure": "2026-04-13T00:20:00+00:00",
+          "estimated_departure": "2026-04-13T00:20:00+00:00",
+          "actual_departure": "2026-04-13T00:29:00+00:00"
+        }
+      },
+      "aircraft": {
+        "type": "A320",
+        "type_source": "CSV_DB",
+        "capacity": "180 (Simulated)",
+        "manufacturer": "Airbus",
+        "registration": "SX-DVN",
+        "owner": "Aegean Airlines",
+        "type_long": "A320 232"
+      },
+      "payload_stats": {
+        "total_passengers": "136 (Simulated)",
+        "estimated_groups": "57 (Simulated)",
+        "total_bags": "163 (Simulated)",
+        "priority_pax": "16 (Simulated)",
+        "prm_pax": "1 (Simulated)",
+        "service_multiplier": 1.4,
+        "assigned_resources": {
+          "baggage_belt": "B2 (Dummy)"
+        }
+      },
+      "origin_coords": null,
+      "dest_coords": [
+        30.9177,
+        29.6964
+      ],
+      "personas": {
+        "p1": 0,
+        "p2": 0,
+        "p3": 0,
+        "p4": 70,
+        "p5": 0,
+        "p6": 20,
+        "p7": 10
+      },
+      "schedule": {
+        "departure": {
+          "scheduled": "2026-04-13T00:20:00+00:00",
+          "estimated": "2026-04-13T00:20:00+00:00",
+          "actual": "2026-04-13T00:29:00+00:00"
+        },
+        "arrival": {
+          "scheduled": "2026-04-13T01:05:00+00:00",
+          "estimated": "2026-04-13T00:45:00+00:00",
+          "actual": null
+        }
+      }
+    },
+    {
+      "flight_id": "PC628",
+      "flight_iata": "PC628",
+      "flight_icao": "PGT628",
+      "airline": "Pegasus",
+      "airline_iata": "PC",
+      "airline_icao": "PGT",
+      "airline_logo": "/airline-logos/PC.png",
+      "flight_status": "active",
+      "flight_type": "International",
+      "route": {
+        "source": "SAW",
+        "source_icao": "LTFJ",
+        "destination": "HBE",
+        "destination_icao": "HEAX",
+        "details": {
+          "origin_name": "Sabiha Gokcen",
+          "terminal": "T2",
+          "gate_id": "T2-G12 (Dummy)",
+          "scheduled_arrival": "2026-04-13T01:00:00+00:00",
+          "estimated_arrival": "2026-04-13T00:56:00+00:00",
+          "actual_arrival": null,
+          "scheduled_departure": "2026-04-12T23:55:00+00:00",
+          "estimated_departure": "2026-04-12T23:55:00+00:00",
+          "actual_departure": "2026-04-13T00:20:00+00:00"
         }
       },
       "aircraft": {
@@ -1092,525 +2172,28 @@
       "dest_coords": [
         30.9177,
         29.6964
-      ]
-    },
-    {
-      "flight_id": "3L404",
-      "flight_iata": "3L404",
-      "flight_icao": "ADY404",
-      "airline": "Air Arabia Abu Dhabi",
-      "airline_iata": "3L",
-      "airline_icao": "ADY",
-      "airline_logo": "/airline-logos/3L.png",
-      "flight_status": "scheduled",
-      "flight_type": "International",
-      "route": {
-        "source": "AUH",
-        "source_icao": "OMAA",
-        "destination": "HBE",
-        "destination_icao": "HEAX",
-        "details": {
-          "origin_name": "Abu Dhabi International",
-          "terminal": "T2",
-          "gate_id": "T2-G2 (Dummy)",
-          "scheduled_arrival": "2026-04-13T12:00:00+00:00",
-          "estimated_arrival": null,
-          "actual_arrival": null,
-          "scheduled_departure": "2026-04-13T09:05:00+00:00",
-          "estimated_departure": "2026-04-13T09:05:00+00:00",
-          "actual_departure": null
-        }
-      },
-      "aircraft": {
-        "type": "A320",
-        "type_source": "AviationStack",
-        "capacity": "180 (Simulated)"
-      },
-      "payload_stats": {
-        "total_passengers": "147 (Simulated)",
-        "estimated_groups": "62 (Simulated)",
-        "total_bags": "176 (Simulated)",
-        "priority_pax": "18 (Simulated)",
-        "prm_pax": "1 (Simulated)",
-        "service_multiplier": 1.4,
-        "assigned_resources": {
-          "baggage_belt": "B4 (Dummy)"
-        }
-      },
-      "origin_coords": [
-        24.433,
-        54.6511
       ],
-      "dest_coords": [
-        30.9177,
-        29.6964
-      ]
-    },
-    {
-      "flight_id": "SV6670",
-      "flight_iata": "SV6670",
-      "flight_icao": "SVA6670",
-      "airline": "Saudia",
-      "airline_iata": "SV",
-      "airline_icao": "SVA",
-      "airline_logo": "/airline-logos/SV.png",
-      "flight_status": "scheduled",
-      "flight_type": "International",
-      "route": {
-        "source": "JED",
-        "source_icao": "OEJN",
-        "destination": "HBE",
-        "destination_icao": "HEAX",
-        "details": {
-          "origin_name": "King Abdulaziz International",
-          "terminal": "T2",
-          "gate_id": "T2-G11 (Dummy)",
-          "scheduled_arrival": "2026-04-13T07:10:00+00:00",
-          "estimated_arrival": "2026-04-13T07:32:00+00:00",
-          "actual_arrival": null,
-          "scheduled_departure": "2026-04-13T05:40:00+00:00",
-          "estimated_departure": "2026-04-13T05:40:00+00:00",
-          "actual_departure": "2026-04-13T05:50:00+00:00"
+      "personas": {
+        "p1": 0,
+        "p2": 0,
+        "p3": 0,
+        "p4": 70,
+        "p5": 0,
+        "p6": 20,
+        "p7": 10
+      },
+      "schedule": {
+        "departure": {
+          "scheduled": "2026-04-12T23:55:00+00:00",
+          "estimated": "2026-04-12T23:55:00+00:00",
+          "actual": "2026-04-13T00:20:00+00:00"
+        },
+        "arrival": {
+          "scheduled": "2026-04-13T01:00:00+00:00",
+          "estimated": "2026-04-13T00:56:00+00:00",
+          "actual": null
         }
-      },
-      "aircraft": {
-        "type": "A320",
-        "type_source": "CSV_DB",
-        "capacity": "180 (Simulated)",
-        "manufacturer": null,
-        "registration": "HZ-FAH",
-        "owner": null,
-        "type_long": null
-      },
-      "payload_stats": {
-        "total_passengers": "165 (Simulated)",
-        "estimated_groups": "69 (Simulated)",
-        "total_bags": "198 (Simulated)",
-        "priority_pax": "20 (Simulated)",
-        "prm_pax": "2 (Simulated)",
-        "service_multiplier": 1.4,
-        "assigned_resources": {
-          "baggage_belt": "B2 (Dummy)"
-        }
-      },
-      "origin_coords": null,
-      "dest_coords": [
-        30.9177,
-        29.6964
-      ]
-    },
-    {
-      "flight_id": "F3773",
-      "flight_iata": "F3773",
-      "flight_icao": "FAD773",
-      "airline": "Flyadeal",
-      "airline_iata": "F3",
-      "airline_icao": "FAD",
-      "airline_logo": "/airline-logos/F3.png",
-      "flight_status": "scheduled",
-      "flight_type": "International",
-      "route": {
-        "source": "JED",
-        "source_icao": "OEJN",
-        "destination": "HBE",
-        "destination_icao": "HEAX",
-        "details": {
-          "origin_name": "King Abdulaziz International",
-          "terminal": "T2",
-          "gate_id": "T2-G3 (Dummy)",
-          "scheduled_arrival": "2026-04-13T07:10:00+00:00",
-          "estimated_arrival": "2026-04-13T07:32:00+00:00",
-          "actual_arrival": null,
-          "scheduled_departure": "2026-04-13T05:40:00+00:00",
-          "estimated_departure": "2026-04-13T05:40:00+00:00",
-          "actual_departure": "2026-04-13T05:50:00+00:00"
-        }
-      },
-      "aircraft": {
-        "type": "A320",
-        "type_source": "CSV_DB",
-        "capacity": "180 (Simulated)",
-        "manufacturer": null,
-        "registration": "HZ-FAH",
-        "owner": null,
-        "type_long": null
-      },
-      "payload_stats": {
-        "total_passengers": "141 (Simulated)",
-        "estimated_groups": "59 (Simulated)",
-        "total_bags": "169 (Simulated)",
-        "priority_pax": "17 (Simulated)",
-        "prm_pax": "1 (Simulated)",
-        "service_multiplier": 1.4,
-        "assigned_resources": {
-          "baggage_belt": "B2 (Dummy)"
-        }
-      },
-      "origin_coords": null,
-      "dest_coords": [
-        30.9177,
-        29.6964
-      ]
-    },
-    {
-      "flight_id": "J93725",
-      "flight_iata": "J93725",
-      "flight_icao": "JZR3725",
-      "airline": "Jazeera Airways",
-      "airline_iata": "J9",
-      "airline_icao": "JZR",
-      "airline_logo": "/airline-logos/J9.png",
-      "flight_status": "scheduled",
-      "flight_type": "International",
-      "route": {
-        "source": "DMM",
-        "source_icao": "OEDF",
-        "destination": "HBE",
-        "destination_icao": "HEAX",
-        "details": {
-          "origin_name": "King Fahd International Airport",
-          "terminal": "T2",
-          "gate_id": "T2-G4 (Dummy)",
-          "scheduled_arrival": "2026-04-13T06:50:00+00:00",
-          "estimated_arrival": null,
-          "actual_arrival": null,
-          "scheduled_departure": "2026-04-13T04:20:00+00:00",
-          "estimated_departure": "2026-04-13T04:20:00+00:00",
-          "actual_departure": null
-        }
-      },
-      "aircraft": {
-        "type": "A320 (Dummy)",
-        "type_source": "Dummy",
-        "capacity": "180 (Simulated)"
-      },
-      "payload_stats": {
-        "total_passengers": "138 (Simulated)",
-        "estimated_groups": "58 (Simulated)",
-        "total_bags": "166 (Simulated)",
-        "priority_pax": "17 (Simulated)",
-        "prm_pax": "0 (Simulated)",
-        "service_multiplier": 1.4,
-        "assigned_resources": {
-          "baggage_belt": "B2 (Dummy)"
-        }
-      },
-      "origin_coords": null,
-      "dest_coords": [
-        30.9177,
-        29.6964
-      ]
-    },
-    {
-      "flight_id": "A3936",
-      "flight_iata": "A3936",
-      "flight_icao": "AEE936",
-      "airline": "Aegean Airlines",
-      "airline_iata": "A3",
-      "airline_icao": "AEE",
-      "airline_logo": "/airline-logos/A3.png",
-      "flight_status": "active",
-      "flight_type": "International",
-      "route": {
-        "source": "ATH",
-        "source_icao": "LGAV",
-        "destination": "HBE",
-        "destination_icao": "HEAX",
-        "details": {
-          "origin_name": "Athens International Airport \"Eleftherios Venizelos\"",
-          "terminal": "T2",
-          "gate_id": "T2-G12 (Dummy)",
-          "scheduled_arrival": "2026-04-13T01:05:00+00:00",
-          "estimated_arrival": "2026-04-13T00:45:00+00:00",
-          "actual_arrival": null,
-          "scheduled_departure": "2026-04-13T00:20:00+00:00",
-          "estimated_departure": "2026-04-13T00:20:00+00:00",
-          "actual_departure": "2026-04-13T00:29:00+00:00"
-        }
-      },
-      "aircraft": {
-        "type": "A320",
-        "type_source": "CSV_DB",
-        "capacity": "180 (Simulated)",
-        "manufacturer": "Airbus",
-        "registration": "SX-DVN",
-        "owner": "Aegean Airlines",
-        "type_long": "A320 232"
-      },
-      "payload_stats": {
-        "total_passengers": "166 (Simulated)",
-        "estimated_groups": "70 (Simulated)",
-        "total_bags": "199 (Simulated)",
-        "priority_pax": "20 (Simulated)",
-        "prm_pax": "0 (Simulated)",
-        "service_multiplier": 1.4,
-        "assigned_resources": {
-          "baggage_belt": "B2 (Dummy)"
-        }
-      },
-      "origin_coords": null,
-      "dest_coords": [
-        30.9177,
-        29.6964
-      ]
-    },
-    {
-      "flight_id": "MS9242",
-      "flight_iata": "MS9242",
-      "flight_icao": "MSR9242",
-      "airline": "EgyptAir",
-      "airline_iata": "MS",
-      "airline_icao": "MSR",
-      "airline_logo": "/airline-logos/MS.png",
-      "flight_status": "active",
-      "flight_type": "International",
-      "route": {
-        "source": "ATH",
-        "source_icao": "LGAV",
-        "destination": "HBE",
-        "destination_icao": "HEAX",
-        "details": {
-          "origin_name": "Athens International Airport \"Eleftherios Venizelos\"",
-          "terminal": "T1",
-          "gate_id": "T1-G2 (Dummy)",
-          "scheduled_arrival": "2026-04-13T01:05:00+00:00",
-          "estimated_arrival": "2026-04-13T00:45:00+00:00",
-          "actual_arrival": null,
-          "scheduled_departure": "2026-04-13T00:20:00+00:00",
-          "estimated_departure": "2026-04-13T00:20:00+00:00",
-          "actual_departure": "2026-04-13T00:29:00+00:00"
-        }
-      },
-      "aircraft": {
-        "type": "A320",
-        "type_source": "CSV_DB",
-        "capacity": "180 (Simulated)",
-        "manufacturer": "Airbus",
-        "registration": "SX-DVN",
-        "owner": "Aegean Airlines",
-        "type_long": "A320 232"
-      },
-      "payload_stats": {
-        "total_passengers": "167 (Simulated)",
-        "estimated_groups": "70 (Simulated)",
-        "total_bags": "200 (Simulated)",
-        "priority_pax": "20 (Simulated)",
-        "prm_pax": "2 (Simulated)",
-        "service_multiplier": 1.4,
-        "assigned_resources": {
-          "baggage_belt": "B3 (Dummy)"
-        }
-      },
-      "origin_coords": null,
-      "dest_coords": [
-        30.9177,
-        29.6964
-      ]
-    },
-    {
-      "flight_id": "TK696",
-      "flight_iata": "TK696",
-      "flight_icao": "THY696",
-      "airline": "Turkish Airlines",
-      "airline_iata": "TK",
-      "airline_icao": "THY",
-      "airline_logo": "/airline-logos/TK.png",
-      "flight_status": "scheduled",
-      "flight_type": "International",
-      "route": {
-        "source": "IST",
-        "source_icao": "LTFM",
-        "destination": "HBE",
-        "destination_icao": "HEAX",
-        "details": {
-          "origin_name": "Istanbul Airport",
-          "terminal": "T2",
-          "gate_id": "T2-G4 (Dummy)",
-          "scheduled_arrival": "2026-04-13T01:50:00+00:00",
-          "estimated_arrival": "2026-04-13T02:07:00+00:00",
-          "actual_arrival": null,
-          "scheduled_departure": "2026-04-13T00:40:00+00:00",
-          "estimated_departure": "2026-04-13T00:40:00+00:00",
-          "actual_departure": "2026-04-13T01:30:00+00:00"
-        }
-      },
-      "aircraft": {
-        "type": "A320 (Dummy)",
-        "type_source": "Dummy",
-        "capacity": "180 (Simulated)"
-      },
-      "payload_stats": {
-        "total_passengers": "170 (Simulated)",
-        "estimated_groups": "71 (Simulated)",
-        "total_bags": "204 (Simulated)",
-        "priority_pax": "20 (Simulated)",
-        "prm_pax": "0 (Simulated)",
-        "service_multiplier": 1.4,
-        "assigned_resources": {
-          "baggage_belt": "B4 (Dummy)"
-        }
-      },
-      "origin_coords": [
-        41.2753,
-        28.7519
-      ],
-      "dest_coords": [
-        30.9177,
-        29.6964
-      ]
-    },
-    {
-      "flight_id": "TG7564",
-      "flight_iata": "TG7564",
-      "flight_icao": "THA7564",
-      "airline": "Thai Airways International",
-      "airline_iata": "TG",
-      "airline_icao": "THA",
-      "airline_logo": "/airline-logos/TG.png",
-      "flight_status": "scheduled",
-      "flight_type": "International",
-      "route": {
-        "source": "IST",
-        "source_icao": "LTFM",
-        "destination": "HBE",
-        "destination_icao": "HEAX",
-        "details": {
-          "origin_name": "Istanbul Airport",
-          "terminal": "T2",
-          "gate_id": "T2-G12 (Dummy)",
-          "scheduled_arrival": "2026-04-13T01:50:00+00:00",
-          "estimated_arrival": "2026-04-13T02:07:00+00:00",
-          "actual_arrival": null,
-          "scheduled_departure": "2026-04-13T00:40:00+00:00",
-          "estimated_departure": "2026-04-13T00:40:00+00:00",
-          "actual_departure": "2026-04-13T01:30:00+00:00"
-        }
-      },
-      "aircraft": {
-        "type": "A320 (Dummy)",
-        "type_source": "Dummy",
-        "capacity": "180 (Simulated)"
-      },
-      "payload_stats": {
-        "total_passengers": "168 (Simulated)",
-        "estimated_groups": "70 (Simulated)",
-        "total_bags": "202 (Simulated)",
-        "priority_pax": "20 (Simulated)",
-        "prm_pax": "2 (Simulated)",
-        "service_multiplier": 1.4,
-        "assigned_resources": {
-          "baggage_belt": "B3 (Dummy)"
-        }
-      },
-      "origin_coords": [
-        41.2753,
-        28.7519
-      ],
-      "dest_coords": [
-        30.9177,
-        29.6964
-      ]
-    },
-    {
-      "flight_id": "MS9296",
-      "flight_iata": "MS9296",
-      "flight_icao": "MSR9296",
-      "airline": "EgyptAir",
-      "airline_iata": "MS",
-      "airline_icao": "MSR",
-      "airline_logo": "/airline-logos/MS.png",
-      "flight_status": "scheduled",
-      "flight_type": "International",
-      "route": {
-        "source": "IST",
-        "source_icao": "LTFM",
-        "destination": "HBE",
-        "destination_icao": "HEAX",
-        "details": {
-          "origin_name": "Istanbul Airport",
-          "terminal": "T1",
-          "gate_id": "T1-G7 (Dummy)",
-          "scheduled_arrival": "2026-04-13T01:50:00+00:00",
-          "estimated_arrival": "2026-04-13T02:07:00+00:00",
-          "actual_arrival": null,
-          "scheduled_departure": "2026-04-13T00:40:00+00:00",
-          "estimated_departure": "2026-04-13T00:40:00+00:00",
-          "actual_departure": "2026-04-13T01:30:00+00:00"
-        }
-      },
-      "aircraft": {
-        "type": "A320 (Dummy)",
-        "type_source": "Dummy",
-        "capacity": "180 (Simulated)"
-      },
-      "payload_stats": {
-        "total_passengers": "164 (Simulated)",
-        "estimated_groups": "69 (Simulated)",
-        "total_bags": "197 (Simulated)",
-        "priority_pax": "20 (Simulated)",
-        "prm_pax": "2 (Simulated)",
-        "service_multiplier": 1.4,
-        "assigned_resources": {
-          "baggage_belt": "B2 (Dummy)"
-        }
-      },
-      "origin_coords": [
-        41.2753,
-        28.7519
-      ],
-      "dest_coords": [
-        30.9177,
-        29.6964
-      ]
-    },
-    {
-      "flight_id": "PC628",
-      "flight_iata": "PC628",
-      "flight_icao": "PGT628",
-      "airline": "Pegasus",
-      "airline_iata": "PC",
-      "airline_icao": "PGT",
-      "airline_logo": "/airline-logos/PC.png",
-      "flight_status": "active",
-      "flight_type": "International",
-      "route": {
-        "source": "SAW",
-        "source_icao": "LTFJ",
-        "destination": "HBE",
-        "destination_icao": "HEAX",
-        "details": {
-          "origin_name": "Sabiha Gokcen",
-          "terminal": "T2",
-          "gate_id": "T2-G6 (Dummy)",
-          "scheduled_arrival": "2026-04-13T01:00:00+00:00",
-          "estimated_arrival": "2026-04-13T00:56:00+00:00",
-          "actual_arrival": null,
-          "scheduled_departure": "2026-04-12T23:55:00+00:00",
-          "estimated_departure": "2026-04-12T23:55:00+00:00",
-          "actual_departure": "2026-04-13T00:20:00+00:00"
-        }
-      },
-      "aircraft": {
-        "type": "A320 (Dummy)",
-        "type_source": "Dummy",
-        "capacity": "180 (Simulated)"
-      },
-      "payload_stats": {
-        "total_passengers": "163 (Simulated)",
-        "estimated_groups": "68 (Simulated)",
-        "total_bags": "196 (Simulated)",
-        "priority_pax": "20 (Simulated)",
-        "prm_pax": "0 (Simulated)",
-        "service_multiplier": 1.4,
-        "assigned_resources": {
-          "baggage_belt": "B2 (Dummy)"
-        }
-      },
-      "origin_coords": null,
-      "dest_coords": [
-        30.9177,
-        29.6964
-      ]
+      }
     },
     {
       "flight_id": "G9401",
@@ -1630,7 +2213,7 @@
         "details": {
           "origin_name": "Abu Dhabi International",
           "terminal": "T2",
-          "gate_id": "T2-G11 (Dummy)",
+          "gate_id": "T2-G3 (Dummy)",
           "scheduled_arrival": "2026-04-12T19:35:00+00:00",
           "estimated_arrival": "2026-04-12T19:08:00+00:00",
           "actual_arrival": null,
@@ -1645,14 +2228,14 @@
         "capacity": "180 (Simulated)"
       },
       "payload_stats": {
-        "total_passengers": "139 (Simulated)",
-        "estimated_groups": "58 (Simulated)",
-        "total_bags": "167 (Simulated)",
-        "priority_pax": "17 (Simulated)",
+        "total_passengers": "158 (Simulated)",
+        "estimated_groups": "66 (Simulated)",
+        "total_bags": "190 (Simulated)",
+        "priority_pax": "19 (Simulated)",
         "prm_pax": "2 (Simulated)",
         "service_multiplier": 1.4,
         "assigned_resources": {
-          "baggage_belt": "B2 (Dummy)"
+          "baggage_belt": "B4 (Dummy)"
         }
       },
       "origin_coords": [
@@ -1662,7 +2245,28 @@
       "dest_coords": [
         30.9177,
         29.6964
-      ]
+      ],
+      "personas": {
+        "p1": 0,
+        "p2": 0,
+        "p3": 0,
+        "p4": 70,
+        "p5": 0,
+        "p6": 20,
+        "p7": 10
+      },
+      "schedule": {
+        "departure": {
+          "scheduled": "2026-04-12T16:40:00+00:00",
+          "estimated": "2026-04-12T16:40:00+00:00",
+          "actual": "2026-04-12T17:03:00+00:00"
+        },
+        "arrival": {
+          "scheduled": "2026-04-12T19:35:00+00:00",
+          "estimated": "2026-04-12T19:08:00+00:00",
+          "actual": null
+        }
+      }
     },
     {
       "flight_id": "G9104",
@@ -1682,7 +2286,7 @@
         "details": {
           "origin_name": "Bergamo - Orio al Serio",
           "terminal": "T2",
-          "gate_id": "T2-G1 (Dummy)",
+          "gate_id": "T2-G7 (Dummy)",
           "scheduled_arrival": "2026-04-12T23:20:00+00:00",
           "estimated_arrival": "2026-04-12T23:21:00+00:00",
           "actual_arrival": null,
@@ -1701,21 +2305,42 @@
         "type_long": null
       },
       "payload_stats": {
-        "total_passengers": "138 (Simulated)",
-        "estimated_groups": "58 (Simulated)",
-        "total_bags": "166 (Simulated)",
-        "priority_pax": "17 (Simulated)",
-        "prm_pax": "1 (Simulated)",
+        "total_passengers": "162 (Simulated)",
+        "estimated_groups": "68 (Simulated)",
+        "total_bags": "194 (Simulated)",
+        "priority_pax": "19 (Simulated)",
+        "prm_pax": "2 (Simulated)",
         "service_multiplier": 1.4,
         "assigned_resources": {
-          "baggage_belt": "B3 (Dummy)"
+          "baggage_belt": "B4 (Dummy)"
         }
       },
       "origin_coords": null,
       "dest_coords": [
         30.9177,
         29.6964
-      ]
+      ],
+      "personas": {
+        "p1": 0,
+        "p2": 0,
+        "p3": 0,
+        "p4": 70,
+        "p5": 0,
+        "p6": 20,
+        "p7": 10
+      },
+      "schedule": {
+        "departure": {
+          "scheduled": "2026-04-12T19:50:00+00:00",
+          "estimated": "2026-04-12T19:50:00+00:00",
+          "actual": "2026-04-12T20:14:00+00:00"
+        },
+        "arrival": {
+          "scheduled": "2026-04-12T23:20:00+00:00",
+          "estimated": "2026-04-12T23:21:00+00:00",
+          "actual": null
+        }
+      }
     },
     {
       "flight_id": "E5104",
@@ -1735,7 +2360,7 @@
         "details": {
           "origin_name": "Bergamo - Orio al Serio",
           "terminal": "T2",
-          "gate_id": "T2-G4 (Dummy)",
+          "gate_id": "T2-G6 (Dummy)",
           "scheduled_arrival": "2026-04-12T23:20:00+00:00",
           "estimated_arrival": null,
           "actual_arrival": null,
@@ -1754,21 +2379,42 @@
         "type_long": null
       },
       "payload_stats": {
-        "total_passengers": "168 (Simulated)",
+        "total_passengers": "167 (Simulated)",
         "estimated_groups": "70 (Simulated)",
-        "total_bags": "202 (Simulated)",
+        "total_bags": "200 (Simulated)",
         "priority_pax": "20 (Simulated)",
-        "prm_pax": "2 (Simulated)",
+        "prm_pax": "1 (Simulated)",
         "service_multiplier": 1.4,
         "assigned_resources": {
-          "baggage_belt": "B3 (Dummy)"
+          "baggage_belt": "B1 (Dummy)"
         }
       },
       "origin_coords": null,
       "dest_coords": [
         30.9177,
         29.6964
-      ]
+      ],
+      "personas": {
+        "p1": 0,
+        "p2": 0,
+        "p3": 0,
+        "p4": 70,
+        "p5": 0,
+        "p6": 20,
+        "p7": 10
+      },
+      "schedule": {
+        "departure": {
+          "scheduled": "2026-04-12T19:50:00+00:00",
+          "estimated": "2026-04-12T19:50:00+00:00",
+          "actual": null
+        },
+        "arrival": {
+          "scheduled": "2026-04-12T23:20:00+00:00",
+          "estimated": null,
+          "actual": null
+        }
+      }
     },
     {
       "flight_id": "G9326",
@@ -1788,7 +2434,7 @@
         "details": {
           "origin_name": "King Abdulaziz International",
           "terminal": "T2",
-          "gate_id": "T2-G12 (Dummy)",
+          "gate_id": "T2-G5 (Dummy)",
           "scheduled_arrival": "2026-04-12T14:20:00+00:00",
           "estimated_arrival": "2026-04-12T14:08:00+00:00",
           "actual_arrival": null,
@@ -1807,180 +2453,42 @@
         "type_long": null
       },
       "payload_stats": {
-        "total_passengers": "138 (Simulated)",
-        "estimated_groups": "58 (Simulated)",
-        "total_bags": "166 (Simulated)",
-        "priority_pax": "17 (Simulated)",
-        "prm_pax": "1 (Simulated)",
-        "service_multiplier": 1.4,
-        "assigned_resources": {
-          "baggage_belt": "B4 (Dummy)"
-        }
-      },
-      "origin_coords": null,
-      "dest_coords": [
-        30.9177,
-        29.6964
-      ]
-    },
-    {
-      "flight_id": "G9594",
-      "flight_iata": "G9594",
-      "flight_icao": "ABY594",
-      "airline": "Air Arabia",
-      "airline_iata": "G9",
-      "airline_icao": "ABY",
-      "airline_logo": "/airline-logos/G9.png",
-      "flight_status": "active",
-      "flight_type": "International",
-      "route": {
-        "source": "SHJ",
-        "source_icao": "OMSJ",
-        "destination": "HBE",
-        "destination_icao": "HEAX",
-        "details": {
-          "origin_name": "Sharjah",
-          "terminal": "T2",
-          "gate_id": "T2-G2 (Dummy)",
-          "scheduled_arrival": "2026-04-12T22:55:00+00:00",
-          "estimated_arrival": "2026-04-12T22:26:00+00:00",
-          "actual_arrival": null,
-          "scheduled_departure": "2026-04-12T19:55:00+00:00",
-          "estimated_departure": "2026-04-12T19:55:00+00:00",
-          "actual_departure": "2026-04-12T20:10:00+00:00"
-        }
-      },
-      "aircraft": {
-        "type": "A320",
-        "type_source": "CSV_DB",
-        "capacity": "180 (Simulated)",
-        "manufacturer": "Airbus",
-        "registration": "A6-ANQ",
-        "owner": "Air Arabia",
-        "type_long": "A320 214SL"
-      },
-      "payload_stats": {
-        "total_passengers": "164 (Simulated)",
-        "estimated_groups": "69 (Simulated)",
-        "total_bags": "197 (Simulated)",
-        "priority_pax": "20 (Simulated)",
-        "prm_pax": "0 (Simulated)",
-        "service_multiplier": 1.4,
-        "assigned_resources": {
-          "baggage_belt": "B3 (Dummy)"
-        }
-      },
-      "origin_coords": null,
-      "dest_coords": [
-        30.9177,
-        29.6964
-      ]
-    },
-    {
-      "flight_id": "SV411",
-      "flight_iata": "SV411",
-      "flight_icao": "SVA411",
-      "airline": "Saudia",
-      "airline_iata": "SV",
-      "airline_icao": "SVA",
-      "airline_logo": "/airline-logos/SV.png",
-      "flight_status": "active",
-      "flight_type": "International",
-      "route": {
-        "source": "JED",
-        "source_icao": "OEJN",
-        "destination": "HBE",
-        "destination_icao": "HEAX",
-        "details": {
-          "origin_name": "King Abdulaziz International",
-          "terminal": "T2",
-          "gate_id": "T2-G9 (Dummy)",
-          "scheduled_arrival": "2026-04-12T18:30:00+00:00",
-          "estimated_arrival": "2026-04-12T18:28:00+00:00",
-          "actual_arrival": null,
-          "scheduled_departure": "2026-04-12T17:10:00+00:00",
-          "estimated_departure": "2026-04-12T17:10:00+00:00",
-          "actual_departure": "2026-04-12T17:14:00+00:00"
-        }
-      },
-      "aircraft": {
-        "type": "A320",
-        "type_source": "CSV_DB",
-        "capacity": "180 (Simulated)",
-        "manufacturer": "Airbus",
-        "registration": "HZ-AS51",
-        "owner": "Saudi Arabian Airlines",
-        "type_long": "A320 214SL"
-      },
-      "payload_stats": {
-        "total_passengers": "149 (Simulated)",
-        "estimated_groups": "63 (Simulated)",
-        "total_bags": "179 (Simulated)",
-        "priority_pax": "18 (Simulated)",
+        "total_passengers": "158 (Simulated)",
+        "estimated_groups": "66 (Simulated)",
+        "total_bags": "190 (Simulated)",
+        "priority_pax": "19 (Simulated)",
         "prm_pax": "2 (Simulated)",
         "service_multiplier": 1.4,
         "assigned_resources": {
-          "baggage_belt": "B1 (Dummy)"
+          "baggage_belt": "B2 (Dummy)"
         }
       },
       "origin_coords": null,
       "dest_coords": [
         30.9177,
         29.6964
-      ]
-    },
-    {
-      "flight_id": "EY3389",
-      "flight_iata": "EY3389",
-      "flight_icao": "ETD3389",
-      "airline": "Etihad Airways",
-      "airline_iata": "EY",
-      "airline_icao": "ETD",
-      "airline_logo": "/airline-logos/EY.png",
-      "flight_status": "active",
-      "flight_type": "International",
-      "route": {
-        "source": "JED",
-        "source_icao": "OEJN",
-        "destination": "HBE",
-        "destination_icao": "HEAX",
-        "details": {
-          "origin_name": "King Abdulaziz International",
-          "terminal": "T2",
-          "gate_id": "T2-G2 (Dummy)",
-          "scheduled_arrival": "2026-04-12T18:30:00+00:00",
-          "estimated_arrival": "2026-04-12T18:28:00+00:00",
-          "actual_arrival": null,
-          "scheduled_departure": "2026-04-12T17:10:00+00:00",
-          "estimated_departure": "2026-04-12T17:10:00+00:00",
-          "actual_departure": "2026-04-12T17:14:00+00:00"
+      ],
+      "personas": {
+        "p1": 0,
+        "p2": 0,
+        "p3": 0,
+        "p4": 70,
+        "p5": 0,
+        "p6": 20,
+        "p7": 10
+      },
+      "schedule": {
+        "departure": {
+          "scheduled": "2026-04-12T12:55:00+00:00",
+          "estimated": "2026-04-12T12:55:00+00:00",
+          "actual": "2026-04-12T13:04:00+00:00"
+        },
+        "arrival": {
+          "scheduled": "2026-04-12T14:20:00+00:00",
+          "estimated": "2026-04-12T14:08:00+00:00",
+          "actual": null
         }
-      },
-      "aircraft": {
-        "type": "A320",
-        "type_source": "CSV_DB",
-        "capacity": "180 (Simulated)",
-        "manufacturer": "Airbus",
-        "registration": "HZ-AS51",
-        "owner": "Saudi Arabian Airlines",
-        "type_long": "A320 214SL"
-      },
-      "payload_stats": {
-        "total_passengers": "139 (Simulated)",
-        "estimated_groups": "58 (Simulated)",
-        "total_bags": "167 (Simulated)",
-        "priority_pax": "17 (Simulated)",
-        "prm_pax": "0 (Simulated)",
-        "service_multiplier": 1.4,
-        "assigned_resources": {
-          "baggage_belt": "B3 (Dummy)"
-        }
-      },
-      "origin_coords": null,
-      "dest_coords": [
-        30.9177,
-        29.6964
-      ]
+      }
     },
     {
       "flight_id": "SM486",
@@ -2000,7 +2508,7 @@
         "details": {
           "origin_name": "Mohammad Bin Abdulaziz",
           "terminal": "T2",
-          "gate_id": "T2-G11 (Dummy)",
+          "gate_id": "T2-G9 (Dummy)",
           "scheduled_arrival": "2026-04-12T16:30:00+00:00",
           "estimated_arrival": null,
           "actual_arrival": null,
@@ -2015,14 +2523,14 @@
         "capacity": "180 (Simulated)"
       },
       "payload_stats": {
-        "total_passengers": "156 (Simulated)",
-        "estimated_groups": "65 (Simulated)",
-        "total_bags": "187 (Simulated)",
+        "total_passengers": "159 (Simulated)",
+        "estimated_groups": "67 (Simulated)",
+        "total_bags": "191 (Simulated)",
         "priority_pax": "19 (Simulated)",
         "prm_pax": "1 (Simulated)",
         "service_multiplier": 1.4,
         "assigned_resources": {
-          "baggage_belt": "B3 (Dummy)"
+          "baggage_belt": "B1 (Dummy)"
         }
       },
       "origin_coords": [
@@ -2032,7 +2540,28 @@
       "dest_coords": [
         30.9177,
         29.6964
-      ]
+      ],
+      "personas": {
+        "p1": 0,
+        "p2": 0,
+        "p3": 0,
+        "p4": 70,
+        "p5": 0,
+        "p6": 20,
+        "p7": 10
+      },
+      "schedule": {
+        "departure": {
+          "scheduled": "2026-04-12T15:20:00+00:00",
+          "estimated": "2026-04-12T15:20:00+00:00",
+          "actual": null
+        },
+        "arrival": {
+          "scheduled": "2026-04-12T16:30:00+00:00",
+          "estimated": null,
+          "actual": null
+        }
+      }
     },
     {
       "flight_id": "3L401",
@@ -2052,7 +2581,7 @@
         "details": {
           "origin_name": "Abu Dhabi International",
           "terminal": "T2",
-          "gate_id": "T2-G6 (Dummy)",
+          "gate_id": "T2-G7 (Dummy)",
           "scheduled_arrival": "2026-04-12T19:35:00+00:00",
           "estimated_arrival": null,
           "actual_arrival": null,
@@ -2067,11 +2596,11 @@
         "capacity": "180 (Simulated)"
       },
       "payload_stats": {
-        "total_passengers": "137 (Simulated)",
-        "estimated_groups": "58 (Simulated)",
-        "total_bags": "164 (Simulated)",
-        "priority_pax": "16 (Simulated)",
-        "prm_pax": "0 (Simulated)",
+        "total_passengers": "164 (Simulated)",
+        "estimated_groups": "69 (Simulated)",
+        "total_bags": "197 (Simulated)",
+        "priority_pax": "20 (Simulated)",
+        "prm_pax": "2 (Simulated)",
         "service_multiplier": 1.4,
         "assigned_resources": {
           "baggage_belt": "B2 (Dummy)"
@@ -2084,7 +2613,28 @@
       "dest_coords": [
         30.9177,
         29.6964
-      ]
+      ],
+      "personas": {
+        "p1": 0,
+        "p2": 0,
+        "p3": 0,
+        "p4": 70,
+        "p5": 0,
+        "p6": 20,
+        "p7": 10
+      },
+      "schedule": {
+        "departure": {
+          "scheduled": "2026-04-12T16:40:00+00:00",
+          "estimated": "2026-04-12T16:40:00+00:00",
+          "actual": null
+        },
+        "arrival": {
+          "scheduled": "2026-04-12T19:35:00+00:00",
+          "estimated": null,
+          "actual": null
+        }
+      }
     },
     {
       "flight_id": "G9322",
@@ -2104,7 +2654,7 @@
         "details": {
           "origin_name": "King Abdulaziz International",
           "terminal": "T2",
-          "gate_id": "T2-G2 (Dummy)",
+          "gate_id": "T2-G7 (Dummy)",
           "scheduled_arrival": "2026-04-12T07:55:00+00:00",
           "estimated_arrival": "2026-04-12T07:48:00+00:00",
           "actual_arrival": null,
@@ -2123,21 +2673,42 @@
         "type_long": null
       },
       "payload_stats": {
-        "total_passengers": "151 (Simulated)",
-        "estimated_groups": "63 (Simulated)",
-        "total_bags": "181 (Simulated)",
-        "priority_pax": "18 (Simulated)",
-        "prm_pax": "0 (Simulated)",
+        "total_passengers": "142 (Simulated)",
+        "estimated_groups": "60 (Simulated)",
+        "total_bags": "170 (Simulated)",
+        "priority_pax": "17 (Simulated)",
+        "prm_pax": "2 (Simulated)",
         "service_multiplier": 1.4,
         "assigned_resources": {
-          "baggage_belt": "B3 (Dummy)"
+          "baggage_belt": "B1 (Dummy)"
         }
       },
       "origin_coords": null,
       "dest_coords": [
         30.9177,
         29.6964
-      ]
+      ],
+      "personas": {
+        "p1": 0,
+        "p2": 0,
+        "p3": 0,
+        "p4": 70,
+        "p5": 0,
+        "p6": 20,
+        "p7": 10
+      },
+      "schedule": {
+        "departure": {
+          "scheduled": "2026-04-12T06:30:00+00:00",
+          "estimated": "2026-04-12T06:30:00+00:00",
+          "actual": "2026-04-12T06:38:00+00:00"
+        },
+        "arrival": {
+          "scheduled": "2026-04-12T07:55:00+00:00",
+          "estimated": "2026-04-12T07:48:00+00:00",
+          "actual": null
+        }
+      }
     },
     {
       "flight_id": "LN208",
@@ -2157,7 +2728,7 @@
         "details": {
           "origin_name": "Benina International",
           "terminal": "T2",
-          "gate_id": "T2-G3 (Dummy)",
+          "gate_id": "T2-G6 (Dummy)",
           "scheduled_arrival": "2026-04-12T13:01:00+00:00",
           "estimated_arrival": null,
           "actual_arrival": null,
@@ -2172,11 +2743,11 @@
         "capacity": "180 (Simulated)"
       },
       "payload_stats": {
-        "total_passengers": "150 (Simulated)",
-        "estimated_groups": "63 (Simulated)",
-        "total_bags": "180 (Simulated)",
+        "total_passengers": "147 (Simulated)",
+        "estimated_groups": "62 (Simulated)",
+        "total_bags": "176 (Simulated)",
         "priority_pax": "18 (Simulated)",
-        "prm_pax": "1 (Simulated)",
+        "prm_pax": "0 (Simulated)",
         "service_multiplier": 1.4,
         "assigned_resources": {
           "baggage_belt": "B1 (Dummy)"
@@ -2186,7 +2757,28 @@
       "dest_coords": [
         30.9177,
         29.6964
-      ]
+      ],
+      "personas": {
+        "p1": 0,
+        "p2": 0,
+        "p3": 0,
+        "p4": 70,
+        "p5": 0,
+        "p6": 20,
+        "p7": 10
+      },
+      "schedule": {
+        "departure": {
+          "scheduled": "2026-04-12T11:30:00+00:00",
+          "estimated": "2026-04-12T11:30:00+00:00",
+          "actual": null
+        },
+        "arrival": {
+          "scheduled": "2026-04-12T13:01:00+00:00",
+          "estimated": null,
+          "actual": null
+        }
+      }
     },
     {
       "flight_id": "E5326",
@@ -2206,7 +2798,7 @@
         "details": {
           "origin_name": "King Abdulaziz International",
           "terminal": "T2",
-          "gate_id": "T2-G12 (Dummy)",
+          "gate_id": "T2-G1 (Dummy)",
           "scheduled_arrival": "2026-04-12T14:20:00+00:00",
           "estimated_arrival": null,
           "actual_arrival": null,
@@ -2229,66 +2821,38 @@
         "estimated_groups": "62 (Simulated)",
         "total_bags": "178 (Simulated)",
         "priority_pax": "18 (Simulated)",
-        "prm_pax": "0 (Simulated)",
+        "prm_pax": "1 (Simulated)",
         "service_multiplier": 1.4,
         "assigned_resources": {
-          "baggage_belt": "B2 (Dummy)"
+          "baggage_belt": "B4 (Dummy)"
         }
       },
       "origin_coords": null,
       "dest_coords": [
         30.9177,
         29.6964
-      ]
-    },
-    {
-      "flight_id": "UNKNOWN_FLIGHT",
-      "flight_iata": null,
-      "flight_icao": null,
-      "airline": "empty",
-      "airline_iata": null,
-      "airline_icao": null,
-      "airline_logo": null,
-      "flight_status": "unknown",
-      "flight_type": "International",
-      "route": {
-        "source": "MRA",
-        "source_icao": "HLMS",
-        "destination": "HBE",
-        "destination_icao": "HEAX",
-        "details": {
-          "origin_name": "Unknown Departure",
-          "terminal": "T2",
-          "gate_id": "T2-G4 (Dummy)",
-          "scheduled_arrival": "2026-04-12T12:45:00+00:00",
-          "estimated_arrival": null,
-          "actual_arrival": null,
-          "scheduled_departure": "2026-04-12T10:35:00+00:00",
-          "estimated_departure": "2026-04-12T10:35:00+00:00",
-          "actual_departure": null
+      ],
+      "personas": {
+        "p1": 0,
+        "p2": 0,
+        "p3": 0,
+        "p4": 70,
+        "p5": 0,
+        "p6": 20,
+        "p7": 10
+      },
+      "schedule": {
+        "departure": {
+          "scheduled": "2026-04-12T12:55:00+00:00",
+          "estimated": "2026-04-12T12:55:00+00:00",
+          "actual": null
+        },
+        "arrival": {
+          "scheduled": "2026-04-12T14:20:00+00:00",
+          "estimated": null,
+          "actual": null
         }
-      },
-      "aircraft": {
-        "type": "A320 (Dummy)",
-        "type_source": "Dummy",
-        "capacity": "180 (Simulated)"
-      },
-      "payload_stats": {
-        "total_passengers": "138 (Simulated)",
-        "estimated_groups": "58 (Simulated)",
-        "total_bags": "166 (Simulated)",
-        "priority_pax": "17 (Simulated)",
-        "prm_pax": "2 (Simulated)",
-        "service_multiplier": 1.4,
-        "assigned_resources": {
-          "baggage_belt": "B3 (Dummy)"
-        }
-      },
-      "origin_coords": null,
-      "dest_coords": [
-        30.9177,
-        29.6964
-      ]
+      }
     },
     {
       "flight_id": "NB421",
@@ -2308,7 +2872,7 @@
         "details": {
           "origin_name": "Unknown Departure",
           "terminal": "T2",
-          "gate_id": "T2-G4 (Dummy)",
+          "gate_id": "T2-G9 (Dummy)",
           "scheduled_arrival": "2026-04-12T12:45:00+00:00",
           "estimated_arrival": "2026-04-12T12:28:00+00:00",
           "actual_arrival": null,
@@ -2323,21 +2887,42 @@
         "capacity": "180 (Simulated)"
       },
       "payload_stats": {
-        "total_passengers": "169 (Simulated)",
-        "estimated_groups": "71 (Simulated)",
-        "total_bags": "203 (Simulated)",
-        "priority_pax": "20 (Simulated)",
-        "prm_pax": "1 (Simulated)",
+        "total_passengers": "160 (Simulated)",
+        "estimated_groups": "67 (Simulated)",
+        "total_bags": "192 (Simulated)",
+        "priority_pax": "19 (Simulated)",
+        "prm_pax": "2 (Simulated)",
         "service_multiplier": 1.4,
         "assigned_resources": {
-          "baggage_belt": "B2 (Dummy)"
+          "baggage_belt": "B3 (Dummy)"
         }
       },
       "origin_coords": null,
       "dest_coords": [
         30.9177,
         29.6964
-      ]
+      ],
+      "personas": {
+        "p1": 0,
+        "p2": 0,
+        "p3": 0,
+        "p4": 70,
+        "p5": 0,
+        "p6": 20,
+        "p7": 10
+      },
+      "schedule": {
+        "departure": {
+          "scheduled": "2026-04-12T10:35:00+00:00",
+          "estimated": "2026-04-12T10:35:00+00:00",
+          "actual": "2026-04-12T10:35:00+00:00"
+        },
+        "arrival": {
+          "scheduled": "2026-04-12T12:45:00+00:00",
+          "estimated": "2026-04-12T12:28:00+00:00",
+          "actual": null
+        }
+      }
     },
     {
       "flight_id": "8U436",
@@ -2357,7 +2942,7 @@
         "details": {
           "origin_name": "Mitiga",
           "terminal": "T2",
-          "gate_id": "T2-G8 (Dummy)",
+          "gate_id": "T2-G11 (Dummy)",
           "scheduled_arrival": "2026-04-12T11:45:00+00:00",
           "estimated_arrival": "2026-04-12T11:32:00+00:00",
           "actual_arrival": null,
@@ -2376,21 +2961,42 @@
         "type_long": null
       },
       "payload_stats": {
-        "total_passengers": "160 (Simulated)",
-        "estimated_groups": "67 (Simulated)",
-        "total_bags": "192 (Simulated)",
-        "priority_pax": "19 (Simulated)",
+        "total_passengers": "140 (Simulated)",
+        "estimated_groups": "59 (Simulated)",
+        "total_bags": "168 (Simulated)",
+        "priority_pax": "17 (Simulated)",
         "prm_pax": "2 (Simulated)",
         "service_multiplier": 1.4,
         "assigned_resources": {
-          "baggage_belt": "B3 (Dummy)"
+          "baggage_belt": "B2 (Dummy)"
         }
       },
       "origin_coords": null,
       "dest_coords": [
         30.9177,
         29.6964
-      ]
+      ],
+      "personas": {
+        "p1": 0,
+        "p2": 0,
+        "p3": 0,
+        "p4": 70,
+        "p5": 0,
+        "p6": 20,
+        "p7": 10
+      },
+      "schedule": {
+        "departure": {
+          "scheduled": "2026-04-12T09:15:00+00:00",
+          "estimated": "2026-04-12T09:15:00+00:00",
+          "actual": "2026-04-12T09:32:00+00:00"
+        },
+        "arrival": {
+          "scheduled": "2026-04-12T11:45:00+00:00",
+          "estimated": "2026-04-12T11:32:00+00:00",
+          "actual": null
+        }
+      }
     },
     {
       "flight_id": "TG9166",
@@ -2410,7 +3016,7 @@
         "details": {
           "origin_name": "Istanbul Airport",
           "terminal": "T2",
-          "gate_id": "T2-G8 (Dummy)",
+          "gate_id": "T2-G7 (Dummy)",
           "scheduled_arrival": "2026-04-12T08:00:00+00:00",
           "estimated_arrival": "2026-04-12T07:32:00+00:00",
           "actual_arrival": null,
@@ -2429,10 +3035,10 @@
         "type_long": "737NG 9F2ER/W"
       },
       "payload_stats": {
-        "total_passengers": "139 (Simulated)",
-        "estimated_groups": "58 (Simulated)",
-        "total_bags": "167 (Simulated)",
-        "priority_pax": "17 (Simulated)",
+        "total_passengers": "147 (Simulated)",
+        "estimated_groups": "62 (Simulated)",
+        "total_bags": "176 (Simulated)",
+        "priority_pax": "18 (Simulated)",
         "prm_pax": "0 (Simulated)",
         "service_multiplier": 1.4,
         "assigned_resources": {
@@ -2446,7 +3052,28 @@
       "dest_coords": [
         30.9177,
         29.6964
-      ]
+      ],
+      "personas": {
+        "p1": 0,
+        "p2": 0,
+        "p3": 0,
+        "p4": 70,
+        "p5": 0,
+        "p6": 20,
+        "p7": 10
+      },
+      "schedule": {
+        "departure": {
+          "scheduled": "2026-04-12T06:45:00+00:00",
+          "estimated": "2026-04-12T06:45:00+00:00",
+          "actual": "2026-04-12T06:52:00+00:00"
+        },
+        "arrival": {
+          "scheduled": "2026-04-12T08:00:00+00:00",
+          "estimated": "2026-04-12T07:32:00+00:00",
+          "actual": null
+        }
+      }
     },
     {
       "flight_id": "MS9310",
@@ -2466,7 +3093,7 @@
         "details": {
           "origin_name": "Istanbul Airport",
           "terminal": "T1",
-          "gate_id": "T1-G12 (Dummy)",
+          "gate_id": "T1-G10 (Dummy)",
           "scheduled_arrival": "2026-04-12T08:00:00+00:00",
           "estimated_arrival": "2026-04-12T07:32:00+00:00",
           "actual_arrival": null,
@@ -2485,14 +3112,14 @@
         "type_long": "737NG 9F2ER/W"
       },
       "payload_stats": {
-        "total_passengers": "165 (Simulated)",
-        "estimated_groups": "69 (Simulated)",
-        "total_bags": "198 (Simulated)",
-        "priority_pax": "20 (Simulated)",
-        "prm_pax": "1 (Simulated)",
+        "total_passengers": "141 (Simulated)",
+        "estimated_groups": "59 (Simulated)",
+        "total_bags": "169 (Simulated)",
+        "priority_pax": "17 (Simulated)",
+        "prm_pax": "0 (Simulated)",
         "service_multiplier": 1.4,
         "assigned_resources": {
-          "baggage_belt": "B2 (Dummy)"
+          "baggage_belt": "B3 (Dummy)"
         }
       },
       "origin_coords": [
@@ -2502,7 +3129,28 @@
       "dest_coords": [
         30.9177,
         29.6964
-      ]
+      ],
+      "personas": {
+        "p1": 0,
+        "p2": 0,
+        "p3": 0,
+        "p4": 70,
+        "p5": 0,
+        "p6": 20,
+        "p7": 10
+      },
+      "schedule": {
+        "departure": {
+          "scheduled": "2026-04-12T06:45:00+00:00",
+          "estimated": "2026-04-12T06:45:00+00:00",
+          "actual": "2026-04-12T06:52:00+00:00"
+        },
+        "arrival": {
+          "scheduled": "2026-04-12T08:00:00+00:00",
+          "estimated": "2026-04-12T07:32:00+00:00",
+          "actual": null
+        }
+      }
     },
     {
       "flight_id": "SM34",
@@ -2541,123 +3189,42 @@
         "type_long": null
       },
       "payload_stats": {
-        "total_passengers": "162 (Simulated)",
-        "estimated_groups": "68 (Simulated)",
-        "total_bags": "65 (Simulated)",
-        "priority_pax": "19 (Simulated)",
-        "prm_pax": "2 (Simulated)",
+        "total_passengers": "135 (Simulated)",
+        "estimated_groups": "57 (Simulated)",
+        "total_bags": "54 (Simulated)",
+        "priority_pax": "16 (Simulated)",
+        "prm_pax": "0 (Simulated)",
         "service_multiplier": 1,
         "assigned_resources": {
-          "baggage_belt": "B1 (Dummy)"
+          "baggage_belt": "B2 (Dummy)"
         }
       },
       "origin_coords": null,
       "dest_coords": [
         30.9177,
         29.6964
-      ]
-    },
-    {
-      "flight_id": "SM452",
-      "flight_iata": "SM452",
-      "flight_icao": "MSC452",
-      "airline": "Air Cairo",
-      "airline_iata": "SM",
-      "airline_icao": "MSC",
-      "airline_logo": "/airline-logos/SM.png",
-      "flight_status": "active",
-      "flight_type": "International",
-      "route": {
-        "source": "JED",
-        "source_icao": "OEJN",
-        "destination": "HBE",
-        "destination_icao": "HEAX",
-        "details": {
-          "origin_name": "King Abdulaziz International",
-          "terminal": "T2",
-          "gate_id": "T2-G10 (Dummy)",
-          "scheduled_arrival": "2026-04-12T09:00:00+00:00",
-          "estimated_arrival": "2026-04-12T08:54:00+00:00",
-          "actual_arrival": null,
-          "scheduled_departure": "2026-04-12T07:40:00+00:00",
-          "estimated_departure": "2026-04-12T07:40:00+00:00",
-          "actual_departure": "2026-04-12T07:52:00+00:00"
+      ],
+      "personas": {
+        "p1": 0,
+        "p2": 0,
+        "p3": 0,
+        "p4": 70,
+        "p5": 0,
+        "p6": 20,
+        "p7": 10
+      },
+      "schedule": {
+        "departure": {
+          "scheduled": "2026-04-12T08:00:00+00:00",
+          "estimated": "2026-04-12T08:00:00+00:00",
+          "actual": "2026-04-12T08:07:00+00:00"
+        },
+        "arrival": {
+          "scheduled": "2026-04-12T09:55:00+00:00",
+          "estimated": "2026-04-12T09:35:00+00:00",
+          "actual": null
         }
-      },
-      "aircraft": {
-        "type": "A320 (Dummy)",
-        "type_source": "Dummy",
-        "capacity": "180 (Simulated)"
-      },
-      "payload_stats": {
-        "total_passengers": "157 (Simulated)",
-        "estimated_groups": "66 (Simulated)",
-        "total_bags": "188 (Simulated)",
-        "priority_pax": "19 (Simulated)",
-        "prm_pax": "2 (Simulated)",
-        "service_multiplier": 1.4,
-        "assigned_resources": {
-          "baggage_belt": "B4 (Dummy)"
-        }
-      },
-      "origin_coords": null,
-      "dest_coords": [
-        30.9177,
-        29.6964
-      ]
-    },
-    {
-      "flight_id": "E5322",
-      "flight_iata": "E5322",
-      "flight_icao": "RBG322",
-      "airline": "Air Arabia Egypt",
-      "airline_iata": "E5",
-      "airline_icao": "RBG",
-      "airline_logo": "/airline-logos/E5.png",
-      "flight_status": "scheduled",
-      "flight_type": "International",
-      "route": {
-        "source": "JED",
-        "source_icao": "OEJN",
-        "destination": "HBE",
-        "destination_icao": "HEAX",
-        "details": {
-          "origin_name": "King Abdulaziz International",
-          "terminal": "T2",
-          "gate_id": "T2-G4 (Dummy)",
-          "scheduled_arrival": "2026-04-12T07:55:00+00:00",
-          "estimated_arrival": null,
-          "actual_arrival": null,
-          "scheduled_departure": "2026-04-12T06:30:00+00:00",
-          "estimated_departure": "2026-04-12T06:30:00+00:00",
-          "actual_departure": null
-        }
-      },
-      "aircraft": {
-        "type": "A320",
-        "type_source": "CSV_DB",
-        "capacity": "180 (Simulated)",
-        "manufacturer": null,
-        "registration": "SU-AAD",
-        "owner": null,
-        "type_long": null
-      },
-      "payload_stats": {
-        "total_passengers": "169 (Simulated)",
-        "estimated_groups": "71 (Simulated)",
-        "total_bags": "203 (Simulated)",
-        "priority_pax": "20 (Simulated)",
-        "prm_pax": "0 (Simulated)",
-        "service_multiplier": 1.4,
-        "assigned_resources": {
-          "baggage_belt": "B1 (Dummy)"
-        }
-      },
-      "origin_coords": null,
-      "dest_coords": [
-        30.9177,
-        29.6964
-      ]
+      }
     },
     {
       "flight_id": "TK688",
@@ -2696,10 +3263,10 @@
         "type_long": "737NG 9F2ER/W"
       },
       "payload_stats": {
-        "total_passengers": "147 (Simulated)",
-        "estimated_groups": "62 (Simulated)",
-        "total_bags": "176 (Simulated)",
-        "priority_pax": "18 (Simulated)",
+        "total_passengers": "136 (Simulated)",
+        "estimated_groups": "57 (Simulated)",
+        "total_bags": "163 (Simulated)",
+        "priority_pax": "16 (Simulated)",
         "prm_pax": "1 (Simulated)",
         "service_multiplier": 1.4,
         "assigned_resources": {
@@ -2713,175 +3280,28 @@
       "dest_coords": [
         30.9177,
         29.6964
-      ]
-    },
-    {
-      "flight_id": "TG7564",
-      "flight_iata": "TG7564",
-      "flight_icao": "THA7564",
-      "airline": "Thai Airways International",
-      "airline_iata": "TG",
-      "airline_icao": "THA",
-      "airline_logo": "/airline-logos/TG.png",
-      "flight_status": "unknown",
-      "flight_type": "International",
-      "route": {
-        "source": "IST",
-        "source_icao": "LTFM",
-        "destination": "HBE",
-        "destination_icao": "HEAX",
-        "details": {
-          "origin_name": "Istanbul Airport",
-          "terminal": "T2",
-          "gate_id": "T2-G5 (Dummy)",
-          "scheduled_arrival": "2026-04-12T01:50:00+00:00",
-          "estimated_arrival": "2026-04-12T01:30:00+00:00",
-          "actual_arrival": null,
-          "scheduled_departure": "2026-04-12T00:40:00+00:00",
-          "estimated_departure": "2026-04-12T00:40:00+00:00",
-          "actual_departure": "2026-04-12T00:51:00+00:00"
-        }
-      },
-      "aircraft": {
-        "type": "A21N",
-        "type_source": "CSV_DB",
-        "capacity": "240 (Simulated)",
-        "manufacturer": null,
-        "registration": "TC-LSL",
-        "owner": null,
-        "type_long": null
-      },
-      "payload_stats": {
-        "total_passengers": "180 (Simulated)",
-        "estimated_groups": "75 (Simulated)",
-        "total_bags": "216 (Simulated)",
-        "priority_pax": "22 (Simulated)",
-        "prm_pax": "2 (Simulated)",
-        "service_multiplier": 1.4,
-        "assigned_resources": {
-          "baggage_belt": "B4 (Dummy)"
-        }
-      },
-      "origin_coords": [
-        41.2753,
-        28.7519
       ],
-      "dest_coords": [
-        30.9177,
-        29.6964
-      ]
-    },
-    {
-      "flight_id": "MS9296",
-      "flight_iata": "MS9296",
-      "flight_icao": "MSR9296",
-      "airline": "EgyptAir",
-      "airline_iata": "MS",
-      "airline_icao": "MSR",
-      "airline_logo": "/airline-logos/MS.png",
-      "flight_status": "unknown",
-      "flight_type": "International",
-      "route": {
-        "source": "IST",
-        "source_icao": "LTFM",
-        "destination": "HBE",
-        "destination_icao": "HEAX",
-        "details": {
-          "origin_name": "Istanbul Airport",
-          "terminal": "T1",
-          "gate_id": "T1-G4 (Dummy)",
-          "scheduled_arrival": "2026-04-12T01:50:00+00:00",
-          "estimated_arrival": "2026-04-12T01:30:00+00:00",
-          "actual_arrival": null,
-          "scheduled_departure": "2026-04-12T00:40:00+00:00",
-          "estimated_departure": "2026-04-12T00:40:00+00:00",
-          "actual_departure": "2026-04-12T00:51:00+00:00"
+      "personas": {
+        "p1": 0,
+        "p2": 0,
+        "p3": 0,
+        "p4": 70,
+        "p5": 0,
+        "p6": 20,
+        "p7": 10
+      },
+      "schedule": {
+        "departure": {
+          "scheduled": "2026-04-12T06:45:00+00:00",
+          "estimated": "2026-04-12T06:45:00+00:00",
+          "actual": "2026-04-12T06:52:00+00:00"
+        },
+        "arrival": {
+          "scheduled": "2026-04-12T08:00:00+00:00",
+          "estimated": "2026-04-12T07:32:00+00:00",
+          "actual": null
         }
-      },
-      "aircraft": {
-        "type": "A21N",
-        "type_source": "CSV_DB",
-        "capacity": "240 (Simulated)",
-        "manufacturer": null,
-        "registration": "TC-LSL",
-        "owner": null,
-        "type_long": null
-      },
-      "payload_stats": {
-        "total_passengers": "222 (Simulated)",
-        "estimated_groups": "93 (Simulated)",
-        "total_bags": "266 (Simulated)",
-        "priority_pax": "27 (Simulated)",
-        "prm_pax": "2 (Simulated)",
-        "service_multiplier": 1.4,
-        "assigned_resources": {
-          "baggage_belt": "B4 (Dummy)"
-        }
-      },
-      "origin_coords": [
-        41.2753,
-        28.7519
-      ],
-      "dest_coords": [
-        30.9177,
-        29.6964
-      ]
-    },
-    {
-      "flight_id": "TK696",
-      "flight_iata": "TK696",
-      "flight_icao": "THY696",
-      "airline": "Turkish Airlines",
-      "airline_iata": "TK",
-      "airline_icao": "THY",
-      "airline_logo": "/airline-logos/TK.png",
-      "flight_status": "unknown",
-      "flight_type": "International",
-      "route": {
-        "source": "IST",
-        "source_icao": "LTFM",
-        "destination": "HBE",
-        "destination_icao": "HEAX",
-        "details": {
-          "origin_name": "Istanbul Airport",
-          "terminal": "T2",
-          "gate_id": "T2-G9 (Dummy)",
-          "scheduled_arrival": "2026-04-12T01:50:00+00:00",
-          "estimated_arrival": "2026-04-12T01:30:00+00:00",
-          "actual_arrival": null,
-          "scheduled_departure": "2026-04-12T00:40:00+00:00",
-          "estimated_departure": "2026-04-12T00:40:00+00:00",
-          "actual_departure": "2026-04-12T00:51:00+00:00"
-        }
-      },
-      "aircraft": {
-        "type": "A21N",
-        "type_source": "CSV_DB",
-        "capacity": "240 (Simulated)",
-        "manufacturer": null,
-        "registration": "TC-LSL",
-        "owner": null,
-        "type_long": null
-      },
-      "payload_stats": {
-        "total_passengers": "209 (Simulated)",
-        "estimated_groups": "88 (Simulated)",
-        "total_bags": "251 (Simulated)",
-        "priority_pax": "25 (Simulated)",
-        "prm_pax": "2 (Simulated)",
-        "service_multiplier": 1.4,
-        "assigned_resources": {
-          "baggage_belt": "B1 (Dummy)"
-        }
-      },
-      "origin_coords": [
-        41.2753,
-        28.7519
-      ],
-      "dest_coords": [
-        30.9177,
-        29.6964
-      ]
+      }
     }
   ]
 }

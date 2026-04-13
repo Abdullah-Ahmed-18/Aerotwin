@@ -118,6 +118,87 @@ function getFlightStatusClass(status: unknown): string {
     }
 }
 
+function parseFirstValidTimestamp(candidates: unknown[], flightStatus: unknown): number {
+    for (const candidate of candidates) {
+        if (!candidate) continue;
+
+        const parsed = Date.parse(String(candidate));
+        if (!Number.isFinite(parsed)) continue;
+
+        const status = String(flightStatus || '').toLowerCase();
+        const isEnRoute = status === 'active' || status === 'scheduled';
+        if (isEnRoute) {
+            const now = Date.now();
+            const oneDayMs = 24 * 60 * 60 * 1000;
+            const threeHoursMs = 3 * 60 * 60 * 1000;
+            const isRecentPreviousDay = parsed >= (now - oneDayMs) && parsed < (now - threeHoursMs);
+            if (isRecentPreviousDay) {
+                return parsed + oneDayMs;
+            }
+        }
+
+        return parsed;
+    }
+
+    return Number.POSITIVE_INFINITY;
+}
+
+function getArrivalTimestamp(flight: any): number {
+    return parseFirstValidTimestamp([
+        flight?.schedule?.arrival?.actual,
+        flight?.schedule?.arrival?.estimated,
+        flight?.schedule?.arrival?.scheduled,
+        flight?.arrival?.actual,
+        flight?.arrival?.estimated,
+        flight?.arrival?.scheduled,
+        flight?.route?.details?.actual_arrival,
+        flight?.route?.details?.estimated_arrival,
+        flight?.route?.details?.scheduled_arrival,
+    ], flight?.flight_status);
+}
+
+function getDepartureTimestamp(flight: any): number {
+    return parseFirstValidTimestamp([
+        flight?.schedule?.departure?.actual,
+        flight?.schedule?.departure?.estimated,
+        flight?.schedule?.departure?.scheduled,
+        flight?.departure?.actual,
+        flight?.departure?.estimated,
+        flight?.departure?.scheduled,
+        flight?.route?.details?.actual_departure,
+        flight?.route?.details?.estimated_departure,
+        flight?.route?.details?.scheduled_departure,
+    ], flight?.flight_status);
+}
+
+function getEtaMinutes(arrivalTimestamp: number, nowTimestamp = Date.now()): number {
+    if (!Number.isFinite(arrivalTimestamp)) return 0;
+    return Math.max(0, Math.ceil((arrivalTimestamp - nowTimestamp) / 60000));
+}
+
+function getProgressPercent(departureTimestamp: number, arrivalTimestamp: number, nowTimestamp = Date.now()): number {
+    if (!Number.isFinite(departureTimestamp) || !Number.isFinite(arrivalTimestamp)) return 0;
+    if (arrivalTimestamp <= departureTimestamp) return nowTimestamp >= arrivalTimestamp ? 100 : 0;
+    if (nowTimestamp <= departureTimestamp) return 0;
+    if (nowTimestamp >= arrivalTimestamp) return 100;
+
+    const elapsed = nowTimestamp - departureTimestamp;
+    const duration = arrivalTimestamp - departureTimestamp;
+    return Math.max(0, Math.min(100, (elapsed / duration) * 100));
+}
+
+function formatEtaLabel(minutes: number): string {
+    if (!Number.isFinite(minutes) || minutes <= 0) {
+        return 'Landed';
+    }
+
+    return `${Math.floor(minutes)} MIN`;
+}
+
+function isLandedCard(eta: number): boolean {
+    return !Number.isFinite(eta) || eta <= 0;
+}
+
 export default function ActiveFlightsPage() {
     const [selectedAirportCode, setSelectedAirportCode] = useState('HBE');
     const [selectedAirportCenter, setSelectedAirportCenter] = useState<[number, number]>([30.9177, 29.6964]);
@@ -126,10 +207,12 @@ export default function ActiveFlightsPage() {
     const [selectedId, setSelectedId] = useState<string | null>('MS-441');
     const [manageId, setManageId] = useState<string | null>(null);
     const [time, setTime] = useState(new Date());
+    const [lastFetchTimestamp, setLastFetchTimestamp] = useState(Date.now());
     const [mounted, setMounted] = useState(false);
     const [showCard, setShowCard] = useState(false);
     const [mapFlights, setMapFlights] = useState<any[]>([]);
     const [mapAirports, setMapAirports] = useState<any[]>([]);
+    const [airportLookup, setAirportLookup] = useState<Record<string, { code: string; name: string; coords: [number, number] }>>({});
     const [focusTarget, setFocusTarget] = useState<[number, number] | null>(null);
 
     const [flights, setFlights] = useState([
@@ -186,10 +269,56 @@ export default function ActiveFlightsPage() {
             return;
         }
         
-        // Deduplicate flights by flight_id
-        const uniqueFlights = Array.from(new Map(apiFlight.map(f => [f.flight_id, f])).values());
+        // Deduplicate by operational-flight signature to collapse codeshares with different IDs.
+        const uniqueFlights = Array.from(new Map(apiFlight.map((f) => {
+            const depCode = String(f?.route?.source_icao || f?.route?.source || 'UNK').toUpperCase();
+            const arrCode = String(f?.route?.destination_icao || f?.route?.destination || 'UNK').toUpperCase();
+            const arrTime = String(
+                f?.schedule?.arrival?.estimated ||
+                f?.schedule?.arrival?.scheduled ||
+                f?.route?.details?.estimated_arrival ||
+                f?.route?.details?.scheduled_arrival ||
+                f?.schedule?.arrival?.actual ||
+                f?.route?.details?.actual_arrival ||
+                'UNK'
+            );
+            return [`${depCode}|${arrCode}|${arrTime}`, f] as const;
+        })).values());
         console.log('✅ Deduplicated flights (removed duplicates):', uniqueFlights);
 
+        const airportCodes = Array.from(new Set(
+            uniqueFlights
+                .flatMap((flight) => [flight?.route?.source, flight?.route?.destination])
+                .map((code) => String(code || '').trim().toUpperCase())
+                .filter((code) => code.length >= 3)
+        ));
+
+        void (async () => {
+            try {
+                if (airportCodes.length === 0) {
+                    setAirportLookup({});
+                    return;
+                }
+
+                const response = await fetch('http://localhost:5000/api/airports-batch', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ codes: airportCodes })
+                });
+
+                const data = await response.json();
+                if (!response.ok) {
+                    throw new Error(data?.error || 'Airport batch fetch failed.');
+                }
+
+                setAirportLookup(data?.airports || {});
+            } catch (error) {
+                console.error('Airport batch fetch error:', error);
+                setAirportLookup({});
+            }
+        })();
+
+        setLastFetchTimestamp(Date.now());
         setFetchedFlights(uniqueFlights);
     }, []);
 
@@ -213,20 +342,23 @@ export default function ActiveFlightsPage() {
             const maxCap = getAircraftMaxCapacity(aircraftType);
             const originCode = f?.route?.source || 'UNK';
             const destinationCode = f?.route?.destination || 'UNK';
+            const departureTimestamp = getDepartureTimestamp(f);
+            const arrivalTimestamp = getArrivalTimestamp(f);
             const passengerCount = Math.min(
                 parseSimulatedNumber(f?.payload_stats?.total_passengers, Math.floor(maxCap * 0.8)),
                 maxCap
             );
 
-            const eta = 30 + (idx * 7) % 90;
-            const progress = 25 + (idx * 9) % 65;
+            const nowTimestamp = Date.now();
+            const eta = Number.isFinite(arrivalTimestamp) ? getEtaMinutes(arrivalTimestamp, nowTimestamp) : 0;
+            const progress = getProgressPercent(departureTimestamp, arrivalTimestamp, nowTimestamp);
 
             const originCoords = f?.origin_coords
                 ? (f.origin_coords as [number, number])
-                : AIRPORT_COORDS[originCode] || null;
+                : airportLookup[originCode]?.coords || AIRPORT_COORDS[originCode] || null;
             const destCoords = f?.dest_coords
                 ? (f.dest_coords as [number, number])
-                : AIRPORT_COORDS[destinationCode] || null;
+                : airportLookup[destinationCode]?.coords || AIRPORT_COORDS[destinationCode] || null;
 
             let coords: [number, number];
             let heading: number;
@@ -255,6 +387,8 @@ export default function ActiveFlightsPage() {
                 destName: AIRPORT_NAMES[destinationCode] || destinationCode,
                 eta,
                 progress,
+                departureTimestamp,
+                arrivalTimestamp,
                 coords,
                 heading,
                 originCoords,
@@ -267,12 +401,44 @@ export default function ActiveFlightsPage() {
             };
         });
 
-        setFlights(mappedFlights);
-        setMapFlights(mappedFlights.map(({ id, coords, heading, airlineLogo }) => ({ id, coords, heading, airlineLogo })));
+        const fetchRefTimestamp = Number.isFinite(lastFetchTimestamp) ? lastFetchTimestamp : Date.now();
+        const fetchRefDate = new Date(fetchRefTimestamp);
+        const startOfUtcDayTimestamp = Date.UTC(
+            fetchRefDate.getUTCFullYear(),
+            fetchRefDate.getUTCMonth(),
+            fetchRefDate.getUTCDate()
+        );
+        const endOfWindowTimestamp = fetchRefTimestamp + (24 * 60 * 60 * 1000);
+
+        const windowedFlights = mappedFlights.filter((flight) => {
+            if (!Number.isFinite(flight.arrivalTimestamp)) return false;
+            return flight.arrivalTimestamp >= startOfUtcDayTimestamp && flight.arrivalTimestamp <= endOfWindowTimestamp;
+        });
+
+        windowedFlights.sort((a, b) => {
+            const aLanded = isLandedCard(a.eta);
+            const bLanded = isLandedCard(b.eta);
+
+            if (aLanded !== bLanded) {
+                return aLanded ? -1 : 1;
+            }
+
+            if (aLanded && bLanded) {
+                return (a.arrivalTimestamp || Number.POSITIVE_INFINITY) - (b.arrivalTimestamp || Number.POSITIVE_INFINITY);
+            }
+
+            const etaDiff = a.eta - b.eta;
+            if (etaDiff !== 0) return etaDiff;
+
+            return (a.arrivalTimestamp || Number.POSITIVE_INFINITY) - (b.arrivalTimestamp || Number.POSITIVE_INFINITY);
+        });
+
+        setFlights(windowedFlights);
+        setMapFlights(windowedFlights.map(({ id, coords, heading, airlineLogo }) => ({ id, coords, heading, airlineLogo })));
 
         // Build unique airport list from flights
         const airportSet = new Map<string, { code: string; name: string; coords: [number, number] }>();
-        mappedFlights.forEach((f) => {
+        windowedFlights.forEach((f) => {
             if (f.originCoords) {
                 airportSet.set(f.origin, { code: f.origin, name: f.originName, coords: f.originCoords });
             }
@@ -283,12 +449,12 @@ export default function ActiveFlightsPage() {
         setMapAirports(Array.from(airportSet.values()));
 
         setSelectedId((currentId) => {
-            if (currentId && mappedFlights.some((flight) => flight.id === currentId)) {
+            if (currentId && windowedFlights.some((flight) => flight.id === currentId)) {
                 return currentId;
             }
-            return mappedFlights[0]?.id || null;
+            return windowedFlights[0]?.id || null;
         });
-    }, [fetchedFlights, selectedStatusFilters, selectedAirportCenter]);
+    }, [fetchedFlights, selectedStatusFilters, selectedAirportCenter, lastFetchTimestamp, airportLookup]);
 
     useEffect(() => {
         const airportCode = selectedAirportCode.trim().toUpperCase();
@@ -297,31 +463,17 @@ export default function ActiveFlightsPage() {
             return;
         }
 
-        let isCancelled = false;
+        const cachedAirport = airportLookup[airportCode];
+        if (cachedAirport?.coords && cachedAirport.coords.length === 2) {
+            setSelectedAirportCenter([cachedAirport.coords[0], cachedAirport.coords[1]]);
+            return;
+        }
 
-        const fetchAirportLocation = async () => {
-            try {
-                const response = await fetch(`http://localhost:5000/api/airport-location?airport=${airportCode}`);
-                const data = await response.json();
-
-                if (!response.ok || !Array.isArray(data.coords) || data.coords.length !== 2) {
-                    return;
-                }
-
-                if (!isCancelled) {
-                    setSelectedAirportCenter([data.coords[0], data.coords[1]]);
-                }
-            } catch (error) {
-                console.error('Airport location fetch error:', error);
-            }
-        };
-
-        fetchAirportLocation();
-
-        return () => {
-            isCancelled = true;
-        };
-    }, [selectedAirportCode]);
+        const fallbackCoords = AIRPORT_COORDS[airportCode];
+        if (fallbackCoords) {
+            setSelectedAirportCenter([fallbackCoords[0], fallbackCoords[1]]);
+        }
+    }, [selectedAirportCode, airportLookup]);
 
     const handleAircraftChange = (flightId: string, newAircraft: string) => {
         const newMax = getAircraftMaxCapacity(newAircraft);
@@ -402,17 +554,23 @@ export default function ActiveFlightsPage() {
         setMounted(true);
         const timer = setInterval(() => {
             setTime(new Date());
-        setFlights(prev => prev.map(f => {
-            const newEta = f.eta > 0 ? f.eta - 0.1 : 0;
-            const newProgress = f.progress < 100 ? f.progress + 0.05 : 100;
-            let newCoords = f.coords;
-            let newHeading = f.heading;
-            if (f.originCoords && f.destCoords) {
-                newCoords = lerpCoords(f.originCoords, f.destCoords, newProgress / 100);
-                newHeading = calculateBearing(newCoords, f.destCoords);
-            }
-            return { ...f, eta: newEta, progress: newProgress, coords: newCoords, heading: newHeading };
-        }));
+            setFlights(prev => prev.map(f => {
+                const flightCard = f as any;
+                const nowTimestamp = Date.now();
+                const arrivalTimestamp = Number.isFinite(flightCard.arrivalTimestamp) ? flightCard.arrivalTimestamp : getArrivalTimestamp(flightCard);
+                const departureTimestamp = Number.isFinite(flightCard.departureTimestamp) ? flightCard.departureTimestamp : getDepartureTimestamp(flightCard);
+                const newEta = getEtaMinutes(arrivalTimestamp, nowTimestamp);
+                const newProgress = getProgressPercent(departureTimestamp, arrivalTimestamp, nowTimestamp);
+                let newCoords = f.coords;
+                let newHeading = f.heading;
+
+                if (f.originCoords && f.destCoords) {
+                    newCoords = lerpCoords(f.originCoords, f.destCoords, newProgress / 100);
+                    newHeading = calculateBearing(newCoords, f.destCoords);
+                }
+
+                return { ...f, eta: newEta, progress: newProgress, coords: newCoords, heading: newHeading, departureTimestamp, arrivalTimestamp };
+            }));
         }, 1000);
         return () => clearInterval(timer);
     }, []);
@@ -437,9 +595,9 @@ export default function ActiveFlightsPage() {
                         </div>
                         <div className="flex flex-col items-end">
                             <span className="text-sm font-black text-slate-800">
-                                {mounted ? time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '--:--'}
+                                {mounted ? time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', timeZone: 'UTC' }) : '--:--'}
                             </span>
-                            <span className="text-[9px] font-bold text-slate-400 uppercase">EET / GMT+2</span>
+                            <span className="text-[9px] font-bold text-slate-400 uppercase">UTC / GMT+0</span>
                         </div>
                     </div>
 
@@ -479,6 +637,7 @@ export default function ActiveFlightsPage() {
                     <div className="flex-1 overflow-y-auto space-y-4 pr-2 custom-scrollbar pb-32">
                         {flights.map((f, idx) => {
                             const currentMax = getAircraftMaxCapacity(f.aircraft);
+                            const landedCard = isLandedCard(f.eta);
                             return (
                                 <div
                                     key={`flight-${idx}-${f.id}`}
@@ -488,8 +647,12 @@ export default function ActiveFlightsPage() {
                                         setFocusTarget(f.coords);
                                     }}
                                     className={`group rounded-[28px] border transition-all duration-500 cursor-pointer overflow-hidden ${selectedId === f.id
-                                        ? 'bg-white border-blue-600 shadow-2xl shadow-blue-600/10 scale-[1.01]'
-                                        : 'bg-white/60 border-slate-200 hover:border-slate-300 shadow-sm'
+                                        ? landedCard
+                                            ? 'bg-emerald-50 border-emerald-400 shadow-2xl shadow-emerald-500/10 scale-[1.01]'
+                                            : 'bg-white border-blue-600 shadow-2xl shadow-blue-600/10 scale-[1.01]'
+                                        : landedCard
+                                            ? 'bg-emerald-50/80 border-emerald-200 hover:border-emerald-300 shadow-sm'
+                                            : 'bg-white/60 border-slate-200 hover:border-slate-300 shadow-sm'
                                         }`}
                                 >
                                     <div className="p-7">
@@ -525,10 +688,10 @@ export default function ActiveFlightsPage() {
                                         <div className="space-y-3 mb-6">
                                             <div className="flex justify-between text-[10px] font-black uppercase tracking-widest">
                                                 <span className="text-slate-400">Time to Arrival</span>
-                                                <span className="text-blue-600 italic">{Math.floor(f.eta)} MIN</span>
+                                                <span className={`${landedCard ? 'text-emerald-700' : 'text-blue-600'} italic`}>{formatEtaLabel(f.eta)}</span>
                                             </div>
                                             <div className="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden">
-                                                <div className="h-full bg-blue-600 transition-all duration-1000 shadow-[0_0_10px_#2563eb]" style={{ width: `${f.progress}%` }} />
+                                                <div className={`h-full transition-all duration-1000 shadow-[0_0_10px_#2563eb] ${landedCard ? 'bg-emerald-500' : 'bg-blue-600'}`} style={{ width: `${f.progress}%` }} />
                                             </div>
                                         </div>
 
