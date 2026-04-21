@@ -549,169 +549,188 @@ function mapKeysDeep(data, mapping) {
 
 app.post('/api/format-aerotwin-data', (req, res) => {
     try {
-        const incomingData = req.body;
+        const incomingData = Array.isArray(req.body) ? req.body : [];
+        const normalizedIncoming = incomingData.map((checkpoint) => ({
+            ...checkpoint,
+            flowType: checkpoint.flowType === 'arrival' ? 'arrival' : 'departure'
+        }));
         
         console.log("\n=== INCOMING DATA DEBUG ===");
-        console.log("Number of checkpoints:", incomingData.length);
-        incomingData.forEach(cp => {
-            console.log(`  ${cp.idCode}: nextCheckpointIds =`, cp.nextCheckpointIds);
+        console.log("Number of checkpoints:", normalizedIncoming.length);
+        normalizedIncoming.forEach(cp => {
+            console.log(`  [${cp.flowType}] ${cp.idCode}: nextCheckpointIds =`, cp.nextCheckpointIds);
         });
         
         // Step 0: Create mapping from frontend checkpoint IDs to their Checkpoint_ID (idCode)
         const frontendIdToCheckpointId = {};
-        incomingData.forEach(checkpoint => {
+        const frontendIdToFlowType = {};
+        normalizedIncoming.forEach(checkpoint => {
             frontendIdToCheckpointId[checkpoint.id] = checkpoint.idCode;
+            frontendIdToFlowType[checkpoint.id] = checkpoint.flowType;
         });
 
         console.log("\nFrontend ID to Checkpoint ID mapping:", frontendIdToCheckpointId);
         
         // Step 1: Pass the deeply nested payload through the recursive formatter
-        let finalPayload = mapKeysDeep(incomingData, keyMapping);
+        let finalPayload = mapKeysDeep(normalizedIncoming, keyMapping);
 
         // Ensure finalPayload is an array of checkpoints
         if (!Array.isArray(finalPayload)) {
             finalPayload = [];
         }
 
-        // Step 2: Build a mapping of checkpoint ID to next checkpoint IDs (array for forks)
-        const checkpointNextMap = {};
-        incomingData.forEach((checkpoint) => {
+        // Step 2: Build a mapping of checkpoint ID to next checkpoint IDs (array for forks), split by flow
+        const checkpointNextMapByFlow = {
+            departure: {},
+            arrival: {}
+        };
+
+        normalizedIncoming.forEach((checkpoint) => {
+            const flowType = checkpoint.flowType === 'arrival' ? 'arrival' : 'departure';
+
             if (checkpoint.nextCheckpointIds && Array.isArray(checkpoint.nextCheckpointIds) && checkpoint.nextCheckpointIds.length > 0) {
                 // Convert ALL frontend IDs to actual Checkpoint_IDs (handle forks)
                 const nextCheckpointIds = checkpoint.nextCheckpointIds
                     .map(frontendNextId => {
                         const mapped = frontendIdToCheckpointId[frontendNextId];
-                        console.log(`  Mapping frontend ID "${frontendNextId}" → "${mapped}"`);
+                        const targetFlowType = frontendIdToFlowType[frontendNextId] || 'departure';
+
+                        if (targetFlowType !== flowType) {
+                            console.log(`  Ignoring cross-flow connection ${checkpoint.idCode} -> ${mapped} (${flowType} -> ${targetFlowType})`);
+                            return null;
+                        }
+
+                        console.log(`  [${flowType}] Mapping frontend ID "${frontendNextId}" → "${mapped}"`);
                         return mapped;
                     })
                     .filter(id => id); // Remove undefined values
                 
-                console.log(`  ${checkpoint.idCode} will have Next_Anchor:`, nextCheckpointIds);
+                console.log(`  [${flowType}] ${checkpoint.idCode} will have Next_Anchor:`, nextCheckpointIds);
                 
                 if (nextCheckpointIds.length > 0) {
-                    checkpointNextMap[checkpoint.idCode] = nextCheckpointIds;
+                    checkpointNextMapByFlow[flowType][checkpoint.idCode] = nextCheckpointIds;
                 }
             }
         });
 
-        console.log("\nFinal Checkpoint next mapping:", JSON.stringify(checkpointNextMap, null, 2));
+        console.log("\nFinal Checkpoint next mapping by flow:", JSON.stringify(checkpointNextMapByFlow, null, 2));
 
-        // Check if we have explicit connections or need to use sequential fallback
-        const hasExplicitConnections = Object.keys(checkpointNextMap).length > 0;
-        console.log("Has explicit connections:", hasExplicitConnections);
+        const processFlowPayload = (flowPayload, flowType, checkpointNextMap) => {
+            const entryAnchor = flowType === 'arrival' ? 'Boarding_Gate' : 'Terminal_Entrance';
+            const exitAnchor = flowType === 'arrival' ? 'Terminal_Exit' : 'Boarding_Gate';
+            const hasExplicitConnections = Object.keys(checkpointNextMap).length > 0;
+            const previousAnchorMap = {};
 
-        // Step 3: Build reverse mapping for previous anchors (computed from next anchors)
-        const previousAnchorMap = {};
-        
-        if (hasExplicitConnections) {
-            // Use explicit connections from frontend
-            Object.entries(checkpointNextMap).forEach(([currentId, nextIds]) => {
-                // nextIds is now an array, so iterate through all of them
-                nextIds.forEach(nextId => {
-                    previousAnchorMap[nextId] = currentId;
+            console.log(`\n=== Processing ${flowType.toUpperCase()} flow (${flowPayload.length} checkpoints) ===`);
+            console.log(`[${flowType}] Has explicit connections:`, hasExplicitConnections);
+
+            if (hasExplicitConnections) {
+                Object.entries(checkpointNextMap).forEach(([currentId, nextIds]) => {
+                    nextIds.forEach(nextId => {
+                        previousAnchorMap[nextId] = currentId;
+                    });
                 });
-            });
-        } else {
-            // Fallback: Use sequential order
-            console.log("No explicit connections found, using sequential order");
-            for (let i = 1; i < finalPayload.length; i++) {
-                previousAnchorMap[finalPayload[i].Checkpoint_ID] = finalPayload[i - 1].Checkpoint_ID;
-            }
-        }
-
-        console.log("Previous anchor mapping (computed):", previousAnchorMap);
-
-        // Step 4: Identify terminal checkpoints (those that aren't referenced as next by any other checkpoint)
-        const referencedCheckpoints = new Set();
-        Object.values(checkpointNextMap).forEach(nextIds => {
-            nextIds.forEach(id => referencedCheckpoints.add(id));
-        });
-        
-        const terminalCheckpoints = finalPayload
-            .map(cp => cp.Checkpoint_ID)
-            .filter(id => !referencedCheckpoints.has(id) && id !== finalPayload[0]?.Checkpoint_ID);
-
-        console.log("Terminal checkpoints (will point to Boarding_Gate):", terminalCheckpoints);
-
-        // Step 5: Update all checkpoints with proper structure, Prev_Anchor, and Next_Anchor
-        finalPayload = finalPayload.map((checkpoint, index) => {
-            const checkpointId = checkpoint.Checkpoint_ID;
-            
-            console.log(`\nProcessing checkpoint: ${checkpointId} (index: ${index})`);
-            
-            // Set Prev_Anchor: use computed mapping or "Terminal_Entrance" for first checkpoint
-            if (index === 0) {
-                checkpoint.Prev_Anchor = "Terminal_Entrance";
-                console.log(`  → Prev_Anchor: "Terminal_Entrance" (first checkpoint)`);
-            } else if (previousAnchorMap[checkpointId]) {
-                checkpoint.Prev_Anchor = previousAnchorMap[checkpointId];
-                console.log(`  → Prev_Anchor: "${previousAnchorMap[checkpointId]}" (from mapping)`);
             } else {
-                // Fallback for disconnected checkpoints
-                checkpoint.Prev_Anchor = "Terminal_Entrance";
-                console.log(`  → Prev_Anchor: "Terminal_Entrance" (fallback)`);
-            }
-            
-            // Set Next_Anchor from the explicit mapping or fallback to sequential
-            if (hasExplicitConnections && checkpointNextMap[checkpointId]) {
-                // Use explicit mapping from frontend (already an array for forks)
-                checkpoint.Next_Anchor = checkpointNextMap[checkpointId];
-                console.log(`  → Next_Anchor:`, checkpoint.Next_Anchor, "(from explicit mapping)");
-            } else if (hasExplicitConnections && terminalCheckpoints.includes(checkpointId)) {
-                // Terminal checkpoint - points to Boarding_Gate
-                checkpoint.Next_Anchor = ["Boarding_Gate"];
-                console.log(`  → Next_Anchor: ["Boarding_Gate"] (terminal checkpoint)`);
-            } else if (!hasExplicitConnections) {
-                // Fallback to sequential order
-                if (index < finalPayload.length - 1) {
-                    checkpoint.Next_Anchor = [finalPayload[index + 1].Checkpoint_ID];
-                    console.log(`  → Next_Anchor: [${finalPayload[index + 1].Checkpoint_ID}] (sequential)`);
-                } else {
-                    checkpoint.Next_Anchor = ["Boarding_Gate"];
-                    console.log(`  → Next_Anchor: ["Boarding_Gate"] (last in sequence)`);
+                console.log(`[${flowType}] No explicit connections found, using sequential order`);
+                for (let i = 1; i < flowPayload.length; i++) {
+                    previousAnchorMap[flowPayload[i].Checkpoint_ID] = flowPayload[i - 1].Checkpoint_ID;
                 }
-            } else {
-                // No explicit next connection and not a terminal - default
-                checkpoint.Next_Anchor = ["Boarding_Gate"];
-                console.log(`  → Next_Anchor: ["Boarding_Gate"] (default)`);
             }
-            
-            // Fix Stations: remove Checkpoint_ID and rename Station_Name to Station_ID
-            const stations = (checkpoint.Stations || []).map(station => {
-                const { Checkpoint_ID, Station_Name, ...rest } = station;
-                
-                // Get appropriate tasks based on checkpoint type and feature value
-                const tasks = getTasksForCheckpoint(
-                    checkpoint.Checkpoint_Type, 
-                    rest.Feature_Val || 0,
-                    rest.Avg_Service_Time
-                );
-                
-                return {
-                    Station_ID: Station_Name,
-                    ...rest,
-                    Tasks: tasks
-                };
+
+            const referencedCheckpoints = new Set();
+            Object.values(checkpointNextMap).forEach(nextIds => {
+                nextIds.forEach(id => referencedCheckpoints.add(id));
             });
-            
-            // Reorder: Checkpoint_ID, Checkpoint_Type, Prev_Anchor, Next_Anchor, then Stations
-            const ordered = {};
-            ordered.Checkpoint_ID = checkpoint.Checkpoint_ID;
-            ordered.Checkpoint_Type = checkpoint.Checkpoint_Type;
-            if (checkpoint.Prev_Anchor) ordered.Prev_Anchor = checkpoint.Prev_Anchor;
-            if (checkpoint.Next_Anchor) ordered.Next_Anchor = checkpoint.Next_Anchor;
-            ordered.Stations = stations;
-            
-            return ordered;
-        });
+
+            const terminalCheckpoints = flowPayload
+                .map(cp => cp.Checkpoint_ID)
+                .filter(id => !referencedCheckpoints.has(id) && id !== flowPayload[0]?.Checkpoint_ID);
+
+            console.log(`[${flowType}] Previous anchor mapping:`, previousAnchorMap);
+            console.log(`[${flowType}] Terminal checkpoints (will point to ${exitAnchor}):`, terminalCheckpoints);
+
+            return flowPayload.map((checkpoint, index) => {
+                const checkpointId = checkpoint.Checkpoint_ID;
+
+                console.log(`\n[${flowType}] Processing checkpoint: ${checkpointId} (index: ${index})`);
+
+                if (index === 0) {
+                    checkpoint.Prev_Anchor = entryAnchor;
+                    console.log(`  → Prev_Anchor: "${entryAnchor}" (first checkpoint)`);
+                } else if (previousAnchorMap[checkpointId]) {
+                    checkpoint.Prev_Anchor = previousAnchorMap[checkpointId];
+                    console.log(`  → Prev_Anchor: "${previousAnchorMap[checkpointId]}" (from mapping)`);
+                } else {
+                    checkpoint.Prev_Anchor = entryAnchor;
+                    console.log(`  → Prev_Anchor: "${entryAnchor}" (fallback)`);
+                }
+
+                if (hasExplicitConnections && checkpointNextMap[checkpointId]) {
+                    checkpoint.Next_Anchor = checkpointNextMap[checkpointId];
+                    console.log(`  → Next_Anchor:`, checkpoint.Next_Anchor, "(from explicit mapping)");
+                } else if (hasExplicitConnections && terminalCheckpoints.includes(checkpointId)) {
+                    checkpoint.Next_Anchor = [exitAnchor];
+                    console.log(`  → Next_Anchor: ["${exitAnchor}"] (terminal checkpoint)`);
+                } else if (!hasExplicitConnections) {
+                    if (index < flowPayload.length - 1) {
+                        checkpoint.Next_Anchor = [flowPayload[index + 1].Checkpoint_ID];
+                        console.log(`  → Next_Anchor: [${flowPayload[index + 1].Checkpoint_ID}] (sequential)`);
+                    } else {
+                        checkpoint.Next_Anchor = [exitAnchor];
+                        console.log(`  → Next_Anchor: ["${exitAnchor}"] (last in sequence)`);
+                    }
+                } else {
+                    checkpoint.Next_Anchor = [exitAnchor];
+                    console.log(`  → Next_Anchor: ["${exitAnchor}"] (default)`);
+                }
+
+                const stations = (checkpoint.Stations || []).map(station => {
+                    const { Checkpoint_ID, Station_Name, ...rest } = station;
+
+                    const tasks = getTasksForCheckpoint(
+                        checkpoint.Checkpoint_Type,
+                        rest.Feature_Val || 0,
+                        rest.Avg_Service_Time
+                    );
+
+                    return {
+                        Station_ID: Station_Name,
+                        ...rest,
+                        Tasks: tasks
+                    };
+                });
+
+                const ordered = {};
+                ordered.Checkpoint_ID = checkpoint.Checkpoint_ID;
+                ordered.Checkpoint_Type = checkpoint.Checkpoint_Type;
+                ordered.Flow_Type = flowType;
+                if (checkpoint.Prev_Anchor) ordered.Prev_Anchor = checkpoint.Prev_Anchor;
+                if (checkpoint.Next_Anchor) ordered.Next_Anchor = checkpoint.Next_Anchor;
+                ordered.Stations = stations;
+
+                return ordered;
+            });
+        };
+
+        const departurePayload = finalPayload.filter(cp => cp.Flow_Type !== 'arrival');
+        const arrivalPayload = finalPayload.filter(cp => cp.Flow_Type === 'arrival');
+
+        const formattedDeparture = processFlowPayload(departurePayload, 'departure', checkpointNextMapByFlow.departure);
+        const formattedArrival = processFlowPayload(arrivalPayload, 'arrival', checkpointNextMapByFlow.arrival);
+        finalPayload = [...formattedDeparture, ...formattedArrival];
 
         console.log("✅ Successfully formatted deeply nested payload from frontend");
         console.log("📊 Checkpoints processed:", finalPayload.length);
         console.log("📤 Formatted output:", JSON.stringify(finalPayload, null, 2));
 
-        // Wrap in Checkpoints object
+        // Wrap each flow as its own top-level item
         const formattedResponse = {
-            Checkpoints: finalPayload
+            Departure: {
+                Checkpoints: formattedDeparture
+            },
+            Arrival: {
+                Checkpoints: formattedArrival
+            }
         };
 
         res.status(200).json({

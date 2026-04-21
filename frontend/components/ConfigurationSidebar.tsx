@@ -18,6 +18,7 @@ export interface Checkpoint {
     title: string;
     idCode: string;
     type: string;
+    flowType: 'departure' | 'arrival';
     colorType: 'security' | 'checkin';
     icon: React.ElementType;
     stations: { id: string; name: string; settings?: StationSettings }[];
@@ -36,7 +37,8 @@ export default function ConfigurationSidebar({ checkpoints = [], setCheckpoints 
     const [newCheckpoint, setNewCheckpoint] = useState({
         title: '',
         idCode: '',
-        type: 'Security'
+        type: 'Security',
+        flowType: 'departure' as 'departure' | 'arrival'
     });
     const [isFormatting, setIsFormatting] = useState(false);
     const [formatStatus, setFormatStatus] = useState<{ type: 'success' | 'error' | null; message: string }>({ type: null, message: '' });
@@ -129,19 +131,43 @@ export default function ConfigurationSidebar({ checkpoints = [], setCheckpoints 
             const text = await file.text();
             const parsed = JSON.parse(text);
 
-            const checkpointSource = Array.isArray(parsed)
-                ? parsed
-                : Array.isArray(parsed?.Checkpoints)
-                    ? parsed.Checkpoints
-                    : null;
+            const departureSource = Array.isArray(parsed?.Departure?.Checkpoints)
+                ? parsed.Departure.Checkpoints
+                : Array.isArray(parsed?.Airport?.Departure?.Checkpoints)
+                    ? parsed.Airport.Departure.Checkpoints
+                    : [];
 
-            if (!checkpointSource) {
-                throw new Error('Invalid file format. Expected an Aerotwin config JSON with a Checkpoints array.');
+            const arrivalSource = Array.isArray(parsed?.Arrival?.Checkpoints)
+                ? parsed.Arrival.Checkpoints
+                : Array.isArray(parsed?.Airport?.Arrival?.Checkpoints)
+                    ? parsed.Airport.Arrival.Checkpoints
+                    : [];
+
+            const checkpointSourceWithFlow = departureSource.length > 0 || arrivalSource.length > 0
+                ? [
+                    ...departureSource.map((cp: any) => ({ cp, defaultFlowType: 'departure' as const })),
+                    ...arrivalSource.map((cp: any) => ({ cp, defaultFlowType: 'arrival' as const }))
+                ]
+                : Array.isArray(parsed)
+                    ? parsed.map((cp: any) => ({ cp, defaultFlowType: 'departure' as const }))
+                    : Array.isArray(parsed?.Checkpoints)
+                        ? parsed.Checkpoints.map((cp: any) => ({ cp, defaultFlowType: 'departure' as const }))
+                        : [];
+
+            if (checkpointSourceWithFlow.length === 0) {
+                throw new Error('Invalid file format. Expected Departure/Arrival Checkpoints or a Checkpoints array.');
             }
 
-            const importedCheckpoints: Checkpoint[] = checkpointSource.map((cp: any, index: number) => {
+            const importedCheckpoints: Checkpoint[] = checkpointSourceWithFlow.map(({ cp, defaultFlowType }: any, index: number) => {
                 const checkpointType = String(cp.Checkpoint_Type || cp.type || 'Security');
                 const idCode = String(cp.Checkpoint_ID || cp.idCode || `CP-${index + 1}`);
+                const rawFlowType = String(cp.Flow_Type || cp.flowType || '').toLowerCase();
+                const flowType: 'departure' | 'arrival' =
+                    rawFlowType === 'arrival'
+                        ? 'arrival'
+                        : rawFlowType === 'departure'
+                            ? 'departure'
+                            : defaultFlowType;
                 const uiId = `cp-import-${Date.now()}-${index}`;
                 const isTerminalType = checkpointType === 'Arrival Terminal' || checkpointType === 'Departing Terminal';
                 const stations = Array.isArray(cp.Stations)
@@ -166,6 +192,7 @@ export default function ConfigurationSidebar({ checkpoints = [], setCheckpoints 
                     title: String(cp.title || cp.Checkpoint_ID || `${checkpointType} ${index + 1}`),
                     idCode,
                     type: checkpointType,
+                    flowType,
                     colorType: getColorTypeForCheckpoint(checkpointType),
                     icon: getIconForType(checkpointType),
                     stations,
@@ -185,7 +212,7 @@ export default function ConfigurationSidebar({ checkpoints = [], setCheckpoints 
             const idCodeToUiId = new Map(importedCheckpoints.map(cp => [cp.idCode, cp.id]));
 
             const checkpointsWithLinks = importedCheckpoints.map((cp, index) => {
-                const sourceCheckpoint = checkpointSource[index];
+                const sourceCheckpoint = checkpointSourceWithFlow[index]?.cp;
                 const nextAnchors = sourceCheckpoint?.Next_Anchor;
                 const mappedNextCheckpointIds = Array.isArray(nextAnchors)
                     ? nextAnchors
@@ -247,6 +274,7 @@ export default function ConfigurationSidebar({ checkpoints = [], setCheckpoints 
                         title: cp.title,
                         idCode: cp.idCode,
                         type: cp.type,
+                        flowType: cp.flowType,
                         stations: [
                             {
                                 id: 'SEAT-CAPACITY',
@@ -268,6 +296,7 @@ export default function ConfigurationSidebar({ checkpoints = [], setCheckpoints 
                     title: cp.title,
                     idCode: cp.idCode,
                     type: cp.type,
+                    flowType: cp.flowType,
                     stations: cp.stations.map(station => {
                         const stationData: any = {
                             id: station.id,
@@ -365,6 +394,12 @@ export default function ConfigurationSidebar({ checkpoints = [], setCheckpoints 
         ));
     };
 
+    const handleUpdateCheckpointFlow = (id: string, flowType: 'departure' | 'arrival') => {
+        setCheckpoints(checkpoints.map(cp =>
+            cp.id === id ? { ...cp, flowType } : cp
+        ));
+    };
+
     const handleAddCheckpoint = () => {
         if (!newCheckpoint.title || !newCheckpoint.idCode) {
             alert('Please fill in all required fields');
@@ -391,6 +426,7 @@ export default function ConfigurationSidebar({ checkpoints = [], setCheckpoints 
             title: newCheckpoint.title,
             idCode: newCheckpoint.idCode,
             type: newCheckpoint.type,
+            flowType: newCheckpoint.flowType,
             colorType: colorType as any,
             icon: icon,
             stations: [],
@@ -398,8 +434,11 @@ export default function ConfigurationSidebar({ checkpoints = [], setCheckpoints 
         };
 
         setCheckpoints([...checkpoints, checkpoint]);
-        setNewCheckpoint({ title: '', idCode: '', type: 'Security' });
+        setNewCheckpoint({ title: '', idCode: '', type: 'Security', flowType: 'departure' });
     };
+
+    const departureCheckpoints = checkpoints.filter(cp => cp.flowType !== 'arrival');
+    const arrivalCheckpoints = checkpoints.filter(cp => cp.flowType === 'arrival');
 
     return (
         <>
@@ -416,11 +455,24 @@ export default function ConfigurationSidebar({ checkpoints = [], setCheckpoints 
             {!showAddForm && (
                 <div className="flex items-center gap-2 flex-wrap">
                     <button
-                        onClick={() => setShowAddForm(true)}
+                        onClick={() => {
+                            setNewCheckpoint(prev => ({ ...prev, flowType: 'departure' }));
+                            setShowAddForm(true);
+                        }}
                         className="bg-[#1ED5F4] text-slate-900 text-xs font-bold px-3 py-1.5 rounded flex items-center gap-1.5 w-max hover:bg-[#1ac1de] transition-colors shadow-sm flex-shrink-0"
                     >
                         <Plus size={14} strokeWidth={3} />
-                        Add Checkpoint
+                        Add Departure Checkpoint
+                    </button>
+                    <button
+                        onClick={() => {
+                            setNewCheckpoint(prev => ({ ...prev, flowType: 'arrival' }));
+                            setShowAddForm(true);
+                        }}
+                        className="bg-emerald-100 border border-emerald-300 text-emerald-800 text-xs font-bold px-3 py-1.5 rounded flex items-center gap-1.5 w-max hover:bg-emerald-200 transition-colors shadow-sm flex-shrink-0"
+                    >
+                        <Plus size={14} strokeWidth={3} />
+                        Add Arrival Checkpoint
                     </button>
                     <button
                         onClick={handleImportClick}
@@ -475,8 +527,8 @@ export default function ConfigurationSidebar({ checkpoints = [], setCheckpoints 
                             onChange={(e) => setNewCheckpoint({ ...newCheckpoint, type: e.target.value })}
                             className="bg-slate-100 border border-slate-200 rounded px-2 h-7 text-xs text-slate-700 outline-none focus:border-[#1ED5F4]"
                         >
-                            <option value="Arrival Terminal">Arrival Terminal</option>
-                            <option value="Departing Terminal">Departing Terminal</option>
+                            {newCheckpoint.flowType === 'arrival' && <option value="Arrival Terminal">Arrival Terminal</option>}
+                            {newCheckpoint.flowType === 'departure' && <option value="Departing Terminal">Departing Terminal</option>}
                             <option value="Security">Security</option>
                             <option value="Check-in /w Baggage Tagging">Check-in /w Baggage Tagging</option>
                             <option value="Digital Check-in">Digital Check-in</option>
@@ -484,6 +536,26 @@ export default function ConfigurationSidebar({ checkpoints = [], setCheckpoints 
                             <option value="Baggage Retrieval">Baggage Retrieval</option>
                             <option value="Passport Check">Passport Check</option>
                             <option value="Boarding">Boarding</option>
+                        </select>
+                    </div>
+                    <div className="flex flex-col gap-1.5">
+                        <label className="text-[10px] font-bold text-slate-600 uppercase tracking-wider">Flow</label>
+                        <select
+                            value={newCheckpoint.flowType}
+                            onChange={(e) => {
+                                const flowType = e.target.value as 'departure' | 'arrival';
+                                setNewCheckpoint(prev => ({
+                                    ...prev,
+                                    flowType,
+                                    type: flowType === 'arrival'
+                                        ? (prev.type === 'Departing Terminal' ? 'Arrival Terminal' : prev.type)
+                                        : (prev.type === 'Arrival Terminal' ? 'Departing Terminal' : prev.type)
+                                }));
+                            }}
+                            className="bg-slate-100 border border-slate-200 rounded px-2 h-7 text-xs text-slate-700 outline-none focus:border-[#1ED5F4]"
+                        >
+                            <option value="departure">Departure Flow</option>
+                            <option value="arrival">Arrival Flow</option>
                         </select>
                     </div>
                     <button
@@ -501,25 +573,75 @@ export default function ConfigurationSidebar({ checkpoints = [], setCheckpoints 
                         No checkpoints configured. Click &quot;Add Checkpoint&quot; to create one.
                     </div>
                 ) : (
-                    checkpoints.map((checkpoint) => (
-                        <CheckpointCard
-                            key={checkpoint.id}
-                            id={checkpoint.id}
-                            title={checkpoint.title}
-                            idCode={checkpoint.idCode}
-                            type={checkpoint.type}
-                            colorType={checkpoint.colorType}
-                            icon={checkpoint.icon}
-                            stations={checkpoint.stations}
-                            seatCapacity={checkpoint.seatCapacity}
-                            nextCheckpointIds={checkpoint.nextCheckpointIds}
-                            checkpoints={checkpoints}
-                            onDelete={handleDeleteCheckpoint}
-                            onUpdateStations={handleUpdateCheckpoint}
-                            onUpdateCheckpointMeta={handleUpdateCheckpointMeta}
-                            onUpdateNextCheckpoints={handleUpdateNextCheckpoints}
-                        />
-                    ))
+                    <>
+                        <div className="rounded-lg border border-blue-200 bg-blue-50/50 p-2">
+                            <div className="px-1 pb-2">
+                                <div className="text-[10px] font-bold uppercase tracking-wider text-blue-700">Departure Flow</div>
+                                <div className="text-[11px] text-blue-600">Outside airport to boarding gate</div>
+                            </div>
+                            <div className="flex flex-col gap-2">
+                                {departureCheckpoints.length === 0 ? (
+                                    <div className="rounded border border-dashed border-blue-300 bg-white px-3 py-2 text-xs text-blue-500">
+                                        No departure checkpoints yet.
+                                    </div>
+                                ) : departureCheckpoints.map((checkpoint) => (
+                                    <CheckpointCard
+                                        key={checkpoint.id}
+                                        id={checkpoint.id}
+                                        title={checkpoint.title}
+                                        idCode={checkpoint.idCode}
+                                        type={checkpoint.type}
+                                        colorType={checkpoint.colorType}
+                                        icon={checkpoint.icon}
+                                        flowType={checkpoint.flowType}
+                                        stations={checkpoint.stations}
+                                        seatCapacity={checkpoint.seatCapacity}
+                                        nextCheckpointIds={checkpoint.nextCheckpointIds}
+                                        checkpoints={departureCheckpoints}
+                                        onDelete={handleDeleteCheckpoint}
+                                        onUpdateStations={handleUpdateCheckpoint}
+                                        onUpdateCheckpointMeta={handleUpdateCheckpointMeta}
+                                        onUpdateFlowType={handleUpdateCheckpointFlow}
+                                        onUpdateNextCheckpoints={handleUpdateNextCheckpoints}
+                                    />
+                                ))}
+                            </div>
+                        </div>
+
+                        <div className="rounded-lg border border-emerald-200 bg-emerald-50/60 p-2">
+                            <div className="px-1 pb-2">
+                                <div className="text-[10px] font-bold uppercase tracking-wider text-emerald-700">Arrival Flow</div>
+                                <div className="text-[11px] text-emerald-600">Boarding gate to terminal exit</div>
+                            </div>
+                            <div className="flex flex-col gap-2">
+                                {arrivalCheckpoints.length === 0 ? (
+                                    <div className="rounded border border-dashed border-emerald-300 bg-white px-3 py-2 text-xs text-emerald-500">
+                                        No arrival checkpoints yet.
+                                    </div>
+                                ) : arrivalCheckpoints.map((checkpoint) => (
+                                    <CheckpointCard
+                                        key={checkpoint.id}
+                                        id={checkpoint.id}
+                                        title={checkpoint.title}
+                                        idCode={checkpoint.idCode}
+                                        type={checkpoint.type}
+                                        colorType={checkpoint.colorType}
+                                        icon={checkpoint.icon}
+                                        flowType={checkpoint.flowType}
+                                        stations={checkpoint.stations}
+                                        seatCapacity={checkpoint.seatCapacity}
+                                        nextCheckpointIds={checkpoint.nextCheckpointIds}
+                                        checkpoints={arrivalCheckpoints}
+                                        onDelete={handleDeleteCheckpoint}
+                                        onUpdateStations={handleUpdateCheckpoint}
+                                        onUpdateCheckpointMeta={handleUpdateCheckpointMeta}
+                                        onUpdateFlowType={handleUpdateCheckpointFlow}
+                                        onUpdateNextCheckpoints={handleUpdateNextCheckpoints}
+                                    />
+                                ))}
+                            </div>
+                        </div>
+                    </>
                 )}
             </div>
 

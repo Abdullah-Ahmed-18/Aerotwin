@@ -9,6 +9,7 @@ interface CheckpointProps {
     title: string;
     idCode: string;
     type: string;
+    flowType: 'departure' | 'arrival';
     colorType: string; // Updated to accept our dynamic string colors
     icon: React.ElementType;
     stations: { id: string; name: string; settings?: StationSettings }[];
@@ -18,6 +19,7 @@ interface CheckpointProps {
     onDelete: (id: string) => void;
     onUpdateStations: (id: string, stations: { id: string; name: string; settings?: StationSettings }[]) => void;
     onUpdateCheckpointMeta: (id: string, updates: { type?: string; seatCapacity?: string }) => void;
+    onUpdateFlowType: (id: string, flowType: 'departure' | 'arrival') => void;
     onUpdateNextCheckpoints: (id: string, nextCheckpointIds: string[] | undefined) => void;
 }
 
@@ -30,8 +32,9 @@ interface StationSettings {
     hasXRayScanner: boolean;
 }
 
-export default function CheckpointCard({ id, title, idCode, type, colorType, icon: Icon, stations, seatCapacity, nextCheckpointIds, checkpoints, onDelete, onUpdateStations, onUpdateCheckpointMeta, onUpdateNextCheckpoints }: CheckpointProps) {
+export default function CheckpointCard({ id, title, idCode, type, flowType, colorType, icon: Icon, stations, seatCapacity, nextCheckpointIds, checkpoints, onDelete, onUpdateStations, onUpdateCheckpointMeta, onUpdateFlowType, onUpdateNextCheckpoints }: CheckpointProps) {
     const [currentType, setCurrentType] = useState(type);
+    const [currentFlowType, setCurrentFlowType] = useState<'departure' | 'arrival'>(flowType);
     const [localSeatCapacity, setLocalSeatCapacity] = useState(seatCapacity || '');
     const [showAddStation, setShowAddStation] = useState(false);
     const [applyToAll, setApplyToAll] = useState(false);
@@ -92,6 +95,10 @@ export default function CheckpointCard({ id, title, idCode, type, colorType, ico
     useEffect(() => {
         setCurrentType(type);
     }, [type]);
+
+    useEffect(() => {
+        setCurrentFlowType(flowType);
+    }, [flowType]);
 
     useEffect(() => {
         setLocalSeatCapacity(seatCapacity || '');
@@ -172,6 +179,19 @@ export default function CheckpointCard({ id, title, idCode, type, colorType, ico
         onUpdateCheckpointMeta(id, { type: newType });
     };
 
+    const handleFlowTypeChange = (newFlowType: 'departure' | 'arrival') => {
+        setCurrentFlowType(newFlowType);
+        onUpdateFlowType(id, newFlowType);
+
+        if (newFlowType === 'departure' && currentType === 'Arrival Terminal') {
+            handleTypeChange('Departing Terminal');
+        }
+
+        if (newFlowType === 'arrival' && currentType === 'Departing Terminal') {
+            handleTypeChange('Arrival Terminal');
+        }
+    };
+
     const handleSeatCapacityChange = (value: string) => {
         const sanitized = value.replace(/[^0-9]/g, '');
         setLocalSeatCapacity(sanitized);
@@ -233,7 +253,7 @@ export default function CheckpointCard({ id, title, idCode, type, colorType, ico
             </div>
 
             <div className="p-3 flex flex-col gap-2.5">
-                <div className="grid grid-cols-2 gap-2.5">
+                <div className="grid grid-cols-3 gap-2.5">
                     <div className="flex flex-col gap-1.5">
                         <label className="text-[10px] font-bold text-slate-600 uppercase tracking-wider">ID Code</label>
                         <input
@@ -249,8 +269,8 @@ export default function CheckpointCard({ id, title, idCode, type, colorType, ico
                                 onChange={(e) => handleTypeChange(e.target.value)}
                                 className="w-full bg-slate-100 border border-transparent rounded pl-2 pr-6 h-7 text-xs text-slate-700 outline-none appearance-none"
                             >
-                                <option value="Arrival Terminal">Arrival Terminal</option>
-                                <option value="Departing Terminal">Departing Terminal</option>
+                                {currentFlowType === 'arrival' && <option value="Arrival Terminal">Arrival Terminal</option>}
+                                {currentFlowType === 'departure' && <option value="Departing Terminal">Departing Terminal</option>}
                                 <option value="Security">Security</option>
                                 <option value="Check-in /w Baggage Tagging">Check-in /w Baggage Tagging</option>
                                 <option value="Digital Check-in">Digital Check-in</option>
@@ -258,6 +278,20 @@ export default function CheckpointCard({ id, title, idCode, type, colorType, ico
                                 <option value="Baggage Retrieval">Baggage Retrieval</option>
                                 <option value="Passport Check">Passport Check</option>
                                 <option value="Boarding">Boarding</option>
+                            </select>
+                            <ChevronDown size={10} className="absolute right-1.5 top-1/2 -translate-y-1/2 text-slate-600 pointer-events-none" />
+                        </div>
+                    </div>
+                    <div className="flex flex-col gap-1.5">
+                        <label className="text-[10px] font-bold text-slate-600 uppercase tracking-wider">Flow</label>
+                        <div className="relative">
+                            <select
+                                value={currentFlowType}
+                                onChange={(e) => handleFlowTypeChange(e.target.value as 'departure' | 'arrival')}
+                                className="w-full bg-slate-100 border border-transparent rounded pl-2 pr-6 h-7 text-xs text-slate-700 outline-none appearance-none"
+                            >
+                                <option value="departure">Departure</option>
+                                <option value="arrival">Arrival</option>
                             </select>
                             <ChevronDown size={10} className="absolute right-1.5 top-1/2 -translate-y-1/2 text-slate-600 pointer-events-none" />
                         </div>

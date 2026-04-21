@@ -3,6 +3,7 @@
   "title": "Checkpoint_Title",
   "idCode": "Checkpoint_ID",
   "type": "Checkpoint_Type",
+  "flowType": "Flow_Type",
   "stations": "Stations",
   "nextCheckpointIds": "Next_Anchor",
   "name": "Station_Name",
