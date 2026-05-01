@@ -1014,7 +1014,7 @@ app.get('/api/fetch-active-flights', async (req, res) => {
         res.status(200).json(finalPayload);
 
     } catch (error) {
-        console.error("Fetch Error:", error.message);
+        console.error("Fetch Error:", error);
         res.status(500).json({ error: "Failed to fetch active flights." });
     }
 });

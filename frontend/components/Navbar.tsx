@@ -2,12 +2,13 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Plane, Settings, Bell } from 'lucide-react';
+import { Plane, Settings, Bell, LayoutDashboard } from 'lucide-react';
 
 export default function Navbar() {
     const pathname = usePathname();
 
     const navItems = [
+        { name: 'Dashboard', icon: LayoutDashboard, path: '/dashboard' },
         { name: 'Config', icon: Settings, path: '/' },
         { name: 'Flights', icon: Plane, path: '/active-flights' },
     ];
