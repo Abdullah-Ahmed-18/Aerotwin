@@ -1,10 +1,13 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { Monitor, Maximize2, Activity, Wifi, WifiOff, Plane, RefreshCw, ExternalLink, ChevronLeft, ChevronRight, TrendingUp, TrendingDown, Clock, Target, Zap, Gauge } from 'lucide-react';
+import { Monitor, Maximize2, Activity, Wifi, WifiOff, Plane, RefreshCw, ExternalLink, ChevronLeft, ChevronRight, TrendingUp, TrendingDown, Clock, Target, Zap, Gauge, Users, BarChart2 } from 'lucide-react';
 import Link from 'next/link';
 import FlightPieChart from '@/components/FlightPieChart';
 import FlightGanttChart from '@/components/FlightGanttChart';
+import PassengerLoadHeatmap from '@/components/PassengerLoadHeatmap';
+import QueueWaitEstimator from '@/components/QueueWaitEstimator';
+import AirlineAnalytics from '@/components/AirlineAnalytics';
 
 interface FlightMeta {
   count: number;
@@ -71,6 +74,27 @@ const SIDEBAR_CARDS: CardItem[] = [
     component: 'quickActions',
     accentColor: 'rose',
   },
+  {
+    id: 'load-heatmap',
+    title: 'Load Heatmap',
+    icon: <Users size={14} className="text-violet-400" />,
+    component: 'loadHeatmap',
+    accentColor: 'violet',
+  },
+  {
+    id: 'queue-estimator',
+    title: 'Queue Wait',
+    icon: <Clock size={14} className="text-teal-400" />,
+    component: 'queueEstimator',
+    accentColor: 'teal',
+  },
+  {
+    id: 'airline-analytics',
+    title: 'Airline Analytics',
+    icon: <BarChart2 size={14} className="text-indigo-400" />,
+    component: 'airlineAnalytics',
+    accentColor: 'indigo',
+  },
 ];
 
 export default function DashboardPage() {
@@ -78,6 +102,7 @@ export default function DashboardPage() {
   const [isUnityConnected, setIsUnityConnected] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [flightMeta, setFlightMeta] = useState<FlightMeta | null>(null);
+  const [flightList, setFlightList] = useState<any[]>([]);
   const [isLoadingFlights, setIsLoadingFlights] = useState(true);
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
@@ -108,6 +133,9 @@ export default function DashboardPage() {
       if (data.meta) {
         setFlightMeta(data.meta);
         setLastUpdated(new Date());
+      }
+      if (Array.isArray(data.flights)) {
+        setFlightList(data.flights);
       }
     } catch (error) {
       console.error('Failed to fetch flight stats:', error);
@@ -379,6 +407,12 @@ export default function DashboardPage() {
             )}
           </div>
         );
+      case 'loadHeatmap':
+        return <PassengerLoadHeatmap flights={flightList} />;
+      case 'queueEstimator':
+        return <QueueWaitEstimator flights={flightList} />;
+      case 'airlineAnalytics':
+        return <AirlineAnalytics flights={flightList} />;
       default:
         return <p className="text-slate-500 text-sm">Unknown card</p>;
     }
@@ -478,6 +512,9 @@ export default function DashboardPage() {
                   cyan: 'bg-cyan-600 hover:bg-cyan-500 text-white',
                   amber: 'bg-amber-600 hover:bg-amber-500 text-white',
                   rose: 'bg-rose-600 hover:bg-rose-500 text-white',
+                  violet: 'bg-violet-600 hover:bg-violet-500 text-white',
+                  teal: 'bg-teal-600 hover:bg-teal-500 text-white',
+                  indigo: 'bg-indigo-600 hover:bg-indigo-500 text-white',
                 };
                 return (
                   <button

@@ -850,10 +850,17 @@ app.get('/api/fetch-active-flights', async (req, res) => {
             return params;
         };
 
+        // Hoist these so they're accessible after the try-catch
+        let arrivalsRaw = [];
+        let departuresRaw = [];
+        let openskyStates = [];
+        let openskyArrivals = [];
+        let openskyRecentFlights = [];
+
         try {
             // Fetch AviationStack + ALL OpenSky sources in parallel
             const airportCoords = AIRPORT_COORDINATES[airportIata];
-            const [aviationStackArrivalsRes, aviationStackDeparturesRes, openskyStates, openskyArrivals, openskyRecentFlights] = await Promise.all([
+            const [aviationStackArrivalsRes, aviationStackDeparturesRes, liveStates, historicArrivals, recentFlights] = await Promise.all([
                 axios.get(API_URL, { params: buildFlightQueryParams('arr') }),
                 axios.get(API_URL, { params: buildFlightQueryParams('dep') }),
                 airportCoords
@@ -863,8 +870,11 @@ app.get('/api/fetch-active-flights', async (req, res) => {
                 fetchOpenSkyRecentFlights().catch(() => []),
             ]);
 
-            const arrivalsRaw = aviationStackArrivalsRes.data?.data || [];
-            const departuresRaw = aviationStackDeparturesRes.data?.data || [];
+            arrivalsRaw        = aviationStackArrivalsRes.data?.data || [];
+            departuresRaw      = aviationStackDeparturesRes.data?.data || [];
+            openskyStates      = liveStates;
+            openskyArrivals    = historicArrivals;
+            openskyRecentFlights = recentFlights;
 
             // Check if we got any real data - if not, use mock data
             if (arrivalsRaw.length === 0 && departuresRaw.length === 0) {
