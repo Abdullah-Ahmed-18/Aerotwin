@@ -498,28 +498,51 @@ export default function DashboardPage() {
         {/* Right Sidebar - Card Slider */}
         <div className="w-80 flex flex-col">
           {/* Navigation Tabs */}
-          <div className="relative mb-4">
-            {/* Nav Scrollable Container */}
-            <div
-              className="flex gap-2 overflow-x-auto scrollbar-hide pb-2 scroll-smooth"
-              style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+          <div className="relative mb-3">
+            {/* Left scroll arrow */}
+            <button
+              onClick={() => {
+                const el = document.getElementById('dash-tab-scroll');
+                if (el) el.scrollBy({ left: -120, behavior: 'smooth' });
+              }}
+              className="absolute left-0 top-0 bottom-0 z-10 flex items-center justify-center w-7 bg-gradient-to-r from-slate-950 via-slate-950/90 to-transparent hover:from-slate-800 transition-colors"
+              aria-label="Scroll tabs left"
             >
+              <ChevronLeft size={14} className="text-slate-400" />
+            </button>
+
+            {/* Scrollbar-on-top: flip outer div so scrollbar appears above tabs */}
+            <div
+              id="dash-tab-scroll"
+              className="overflow-x-auto scroll-smooth mx-7"
+              style={{
+                transform: 'rotateX(180deg)',
+                scrollbarWidth: 'thin',
+                scrollbarColor: '#475569 transparent',
+              }}
+            >
+              {/* Counter-flip inner row so tabs read normally */}
+              <div className="flex gap-2 pt-2" style={{ transform: 'rotateX(180deg)' }}>
               {SIDEBAR_CARDS.map((card, index) => {
                 const accentColors: Record<string, string> = {
-                  blue: 'bg-blue-600 hover:bg-blue-500 text-white',
-                  emerald: 'bg-emerald-600 hover:bg-emerald-500 text-white',
+                  blue:   'bg-blue-600 hover:bg-blue-500 text-white',
+                  emerald:'bg-emerald-600 hover:bg-emerald-500 text-white',
                   purple: 'bg-purple-600 hover:bg-purple-500 text-white',
-                  cyan: 'bg-cyan-600 hover:bg-cyan-500 text-white',
-                  amber: 'bg-amber-600 hover:bg-amber-500 text-white',
-                  rose: 'bg-rose-600 hover:bg-rose-500 text-white',
+                  cyan:   'bg-cyan-600 hover:bg-cyan-500 text-white',
+                  amber:  'bg-amber-600 hover:bg-amber-500 text-white',
+                  rose:   'bg-rose-600 hover:bg-rose-500 text-white',
                   violet: 'bg-violet-600 hover:bg-violet-500 text-white',
-                  teal: 'bg-teal-600 hover:bg-teal-500 text-white',
+                  teal:   'bg-teal-600 hover:bg-teal-500 text-white',
                   indigo: 'bg-indigo-600 hover:bg-indigo-500 text-white',
                 };
                 return (
                   <button
                     key={card.id}
-                    onClick={() => setCurrentCardIndex(index)}
+                    id={`dash-tab-${index}`}
+                    onClick={() => {
+                      setCurrentCardIndex(index);
+                      document.getElementById(`dash-tab-${index}`)?.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+                    }}
                     className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-all shrink-0 ${
                       currentCardIndex === index
                         ? accentColors[card.accentColor] || 'bg-blue-600 text-white'
@@ -531,10 +554,20 @@ export default function DashboardPage() {
                   </button>
                 );
               })}
+              </div>
             </div>
 
-            {/* Fade edges for scroll indication */}
-            <div className="absolute right-0 top-0 bottom-2 w-8 bg-gradient-to-l from-slate-950 to-transparent pointer-events-none" />
+            {/* Right scroll arrow */}
+            <button
+              onClick={() => {
+                const el = document.getElementById('dash-tab-scroll');
+                if (el) el.scrollBy({ left: 120, behavior: 'smooth' });
+              }}
+              className="absolute right-0 top-0 bottom-0 z-10 flex items-center justify-center w-7 bg-gradient-to-l from-slate-950 via-slate-950/90 to-transparent hover:from-slate-800 transition-colors"
+              aria-label="Scroll tabs right"
+            >
+              <ChevronRight size={14} className="text-slate-400" />
+            </button>
           </div>
 
           {/* Dots Indicator */}
