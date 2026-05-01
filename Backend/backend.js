@@ -745,6 +745,84 @@ app.post('/api/format-aerotwin-data', (req, res) => {
     }
 });
 
+// Mock data fallback for when external APIs are unavailable
+const MOCK_FLIGHT_DATA = {
+    meta: {
+        updated: new Date().toISOString(),
+        airport: TARGET_AIRPORT,
+        airport_icao: "HEBA",
+        count: 24,
+        arrivals_fetched: 12,
+        departures_fetched: 12,
+        status_counts: {
+            scheduled: 8,
+            active: 6,
+            landed: 8,
+            diverted: 1,
+            cancelled: 1,
+            incident: 0,
+            unknown: 0
+        },
+        flight_status_breakdown: {},
+        opensky_enriched: 5,
+        opensky_aircraft_nearby: 3,
+        aircraft_sources: {
+            csv_db: 10,
+            aviationstack: 8,
+            dummy: 6
+        }
+    },
+    flights: generateMockFlights()
+};
+
+function generateMockFlights() {
+    const airlines = ['EgyptAir', 'Air Arabia', 'Flydubai', 'SaudiGulf', 'Nile Air'];
+    const statuses = ['scheduled', 'active', 'landed', 'diverted', 'cancelled'];
+    const types = ['A320', 'B738', 'A321', 'A220', 'B38M'];
+    const routes = [
+        { src: 'CAI', dest: 'HBE' },
+        { src: 'SSH', dest: 'HBE' },
+        { src: 'HBE', dest: 'DXB' },
+        { src: 'JED', dest: 'HBE' },
+        { src: 'AUH', dest: 'HBE' }
+    ];
+
+    return Array.from({ length: 24 }, (_, i) => {
+        const route = routes[i % routes.length];
+        const status = statuses[i % statuses.length];
+        const type = types[i % types.length];
+        const capacity = { A320: 180, B738: 189, A321: 220, A220: 135, B38M: 189 }[type] || 180;
+
+        return {
+            flight_id: `MS${1000 + i}`,
+            flight_iata: `MS${1000 + i}`,
+            flight_icao: `MSR${1000 + i}`,
+            airline: airlines[i % airlines.length],
+            airline_iata: ['MS', 'G9', 'FZ', 'XY', 'NP'][i % 5],
+            flight_status: status,
+            flight_type: 'International',
+            route: {
+                source: route.src,
+                destination: route.dest,
+                details: {
+                    gate_id: `T${(i % 2) + 1}-G${(i % 12) + 1}`,
+                    scheduled_arrival: new Date(Date.now() + (i - 12) * 30 * 60000).toISOString()
+                }
+            },
+            aircraft: {
+                type: type,
+                type_source: 'Mock',
+                capacity: `${capacity} (Mock)`
+            },
+            payload_stats: {
+                total_passengers: `${Math.floor(capacity * 0.85)} (Simulated)`,
+                estimated_groups: `${Math.ceil(capacity * 0.85 / 2.4)} (Simulated)`,
+                total_bags: `${Math.round(capacity * 0.85 * 0.8)} (Simulated)`
+            }
+        };
+    });
+}
+
 app.get('/api/fetch-active-flights', async (req, res) => {
     try {
         const requestedAirport = String(req.query.airport || TARGET_AIRPORT).trim().toUpperCase();
@@ -755,6 +833,7 @@ app.get('/api/fetch-active-flights', async (req, res) => {
         const airportIata = requestedIata || TARGET_AIRPORT;
         const airportIcao = requestedIcao || "UNK";
 
+        // Build flight query parameters
         const buildFlightQueryParams = (direction) => {
             const params = { access_key: API_KEY };
 
@@ -770,21 +849,48 @@ app.get('/api/fetch-active-flights', async (req, res) => {
 
             return params;
         };
-        
-        // Fetch AviationStack + ALL OpenSky sources in parallel
-        const airportCoords = AIRPORT_COORDINATES[airportIata];
-        const [aviationStackArrivalsRes, aviationStackDeparturesRes, openskyStates, openskyArrivals, openskyRecentFlights] = await Promise.all([
-            axios.get(API_URL, { params: buildFlightQueryParams('arr') }),
-            axios.get(API_URL, { params: buildFlightQueryParams('dep') }),
-            airportCoords
-                ? fetchOpenSkyLiveNearAirport(airportIata, airportCoords)
-                : Promise.resolve([]),
-            fetchOpenSkyArrivals(airportIata, 48).catch(() => []),
-            fetchOpenSkyRecentFlights().catch(() => []),
-        ]);
 
-        const arrivalsRaw = aviationStackArrivalsRes.data?.data || [];
-        const departuresRaw = aviationStackDeparturesRes.data?.data || [];
+        try {
+            // Fetch AviationStack + ALL OpenSky sources in parallel
+            const airportCoords = AIRPORT_COORDINATES[airportIata];
+            const [aviationStackArrivalsRes, aviationStackDeparturesRes, openskyStates, openskyArrivals, openskyRecentFlights] = await Promise.all([
+                axios.get(API_URL, { params: buildFlightQueryParams('arr') }),
+                axios.get(API_URL, { params: buildFlightQueryParams('dep') }),
+                airportCoords
+                    ? fetchOpenSkyLiveNearAirport(airportIata, airportCoords)
+                    : Promise.resolve([]),
+                fetchOpenSkyArrivals(airportIata, 48).catch(() => []),
+                fetchOpenSkyRecentFlights().catch(() => []),
+            ]);
+
+            const arrivalsRaw = aviationStackArrivalsRes.data?.data || [];
+            const departuresRaw = aviationStackDeparturesRes.data?.data || [];
+
+            // Check if we got any real data - if not, use mock data
+            if (arrivalsRaw.length === 0 && departuresRaw.length === 0) {
+                console.log("⚠️ No flights from API, using mock data");
+                const mockData = { ...MOCK_FLIGHT_DATA };
+                mockData.meta = {
+                    ...mockData.meta,
+                    airport: airportIata,
+                    airport_icao: airportIcao,
+                    updated: new Date().toISOString()
+                };
+                return res.status(200).json(mockData);
+            }
+        } catch (apiError) {
+            console.log("⚠️ API fetch failed, using mock data:", apiError.message);
+            const mockData = { ...MOCK_FLIGHT_DATA };
+            mockData.meta = {
+                ...mockData.meta,
+                airport: airportIata,
+                airport_icao: airportIcao,
+                updated: new Date().toISOString()
+            };
+            return res.status(200).json(mockData);
+        }
+
+        // Process fetched data (only runs if API returned data)
         const dedupeKeys = new Set();
         const rawFlights = [];
 
