@@ -19,25 +19,81 @@ const AIRPORTS_URL = "https://api.aviationstack.com/v1/airports";
 const DOMESTIC_EGYPT_AIRPORTS = ["CAI", "SSH", "HRG", "LXR", "ASW", "HBE", "ALY", "TCP", "RMF"];
 const AIRCRAFT_CAPACITIES = { "B738": 189, "A320": 180, "A220": 135, "B38M": 189, "A321": 220, "A333": 300, "A21N": 240, "AT72": 72 };
 const AIRPORT_COORDINATES = {
+    // Egypt
     HBE: { code: "HBE", name: "Borg El Arab Airport", coords: [30.9177, 29.6964] },
     CAI: { code: "CAI", name: "Cairo International Airport", coords: [30.1219, 31.4056] },
+    SSH: { code: "SSH", name: "Sharm El Sheikh International Airport", coords: [27.9773, 34.3950] },
+    HRG: { code: "HRG", name: "Hurghada International Airport", coords: [27.1783, 33.7994] },
+    LXR: { code: "LXR", name: "Luxor International Airport", coords: [25.6710, 32.7066] },
+    ASW: { code: "ASW", name: "Aswan International Airport", coords: [23.9644, 32.8200] },
+    // Gulf
     DXB: { code: "DXB", name: "Dubai International Airport", coords: [25.2532, 55.3657] },
-    JFK: { code: "JFK", name: "John F. Kennedy International Airport", coords: [40.6413, -73.7781] },
-    LHR: { code: "LHR", name: "London Heathrow Airport", coords: [51.47, -0.4543] },
-    IST: { code: "IST", name: "Istanbul Airport", coords: [41.2753, 28.7519] },
     AUH: { code: "AUH", name: "Abu Dhabi International Airport", coords: [24.433, 54.6511] },
-    MED: { code: "MED", name: "Prince Mohammad Bin Abdulaziz Airport", coords: [24.5534, 39.7051] }
+    DOH: { code: "DOH", name: "Hamad International Airport", coords: [25.2731, 51.6086] },
+    JED: { code: "JED", name: "King Abdulaziz International Airport", coords: [21.6796, 39.1565] },
+    MED: { code: "MED", name: "Prince Mohammad Bin Abdulaziz Airport", coords: [24.5534, 39.7051] },
+    RUH: { code: "RUH", name: "King Khalid International Airport", coords: [24.9576, 46.6988] },
+    KWI: { code: "KWI", name: "Kuwait International Airport", coords: [29.2266, 47.9689] },
+    // Middle East
+    AMM: { code: "AMM", name: "Queen Alia International Airport", coords: [31.7226, 35.9932] },
+    BEY: { code: "BEY", name: "Beirut–Rafic Hariri International Airport", coords: [33.8209, 35.4884] },
+    IST: { code: "IST", name: "Istanbul Airport", coords: [41.2753, 28.7519] },
+    // Europe
+    LHR: { code: "LHR", name: "London Heathrow Airport", coords: [51.47, -0.4543] },
+    CDG: { code: "CDG", name: "Charles de Gaulle Airport", coords: [49.0097, 2.5479] },
+    FRA: { code: "FRA", name: "Frankfurt Airport", coords: [50.0379, 8.5622] },
+    ATH: { code: "ATH", name: "Athens International Airport", coords: [37.9364, 23.9445] },
+    // Americas
+    JFK: { code: "JFK", name: "John F. Kennedy International Airport", coords: [40.6413, -73.7781] },
+    // North Africa
+    TUN: { code: "TUN", name: "Tunis–Carthage International Airport", coords: [36.8510, 10.2272] },
 };
+// --- Persistent Airport Cache (disk-backed) ---
+const AIRPORT_CACHE_PATH = path.join(__dirname, 'airport_cache.json');
 const airportLookupCache = new Map(Object.entries(AIRPORT_COORDINATES).map(([code, data]) => [code, data]));
+
+function loadAirportCacheFromDisk() {
+    try {
+        if (fs.existsSync(AIRPORT_CACHE_PATH)) {
+            const raw = JSON.parse(fs.readFileSync(AIRPORT_CACHE_PATH, 'utf8'));
+            let loaded = 0;
+            for (const [code, data] of Object.entries(raw)) {
+                if (!airportLookupCache.has(code)) {
+                    airportLookupCache.set(code, data);
+                    loaded++;
+                }
+            }
+            console.log(`✅ Airport cache loaded from disk: ${loaded} new entries (${airportLookupCache.size} total)`);
+        }
+    } catch (err) {
+        console.warn('⚠️  Could not load airport cache from disk:', err.message);
+    }
+}
+
+function saveAirportCacheToDisk() {
+    try {
+        const cacheObj = Object.fromEntries(airportLookupCache);
+        fs.writeFileSync(AIRPORT_CACHE_PATH, JSON.stringify(cacheObj, null, 2));
+    } catch (err) {
+        console.warn('⚠️  Could not save airport cache to disk:', err.message);
+    }
+}
+
+// Load persisted airport cache on startup
+loadAirportCacheFromDisk();
 
 async function resolveAirportLocation(airportCodeRaw) {
     const airportCode = String(airportCodeRaw || '').trim().toUpperCase();
     if (!airportCode) return null;
 
     const cached = airportLookupCache.get(airportCode);
-    if (cached) return cached;
+    if (cached) {
+        console.log(`✅ Airport ${airportCode}: cache hit (no API credit used)`);
+        return cached;
+    }
 
     try {
+        console.log(`🌐 Airport ${airportCode}: NOT in cache — calling AviationStack API (1 credit)`);
         const response = await axios.get(AIRPORTS_URL, {
             params: {
                 access_key: API_KEY,
@@ -51,6 +107,7 @@ async function resolveAirportLocation(airportCodeRaw) {
         const longitude = Number(airport?.longitude);
 
         if (!Number.isFinite(latitude) || !Number.isFinite(longitude)) {
+            console.warn(`⚠️  Airport ${airportCode}: API returned no valid coordinates`);
             return null;
         }
 
@@ -61,9 +118,11 @@ async function resolveAirportLocation(airportCodeRaw) {
         };
 
         airportLookupCache.set(airportCode, resolved);
+        saveAirportCacheToDisk(); // persist to survive restarts
+        console.log(`💾 Airport ${airportCode}: cached and saved to disk`);
         return resolved;
     } catch (error) {
-        console.error(`Airport lookup error for ${airportCode}:`, error.message);
+        console.error(`❌ Airport lookup error for ${airportCode}:`, error.message);
         return null;
     }
 }
@@ -1170,15 +1229,31 @@ app.post('/api/airports-batch', async (req, res) => {
             return res.status(200).json({ count: 0, airports: {} });
         }
 
-        const resolvedAirports = await Promise.all(normalizedCodes.map((code) => resolveAirportLocation(code)));
-        const airports = resolvedAirports
-            .filter((airport) => airport && Array.isArray(airport.coords) && airport.coords.length === 2)
-            .reduce((acc, airport) => {
-                acc[airport.code] = airport;
-                return acc;
-            }, {});
+        // Split into cached vs uncached — only resolve uncached codes via API
+        const cachedCodes = normalizedCodes.filter((code) => airportLookupCache.has(code));
+        const uncachedCodes = normalizedCodes.filter((code) => !airportLookupCache.has(code));
 
-        return res.status(200).json({ count: Object.keys(airports).length, airports });
+        console.log(`🛫 Airport batch: ${normalizedCodes.length} requested | ${cachedCodes.length} cached (free) | ${uncachedCodes.length} need API`);
+
+        // Resolve only the uncached codes via API (saves credits)
+        if (uncachedCodes.length > 0) {
+            await Promise.all(uncachedCodes.map((code) => resolveAirportLocation(code)));
+        }
+
+        // Build result from the full cache (which now includes any newly resolved codes)
+        const airports = normalizedCodes.reduce((acc, code) => {
+            const airport = airportLookupCache.get(code);
+            if (airport && Array.isArray(airport.coords) && airport.coords.length === 2) {
+                acc[airport.code] = airport;
+            }
+            return acc;
+        }, {});
+
+        const creditsSaved = cachedCodes.length;
+        const creditsUsed = uncachedCodes.length;
+        console.log(`💰 Airport batch result: ${Object.keys(airports).length} resolved | ${creditsSaved} credits saved | ${creditsUsed} credits used`);
+
+        return res.status(200).json({ count: Object.keys(airports).length, airports, credits_saved: creditsSaved, credits_used: creditsUsed });
     } catch (error) {
         console.error('Batch airport lookup error:', error.message);
         return res.status(500).json({ error: 'Failed to fetch airport batch.' });

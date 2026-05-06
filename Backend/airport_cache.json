@@ -1,0 +1,642 @@
+{
+  "HBE": {
+    "code": "HBE",
+    "name": "Borg El Arab Airport",
+    "coords": [
+      30.9177,
+      29.6964
+    ]
+  },
+  "CAI": {
+    "code": "CAI",
+    "name": "Cairo International Airport",
+    "coords": [
+      30.1219,
+      31.4056
+    ]
+  },
+  "SSH": {
+    "code": "SSH",
+    "name": "Sharm El Sheikh International Airport",
+    "coords": [
+      27.9773,
+      34.395
+    ]
+  },
+  "HRG": {
+    "code": "HRG",
+    "name": "Hurghada International Airport",
+    "coords": [
+      27.1783,
+      33.7994
+    ]
+  },
+  "LXR": {
+    "code": "LXR",
+    "name": "Luxor International Airport",
+    "coords": [
+      25.671,
+      32.7066
+    ]
+  },
+  "ASW": {
+    "code": "ASW",
+    "name": "Aswan International Airport",
+    "coords": [
+      23.9644,
+      32.82
+    ]
+  },
+  "DXB": {
+    "code": "DXB",
+    "name": "Dubai International Airport",
+    "coords": [
+      25.2532,
+      55.3657
+    ]
+  },
+  "AUH": {
+    "code": "AUH",
+    "name": "Abu Dhabi International Airport",
+    "coords": [
+      24.433,
+      54.6511
+    ]
+  },
+  "DOH": {
+    "code": "DOH",
+    "name": "Hamad International Airport",
+    "coords": [
+      25.2731,
+      51.6086
+    ]
+  },
+  "JED": {
+    "code": "JED",
+    "name": "King Abdulaziz International Airport",
+    "coords": [
+      21.6796,
+      39.1565
+    ]
+  },
+  "MED": {
+    "code": "MED",
+    "name": "Prince Mohammad Bin Abdulaziz Airport",
+    "coords": [
+      24.5534,
+      39.7051
+    ]
+  },
+  "RUH": {
+    "code": "RUH",
+    "name": "King Khalid International Airport",
+    "coords": [
+      24.9576,
+      46.6988
+    ]
+  },
+  "KWI": {
+    "code": "KWI",
+    "name": "Kuwait International Airport",
+    "coords": [
+      29.2266,
+      47.9689
+    ]
+  },
+  "AMM": {
+    "code": "AMM",
+    "name": "Queen Alia International Airport",
+    "coords": [
+      31.7226,
+      35.9932
+    ]
+  },
+  "BEY": {
+    "code": "BEY",
+    "name": "Beirut–Rafic Hariri International Airport",
+    "coords": [
+      33.8209,
+      35.4884
+    ]
+  },
+  "IST": {
+    "code": "IST",
+    "name": "Istanbul Airport",
+    "coords": [
+      41.2753,
+      28.7519
+    ]
+  },
+  "LHR": {
+    "code": "LHR",
+    "name": "London Heathrow Airport",
+    "coords": [
+      51.47,
+      -0.4543
+    ]
+  },
+  "CDG": {
+    "code": "CDG",
+    "name": "Charles de Gaulle Airport",
+    "coords": [
+      49.0097,
+      2.5479
+    ]
+  },
+  "FRA": {
+    "code": "FRA",
+    "name": "Frankfurt Airport",
+    "coords": [
+      50.0379,
+      8.5622
+    ]
+  },
+  "ATH": {
+    "code": "ATH",
+    "name": "Athens International Airport",
+    "coords": [
+      37.9364,
+      23.9445
+    ]
+  },
+  "JFK": {
+    "code": "JFK",
+    "name": "John F. Kennedy International Airport",
+    "coords": [
+      40.6413,
+      -73.7781
+    ]
+  },
+  "TUN": {
+    "code": "TUN",
+    "name": "Tunis–Carthage International Airport",
+    "coords": [
+      36.851,
+      10.2272
+    ]
+  },
+  "BAH": {
+    "code": "BAH",
+    "name": "Bahrain International",
+    "coords": [
+      26.26918,
+      50.62605
+    ]
+  },
+  "UET": {
+    "code": "UET",
+    "name": "Quetta",
+    "coords": [
+      30.249266,
+      66.949036
+    ]
+  },
+  "TLV": {
+    "code": "TLV",
+    "name": "Ben Gurion International",
+    "coords": [
+      32.000454,
+      34.870743
+    ]
+  },
+  "KHI": {
+    "code": "KHI",
+    "name": "Quaid-e-azam International",
+    "coords": [
+      24.899986,
+      67.16828
+    ]
+  },
+  "PEW": {
+    "code": "PEW",
+    "name": "Peshawar",
+    "coords": [
+      33.989082,
+      71.51925
+    ]
+  },
+  "MAN": {
+    "code": "MAN",
+    "name": "Manchester Airport",
+    "coords": [
+      53.362907,
+      -2.273354
+    ]
+  },
+  "ISB": {
+    "code": "ISB",
+    "name": "Islamabad International",
+    "coords": [
+      33.609707,
+      73.1051
+    ]
+  },
+  "AKL": {
+    "code": "AKL",
+    "name": "Auckland International",
+    "coords": [
+      -37.004787,
+      174.78352
+    ]
+  },
+  "LHE": {
+    "code": "LHE",
+    "name": "Alama Iqbal International",
+    "coords": [
+      31.520832,
+      74.40278
+    ]
+  },
+  "LYP": {
+    "code": "LYP",
+    "name": "Faisalabad",
+    "coords": [
+      31.363043,
+      72.98757
+    ]
+  },
+  "TAS": {
+    "code": "TAS",
+    "name": "Tashkent International",
+    "coords": [
+      41.262714,
+      69.26619
+    ]
+  },
+  "HYD": {
+    "code": "HYD",
+    "name": "Hyderabad Airport",
+    "coords": [
+      17.24,
+      78.428055
+    ]
+  },
+  "OSL": {
+    "code": "OSL",
+    "name": "Gardermoen",
+    "coords": [
+      60.19419,
+      11.100411
+    ]
+  },
+  "MLE": {
+    "code": "MLE",
+    "name": "Malé International Airport",
+    "coords": [
+      4.201389,
+      73.524445
+    ]
+  },
+  "KUL": {
+    "code": "KUL",
+    "name": "Kuala Lumpur International Airport (klia)",
+    "coords": [
+      2.755672,
+      101.70539
+    ]
+  },
+  "GYD": {
+    "code": "GYD",
+    "name": "Heydar Aliyev International (Bina International)",
+    "coords": [
+      40.462486,
+      50.05039
+    ]
+  },
+  "BOM": {
+    "code": "BOM",
+    "name": "Chhatrapati Shivaji International (Sahar International)",
+    "coords": [
+      19.095509,
+      72.87497
+    ]
+  },
+  "CGK": {
+    "code": "CGK",
+    "name": "Soekarno-Hatta International",
+    "coords": [
+      -6.130643,
+      106.655525
+    ]
+  },
+  "MEL": {
+    "code": "MEL",
+    "name": "Melbourne - Tullamarine Airport",
+    "coords": [
+      -37.669613,
+      144.84978
+    ]
+  },
+  "MAA": {
+    "code": "MAA",
+    "name": "Madras International (Meenambakkam)",
+    "coords": [
+      12.982267,
+      80.16378
+    ]
+  },
+  "HKT": {
+    "code": "HKT",
+    "name": "Phuket International",
+    "coords": [
+      8.107619,
+      98.306435
+    ]
+  },
+  "CMB": {
+    "code": "CMB",
+    "name": "Bandaranaike International",
+    "coords": [
+      7.174112,
+      79.8865
+    ]
+  },
+  "DEL": {
+    "code": "DEL",
+    "name": "Indira Gandhi International",
+    "coords": [
+      28.556555,
+      77.10079
+    ]
+  },
+  "SKT": {
+    "code": "SKT",
+    "name": "Sialkot International",
+    "coords": [
+      32.533333,
+      74.5
+    ]
+  },
+  "ADD": {
+    "code": "ADD",
+    "name": "Bole International",
+    "coords": [
+      8.983759,
+      38.7959
+    ]
+  },
+  "BLR": {
+    "code": "BLR",
+    "name": "Bangalore International Airport",
+    "coords": [
+      13.198889,
+      77.70556
+    ]
+  },
+  "OTP": {
+    "code": "OTP",
+    "name": "Henri Coanda International",
+    "coords": [
+      44.571156,
+      26.077063
+    ]
+  },
+  "GRU": {
+    "code": "GRU",
+    "name": "Aeroporto Internacional Guarulhos",
+    "coords": [
+      -23.425669,
+      -46.481926
+    ]
+  },
+  "MUX": {
+    "code": "MUX",
+    "name": "Multan International",
+    "coords": [
+      30.199507,
+      71.41498
+    ]
+  },
+  "MNL": {
+    "code": "MNL",
+    "name": "Ninoy Aquino International",
+    "coords": [
+      14.509602,
+      121.01251
+    ]
+  },
+  "DUR": {
+    "code": "DUR",
+    "name": "Durban International",
+    "coords": [
+      -29.614445,
+      31.116388
+    ]
+  },
+  "DAC": {
+    "code": "DAC",
+    "name": "Zia International",
+    "coords": [
+      23.848648,
+      90.405876
+    ]
+  },
+  "EBL": {
+    "code": "EBL",
+    "name": "Erbil International (irbil Northwest)",
+    "coords": [
+      36.2375,
+      43.963055
+    ]
+  },
+  "ZAG": {
+    "code": "ZAG",
+    "name": "Franjo Tudman International Airport",
+    "coords": [
+      45.733242,
+      16.06152
+    ]
+  },
+  "COK": {
+    "code": "COK",
+    "name": "Cochin International",
+    "coords": [
+      10.155644,
+      76.39053
+    ]
+  },
+  "LOS": {
+    "code": "LOS",
+    "name": "Murtala Muhammed",
+    "coords": [
+      6.577871,
+      3.321178
+    ]
+  },
+  "UNK": {
+    "code": "UNK",
+    "name": "Unalakleet",
+    "coords": [
+      63.881927,
+      -160.79944
+    ]
+  },
+  "KBL": {
+    "code": "KBL",
+    "name": "Khwaja Rawash",
+    "coords": [
+      34.56069,
+      69.21152
+    ]
+  },
+  "GIZ": {
+    "code": "GIZ",
+    "name": "Jazan",
+    "coords": [
+      16.898949,
+      42.582344
+    ]
+  },
+  "EVN": {
+    "code": "EVN",
+    "name": "Zvartnots International",
+    "coords": [
+      40.15272,
+      44.39805
+    ]
+  },
+  "BNE": {
+    "code": "BNE",
+    "name": "Brisbane International",
+    "coords": [
+      -27.40303,
+      153.10905
+    ]
+  },
+  "MRU": {
+    "code": "MRU",
+    "name": "Sir Seewoosagur Ramgoolam International",
+    "coords": [
+      -20.431997,
+      57.67663
+    ]
+  },
+  "KTM": {
+    "code": "KTM",
+    "name": "Tribhuvan International",
+    "coords": [
+      27.699905,
+      85.35657
+    ]
+  },
+  "DAM": {
+    "code": "DAM",
+    "name": "Damascus International Airport",
+    "coords": [
+      33.41117,
+      36.51249
+    ]
+  },
+  "MCT": {
+    "code": "MCT",
+    "name": "Seeb",
+    "coords": [
+      23.588078,
+      58.29022
+    ]
+  },
+  "TBS": {
+    "code": "TBS",
+    "name": "Novo Alexeyevka International",
+    "coords": [
+      41.674065,
+      44.958958
+    ]
+  },
+  "BSR": {
+    "code": "BSR",
+    "name": "Basrah International Airport ",
+    "coords": [
+      30.555555,
+      47.79139
+    ]
+  },
+  "CAN": {
+    "code": "CAN",
+    "name": "Guangzhou Baiyun International",
+    "coords": [
+      23.387861,
+      113.29734
+    ]
+  },
+  "SIN": {
+    "code": "SIN",
+    "name": "Singapore Changi",
+    "coords": [
+      1.361173,
+      103.990204
+    ]
+  },
+  "JNB": {
+    "code": "JNB",
+    "name": "Oliver Reginald Tambo International (Jan Smuts International)",
+    "coords": [
+      -26.132664,
+      28.231314
+    ]
+  },
+  "DMM": {
+    "code": "DMM",
+    "name": "King Fahd International Airport",
+    "coords": [
+      26.471111,
+      49.79778
+    ]
+  },
+  "CCU": {
+    "code": "CCU",
+    "name": "Netaji Subhas Chandra",
+    "coords": [
+      22.64531,
+      88.43931
+    ]
+  },
+  "NBO": {
+    "code": "NBO",
+    "name": "Jomo Kenyatta International",
+    "coords": [
+      -1.319167,
+      36.92578
+    ]
+  },
+  "SYD": {
+    "code": "SYD",
+    "name": "Sydney Kingsford Smith Airport",
+    "coords": [
+      -33.932922,
+      151.1799
+    ]
+  },
+  "SJJ": {
+    "code": "SJJ",
+    "name": "Sarajevo",
+    "coords": [
+      43.826687,
+      18.336065
+    ]
+  },
+  "SHJ": {
+    "code": "SHJ",
+    "name": "Sharjah",
+    "coords": [
+      25.320873,
+      55.52029
+    ]
+  },
+  "SAW": {
+    "code": "SAW",
+    "name": "Sabiha Gokcen",
+    "coords": [
+      40.904675,
+      29.309189
+    ]
+  },
+  "MJI": {
+    "code": "MJI",
+    "name": "Mitiga",
+    "coords": [
+      32.89722,
+      13.277778
+    ]
+  }
+}
