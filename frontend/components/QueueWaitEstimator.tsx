@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useEffect, useRef } from 'react';
 import { Clock, Users, AlertTriangle, CheckCircle, ChevronDown, ChevronUp, Zap } from 'lucide-react';
 
 // ─── Checkpoint definitions pulled from AerotwinConfig.json ─────────────────
@@ -186,6 +186,7 @@ function statusColor(s: CheckpointResult['status']) {
 // ─── Props ────────────────────────────────────────────────────────────────────
 interface Props {
   flights: any[];
+  airport?: string;
 }
 
 function parseNum(raw: string | number | undefined, fallback = 0): number {
@@ -198,9 +199,10 @@ function parseNum(raw: string | number | undefined, fallback = 0): number {
 }
 
 // ─── Component ────────────────────────────────────────────────────────────────
-export default function QueueWaitEstimator({ flights }: Props) {
+export default function QueueWaitEstimator({ flights, airport = 'HBE' }: Props) {
   const [windowMinutes, setWindowMinutes] = useState(60);
   const [expandedId, setExpandedId] = useState<string | null>(null);
+  const saveTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const totalPax = useMemo(() => {
     if (!Array.isArray(flights) || flights.length === 0) return 0;
@@ -214,6 +216,36 @@ export default function QueueWaitEstimator({ flights }: Props) {
   const results = useMemo<CheckpointResult[]>(() => {
     return CHECKPOINTS.map(cp => computeWait(cp, totalPax, windowMinutes));
   }, [totalPax, windowMinutes]);
+
+  // ── Auto-save queue snapshot to DB (debounced 5s) ───────────────────────────
+  useEffect(() => {
+    if (results.length === 0 || totalPax === 0) return;
+    if (saveTimeoutRef.current) clearTimeout(saveTimeoutRef.current);
+    saveTimeoutRef.current = setTimeout(async () => {
+      try {
+        const payload = results.map(r => ({
+          checkpoint_id:    r.checkpoint.id,
+          checkpoint_label: r.checkpoint.label,
+          checkpoint_type:  r.checkpoint.type,
+          flow_type:        'departure',
+          utilisation:      r.utilisation,
+          queue_length:     r.queueLength,
+          wait_secs:        r.waitSecs,
+          arrival_rate:     r.arrivalRate,
+          total_agents:     r.totalAgents,
+          status:           r.status,
+        }));
+        await fetch('http://localhost:5000/api/analytics/queue', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ airport, results: payload }),
+        });
+      } catch {
+        // Non-blocking — ignore errors
+      }
+    }, 5000);
+    return () => { if (saveTimeoutRef.current) clearTimeout(saveTimeoutRef.current); };
+  }, [results, airport, totalPax]);
 
   const criticalCount = results.filter(r => r.status === 'critical').length;
   const warningCount  = results.filter(r => r.status === 'warning').length;

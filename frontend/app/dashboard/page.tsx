@@ -1,13 +1,15 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { Monitor, Maximize2, Activity, Wifi, WifiOff, Plane, RefreshCw, ExternalLink, ChevronLeft, ChevronRight, TrendingUp, TrendingDown, Clock, Target, Zap, Gauge, Users, BarChart2 } from 'lucide-react';
+import { Monitor, Maximize2, Activity, Wifi, WifiOff, Plane, RefreshCw, ExternalLink, ChevronLeft, ChevronRight, TrendingUp, TrendingDown, Clock, Target, Zap, Gauge, Users, BarChart2, Database } from 'lucide-react';
 import Link from 'next/link';
 import FlightPieChart from '@/components/FlightPieChart';
 import FlightGanttChart from '@/components/FlightGanttChart';
 import PassengerLoadHeatmap from '@/components/PassengerLoadHeatmap';
 import QueueWaitEstimator from '@/components/QueueWaitEstimator';
 import AirlineAnalytics from '@/components/AirlineAnalytics';
+import SearchBar from '@/components/SearchBar';
+import FlightTrendChart from '@/components/FlightTrendChart';
 
 interface FlightMeta {
   count: number;
@@ -94,6 +96,13 @@ const SIDEBAR_CARDS: CardItem[] = [
     icon: <BarChart2 size={14} className="text-indigo-400" />,
     component: 'airlineAnalytics',
     accentColor: 'indigo',
+  },
+  {
+    id: 'flight-trend',
+    title: 'Flight Trend',
+    icon: <Database size={14} className="text-fuchsia-400" />,
+    component: 'flightTrend',
+    accentColor: 'fuchsia',
   },
 ];
 
@@ -413,6 +422,8 @@ export default function DashboardPage() {
         return <QueueWaitEstimator flights={flightList} />;
       case 'airlineAnalytics':
         return <AirlineAnalytics flights={flightList} />;
+      case 'flightTrend':
+        return <FlightTrendChart airport={flightMeta?.airport || 'HBE'} hours={12} />;
       default:
         return <p className="text-slate-500 text-sm">Unknown card</p>;
     }
@@ -421,7 +432,7 @@ export default function DashboardPage() {
   return (
     <div className="flex-1 bg-slate-950 p-6 flex flex-col gap-4 overflow-hidden">
       {/* Header Bar */}
-      <div className="flex items-center justify-between shrink-0">
+      <div className="flex items-center justify-between gap-4 shrink-0 flex-wrap">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-blue-600 to-blue-800 flex items-center justify-center">
             <Monitor size={20} className="text-white" />
@@ -431,6 +442,12 @@ export default function DashboardPage() {
             <p className="text-slate-400 text-xs">Unity WebGL Simulation</p>
           </div>
         </div>
+
+        {/* Global Search */}
+        <div className="flex-1 max-w-xl">
+          <SearchBar />
+        </div>
+
         <div className="flex items-center gap-4">
           <div className={`flex items-center gap-2 px-4 py-2 rounded-full border ${isUnityConnected ? 'bg-emerald-500/10 border-emerald-500/30' : 'bg-red-500/10 border-red-500/30'}`}>
             {isUnityConnected ? <><Wifi size={14} className="text-emerald-400" /><span className="text-emerald-400 text-xs font-bold">UNITY CONNECTED</span></> : <><WifiOff size={14} className="text-red-400" /><span className="text-red-400 text-xs font-bold">UNITY OFFLINE</span></>}
@@ -534,6 +551,7 @@ export default function DashboardPage() {
                   violet: 'bg-violet-600 hover:bg-violet-500 text-white',
                   teal:   'bg-teal-600 hover:bg-teal-500 text-white',
                   indigo: 'bg-indigo-600 hover:bg-indigo-500 text-white',
+                  fuchsia:'bg-fuchsia-600 hover:bg-fuchsia-500 text-white',
                 };
                 return (
                   <button

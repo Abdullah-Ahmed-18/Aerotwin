@@ -6,6 +6,7 @@ const fs = require("fs");
 const path = require("path");
 const csv = require("csv-parser");
 const cors = require("cors");
+const db = require('./db');
 const app = express();
 const PORT = process.env.PORT || 5000;
 
@@ -48,7 +49,7 @@ const AIRPORT_COORDINATES = {
     // North Africa
     TUN: { code: "TUN", name: "Tunis–Carthage International Airport", coords: [36.8510, 10.2272] },
 };
-// --- Persistent Airport Cache (disk-backed) ---
+// --- Persistent Airport Cache (disk-backed + DB-backed) ---
 const AIRPORT_CACHE_PATH = path.join(__dirname, 'airport_cache.json');
 const airportLookupCache = new Map(Object.entries(AIRPORT_COORDINATES).map(([code, data]) => [code, data]));
 
@@ -70,6 +71,24 @@ function loadAirportCacheFromDisk() {
     }
 }
 
+async function loadAirportCacheFromDB() {
+    try {
+        const dbAirports = await db.loadAllAirports();
+        let loaded = 0;
+        for (const [code, data] of Object.entries(dbAirports)) {
+            if (!airportLookupCache.has(code)) {
+                airportLookupCache.set(code, data);
+                loaded++;
+            }
+        }
+        if (loaded > 0) {
+            console.log(`✅ [DB] Airport cache enriched: ${loaded} new entries from DB (${airportLookupCache.size} total)`);
+        }
+    } catch (err) {
+        console.warn('⚠️  [DB] Could not enrich airport cache from DB:', err.message);
+    }
+}
+
 function saveAirportCacheToDisk() {
     try {
         const cacheObj = Object.fromEntries(airportLookupCache);
@@ -79,7 +98,7 @@ function saveAirportCacheToDisk() {
     }
 }
 
-// Load persisted airport cache on startup
+// Load persisted airport cache on startup (disk — DB loaded after initDB)
 loadAirportCacheFromDisk();
 
 async function resolveAirportLocation(airportCodeRaw) {
@@ -118,8 +137,9 @@ async function resolveAirportLocation(airportCodeRaw) {
         };
 
         airportLookupCache.set(airportCode, resolved);
-        saveAirportCacheToDisk(); // persist to survive restarts
-        console.log(`💾 Airport ${airportCode}: cached and saved to disk`);
+        saveAirportCacheToDisk(); // persist to JSON (fallback)
+        db.upsertAirport(airportCode, resolved).catch(() => {}); // persist to DB
+        console.log(`💾 Airport ${airportCode}: cached and saved to disk + DB`);
         return resolved;
     } catch (error) {
         console.error(`❌ Airport lookup error for ${airportCode}:`, error.message);
@@ -1186,6 +1206,11 @@ app.get('/api/fetch-active-flights', async (req, res) => {
             flights: formattedFlights
         };
 
+        // ── Persist to TimescaleDB (non-blocking) ──────────────────────────────
+        db.insertFlightSnapshots(airportIata, formattedFlights).catch((err) => {
+            console.warn('⚠️  [DB] Flight snapshot insert skipped:', err.message);
+        });
+
         res.status(200).json(finalPayload);
 
     } catch (error) {
@@ -1209,6 +1234,12 @@ app.post('/api/save-active-flights', (req, res) => {
         };
 
         fs.writeFileSync("active_flights.json", JSON.stringify(payload, null, 2));
+
+        // ── Persist to TimescaleDB (non-blocking) ──────────────────────────────
+        db.insertFlightSnapshots(airport, payload.flights).catch((err) => {
+            console.warn('⚠️  [DB] Flight snapshot insert (save) skipped:', err.message);
+        });
+
         return res.status(200).json({ success: true, path: "active_flights.json", count: payload.flights.length });
     } catch (error) {
         console.error("Save active flights error:", error.message);
@@ -1338,14 +1369,145 @@ app.get('/api/opensky/arrivals', async (req, res) => {
     }
 });
 
-// START — load CSV database first, then start server
-loadAircraftCSV()
+// ==========================================
+// 5. FULL-TEXT SEARCH ENDPOINT
+// ==========================================
+
+/**
+ * GET /api/search?q=<term>&type=all|airports|aircraft|flights&limit=20
+ *
+ * Searches across:
+ *   • airports_full     — 85k airports (name, IATA, ICAO, city, country)
+ *   • aircraft_registry — 520k aircraft (registration, type, manufacturer, operator)
+ *   • flight_snapshots  — historical flights (flight number, airline, route)
+ *
+ * All three queries run in parallel using GIN full-text indexes.
+ */
+app.get('/api/search', async (req, res) => {
+    try {
+        const term  = String(req.query.q || '').trim();
+        const type  = ['all','airports','aircraft','flights'].includes(req.query.type)
+            ? req.query.type : 'all';
+        const limit = Math.min(Math.max(parseInt(req.query.limit) || 20, 1), 100);
+
+        if (term.length < 2) {
+            return res.status(400).json({ error: 'Query must be at least 2 characters.' });
+        }
+
+        const results = await db.fullSearch(term, { type, limit });
+        return res.status(200).json(results);
+    } catch (err) {
+        console.error('[Search] error:', err.message);
+        return res.status(500).json({ error: 'Search failed.' });
+    }
+});
+
+// ==========================================
+// 6. TIMESCALEDB ANALYTICS ENDPOINTS
+// ==========================================
+
+/**
+ * GET /api/analytics/flights?airport=HBE&hours=24
+ * Returns raw flight snapshot rows for the given airport and time window.
+ */
+app.get('/api/analytics/flights', async (req, res) => {
+    try {
+        const airport = String(req.query.airport || TARGET_AIRPORT).trim().toUpperCase();
+        const hours = Math.min(Math.max(parseInt(req.query.hours) || 24, 1), 720);
+        const rows = await db.getFlightSnapshots(airport, hours);
+        return res.status(200).json({
+            meta: { airport, hours_back: hours, count: rows.length, updated: new Date().toISOString() },
+            snapshots: rows,
+        });
+    } catch (err) {
+        console.error('[Analytics] flights error:', err.message);
+        return res.status(500).json({ error: 'Failed to fetch flight analytics.' });
+    }
+});
+
+/**
+ * GET /api/analytics/status-trend?airport=HBE&hours=6
+ * Returns hourly flight status counts (time_bucket aggregation).
+ */
+app.get('/api/analytics/status-trend', async (req, res) => {
+    try {
+        const airport = String(req.query.airport || TARGET_AIRPORT).trim().toUpperCase();
+        const hours = Math.min(Math.max(parseInt(req.query.hours) || 6, 1), 168);
+        const rows = await db.getStatusTrend(airport, hours);
+        return res.status(200).json({
+            meta: { airport, hours_back: hours, updated: new Date().toISOString() },
+            trend: rows,
+        });
+    } catch (err) {
+        console.error('[Analytics] status-trend error:', err.message);
+        return res.status(500).json({ error: 'Failed to fetch status trend.' });
+    }
+});
+
+/**
+ * GET /api/analytics/queue?airport=HBE&hours=1
+ * Returns 5-minute-bucket queue wait history for all checkpoints.
+ */
+app.get('/api/analytics/queue', async (req, res) => {
+    try {
+        const airport = String(req.query.airport || TARGET_AIRPORT).trim().toUpperCase();
+        const hours = Math.min(Math.max(parseFloat(req.query.hours) || 1, 0.08), 168);
+        const rows = await db.getQueueHistory(airport, hours);
+        return res.status(200).json({
+            meta: { airport, hours_back: hours, updated: new Date().toISOString() },
+            queue_history: rows,
+        });
+    } catch (err) {
+        console.error('[Analytics] queue history error:', err.message);
+        return res.status(500).json({ error: 'Failed to fetch queue history.' });
+    }
+});
+
+/**
+ * POST /api/analytics/queue
+ * Body: { airport: "HBE", results: [ CheckpointResult, … ] }
+ * Called from the frontend QueueWaitEstimator to persist a queue snapshot.
+ */
+app.post('/api/analytics/queue', async (req, res) => {
+    try {
+        const airport = String(req.body?.airport || TARGET_AIRPORT).trim().toUpperCase();
+        const results = Array.isArray(req.body?.results) ? req.body.results : [];
+        if (results.length === 0) {
+            return res.status(400).json({ error: 'No checkpoint results provided.' });
+        }
+        await db.insertQueueSnapshot(airport, results);
+        return res.status(201).json({ success: true, airport, count: results.length });
+    } catch (err) {
+        console.error('[Analytics] queue insert error:', err.message);
+        return res.status(500).json({ error: 'Failed to save queue snapshot.' });
+    }
+});
+
+// START — init DB schema, load CSV database, then start server
+db.initDB()
+    .then(() => loadAirportCacheFromDB()) // enrich airport cache from DB
+    .then(() => loadAircraftCSV())
     .then(() => {
         app.listen(PORT, () => {
-            console.log(`Server running on ${PORT}`);
+            console.log(`🚀 Server running on port ${PORT}`);
+            console.log(`📊 TimescaleDB analytics ready at /api/analytics/*`);
         });
     })
     .catch(err => {
-        console.error('❌ Cannot start server without aircraft database:', err.message);
-        process.exit(1);
+        console.error('❌ Startup failed:', err.message);
+        // If DB fails, still try to start without it
+        if (err.message?.includes('ECONNREFUSED') || err.message?.includes('connect')) {
+            console.warn('⚠️  DB unavailable — starting without TimescaleDB (JSON fallback active)');
+            loadAircraftCSV()
+                .then(() => {
+                    app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT} (no DB)`));
+                })
+                .catch(csvErr => {
+                    console.error('❌ Cannot start server without aircraft database:', csvErr.message);
+                    process.exit(1);
+                });
+        } else {
+            console.error('❌ Cannot start server:', err.message);
+            process.exit(1);
+        }
     });

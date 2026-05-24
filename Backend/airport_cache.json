@@ -638,5 +638,101 @@
       32.89722,
       13.277778
     ]
+  },
+  "ELQ": {
+    "code": "ELQ",
+    "name": "Gassim Regional Airport",
+    "coords": [
+      26.305029,
+      43.768177
+    ]
+  },
+  "TFU": {
+    "code": "TFU",
+    "name": "Chengdu Tianfu International Airport",
+    "coords": [
+      30.319,
+      104.445
+    ]
+  },
+  "HMB": {
+    "code": "HMB",
+    "name": "Mubarak International",
+    "coords": [
+      26.338877,
+      31.737167
+    ]
+  },
+  "TUU": {
+    "code": "TUU",
+    "name": "Tabuk",
+    "coords": [
+      28.375784,
+      36.608288
+    ]
+  },
+  "AYT": {
+    "code": "AYT",
+    "name": "Antalya",
+    "coords": [
+      36.89928,
+      30.80135
+    ]
+  },
+  "TIF": {
+    "code": "TIF",
+    "name": "Taif",
+    "coords": [
+      21.480364,
+      40.552685
+    ]
+  },
+  "AHB": {
+    "code": "AHB",
+    "name": "Abha",
+    "coords": [
+      18.23429,
+      42.657574
+    ]
+  },
+  "AJF": {
+    "code": "AJF",
+    "name": "Jouf",
+    "coords": [
+      29.788668,
+      40.101486
+    ]
+  },
+  "ADE": {
+    "code": "ADE",
+    "name": "Aden International Airport",
+    "coords": [
+      12.826116,
+      45.037537
+    ]
+  },
+  "KGL": {
+    "code": "KGL",
+    "name": "Kigali International",
+    "coords": [
+      -1.963042,
+      30.135014
+    ]
+  },
+  "PZU": {
+    "code": "PZU",
+    "name": "Port Sudan",
+    "coords": [
+      19.577778,
+      37.21389
+    ]
+  },
+  "RKT": {
+    "code": "RKT",
+    "name": "Ras Al Khaimah",
+    "coords": [
+      25.616198,
+      55.943695
+    ]
   }
 }

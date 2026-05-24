@@ -5,6 +5,7 @@ import dynamic from 'next/dynamic';
 import { Plane, Info, Globe, Activity, Navigation, ChevronDown, Users, Radar, Repeat, Crown, Clock, X, PieChart, Save } from 'lucide-react';
 import FlightSelector from '@/components/FlightSelector';
 import { lerpCoords, calculateBearing } from '@/lib/geo';
+import { lookupAirport, partitionAirports } from '@/lib/airports';
 
 const FlightMap = dynamic(() => import('@/components/FlightMap'), {
     ssr: false,
@@ -54,27 +55,6 @@ const ABS_PERSONAS = {
 
 type PersonaKey = keyof typeof ABS_PERSONAS;
 
-const AIRPORT_NAMES: Record<string, string> = {
-    HBE: 'Borg El Arab (Alexandria)',
-    CAI: 'Cairo International',
-    DXB: 'Dubai International',
-    JFK: 'John F. Kennedy',
-    LHR: 'London Heathrow',
-    IST: 'Istanbul Airport',
-    AUH: 'Abu Dhabi International',
-    MED: 'Mohammad Bin Abdulaziz'
-};
-
-const AIRPORT_COORDS: Record<string, [number, number]> = {
-    HBE: [30.9177, 29.6964], CAI: [30.1219, 31.4056], DXB: [25.2532, 55.3657],
-    JFK: [40.6413, -73.7781], LHR: [51.4700, -0.4543], IST: [41.2753, 28.7519],
-    AUH: [24.4330, 54.6511], MED: [24.5534, 39.7051], DOH: [25.2731, 51.6086],
-    SSH: [27.9773, 34.3950], HRG: [27.1783, 33.7994], LXR: [25.6710, 32.7066],
-    ASW: [23.9644, 32.8200], JED: [21.6796, 39.1565], RUH: [24.9576, 46.6988],
-    KWI: [29.2266, 47.9689], AMM: [31.7226, 35.9932], BEY: [33.8209, 35.4884],
-    TUN: [36.8510, 10.2272], CDG: [49.0097, 2.5479], FRA: [50.0379, 8.5622],
-    MJI: [32.8889, 13.2764], BEN: [32.0970, 20.2695],
-};
 
 const DEFAULT_AIRCRAFT_MAX_CAP = 180;
 const DEFAULT_PERSONAS: Record<PersonaKey, number> = { p1: 0, p2: 0, p3: 0, p4: 70, p5: 0, p6: 20, p7: 10 };
@@ -220,7 +200,7 @@ export default function ActiveFlightsPage() {
             id: 'MS-441', status: 'ON FINAL', statusClass: 'text-emerald-600 bg-emerald-50 border-emerald-100',
             origin: 'DXB', originName: 'Dubai', dest: 'HBE', destName: 'Alexandria',
             eta: 12, progress: 92, coords: [30.9500, 29.6500] as [number, number],
-            heading: 290, originCoords: AIRPORT_COORDS['DXB'], destCoords: AIRPORT_COORDS['HBE'],
+            heading: 290, originCoords: lookupAirport('DXB')?.coords, destCoords: lookupAirport('HBE')?.coords,
             passengers: 150, aircraft: 'Boeing 737-800',
             personas: { p1: 0, p2: 0, p3: 0, p4: 70, p5: 0, p6: 20, p7: 10 }
         },
@@ -228,7 +208,7 @@ export default function ActiveFlightsPage() {
             id: 'QR-1301', status: 'APPROACH', statusClass: 'text-blue-600 bg-blue-50 border-blue-100',
             origin: 'DOH', originName: 'Doha', dest: 'HBE', destName: 'Alexandria',
             eta: 45, progress: 75, coords: [30.8800, 29.8500] as [number, number],
-            heading: 300, originCoords: AIRPORT_COORDS['DOH'], destCoords: AIRPORT_COORDS['HBE'],
+            heading: 300, originCoords: lookupAirport('DOH')?.coords, destCoords: lookupAirport('HBE')?.coords,
             passengers: 140, aircraft: 'Airbus A320neo',
             personas: { p1: 0, p2: 0, p3: 0, p4: 60, p5: 0, p6: 25, p7: 15 }
         },
@@ -236,7 +216,7 @@ export default function ActiveFlightsPage() {
             id: 'TU-512', status: 'DEPARTED', statusClass: 'text-slate-500 bg-slate-100 border-slate-200',
             origin: 'HBE', originName: 'Alexandria', dest: 'TUN', destName: 'Tunis',
             eta: 140, progress: 15, coords: [31.1000, 29.5000] as [number, number],
-            heading: 280, originCoords: AIRPORT_COORDS['HBE'], destCoords: AIRPORT_COORDS['TUN'],
+            heading: 280, originCoords: lookupAirport('HBE')?.coords, destCoords: lookupAirport('TUN')?.coords,
             passengers: 80, aircraft: 'Embraer E190',
             personas: { p1: 0, p2: 0, p3: 80, p4: 0, p5: 0, p6: 10, p7: 10 }
         }
@@ -294,16 +274,18 @@ export default function ActiveFlightsPage() {
         ));
 
         void (async () => {
-            try {
-                if (airportCodes.length === 0) {
-                    setAirportLookup({});
-                    return;
-                }
+            const { found: localFound, missing } = partitionAirports(airportCodes);
 
+            if (missing.length === 0) {
+                setAirportLookup(localFound);
+                return;
+            }
+
+            try {
                 const response = await fetch('http://localhost:5000/api/airports-batch', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ codes: airportCodes })
+                    body: JSON.stringify({ codes: missing })
                 });
 
                 const data = await response.json();
@@ -311,10 +293,10 @@ export default function ActiveFlightsPage() {
                     throw new Error(data?.error || 'Airport batch fetch failed.');
                 }
 
-                setAirportLookup(data?.airports || {});
+                setAirportLookup({ ...localFound, ...(data?.airports || {}) });
             } catch (error) {
                 console.error('Airport batch fetch error:', error);
-                setAirportLookup({});
+                setAirportLookup(localFound);
             }
         })();
 
@@ -355,10 +337,10 @@ export default function ActiveFlightsPage() {
 
             const originCoords = f?.origin_coords
                 ? (f.origin_coords as [number, number])
-                : airportLookup[originCode]?.coords || AIRPORT_COORDS[originCode] || null;
+                : airportLookup[originCode]?.coords || lookupAirport(originCode)?.coords || null;
             const destCoords = f?.dest_coords
                 ? (f.dest_coords as [number, number])
-                : airportLookup[destinationCode]?.coords || AIRPORT_COORDS[destinationCode] || null;
+                : airportLookup[destinationCode]?.coords || lookupAirport(destinationCode)?.coords || null;
 
             let coords: [number, number];
             let heading: number;
@@ -382,9 +364,9 @@ export default function ActiveFlightsPage() {
                 status: formatFlightStatus(f?.flight_status),
                 statusClass: getFlightStatusClass(f?.flight_status),
                 origin: originCode,
-                originName: f?.route?.details?.origin_name || AIRPORT_NAMES[originCode] || 'Unknown Origin',
+                originName: f?.route?.details?.origin_name || lookupAirport(originCode)?.name || 'Unknown Origin',
                 dest: destinationCode,
-                destName: AIRPORT_NAMES[destinationCode] || destinationCode,
+                destName: lookupAirport(destinationCode)?.name || destinationCode,
                 eta,
                 progress,
                 departureTimestamp,
@@ -469,7 +451,7 @@ export default function ActiveFlightsPage() {
             return;
         }
 
-        const fallbackCoords = AIRPORT_COORDS[airportCode];
+        const fallbackCoords = lookupAirport(airportCode)?.coords;
         if (fallbackCoords) {
             setSelectedAirportCenter([fallbackCoords[0], fallbackCoords[1]]);
         }
