@@ -6,6 +6,8 @@ const fs = require("fs");
 const path = require("path");
 const csv = require("csv-parser");
 const cors = require("cors");
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 const db = require('./db');
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -19,6 +21,9 @@ const API_URL = "https://api.aviationstack.com/v1/flights";
 const AIRPORTS_URL = "https://api.aviationstack.com/v1/airports";
 const DOMESTIC_EGYPT_AIRPORTS = ["CAI", "SSH", "HRG", "LXR", "ASW", "HBE", "ALY", "TCP", "RMF"];
 const AIRCRAFT_CAPACITIES = { "B738": 189, "A320": 180, "A220": 135, "B38M": 189, "A321": 220, "A333": 300, "A21N": 240, "AT72": 72 };
+const JWT_SECRET = process.env.JWT_SECRET || 'aerotwin-jwt-fallback-secret';
+const JWT_EXPIRES_IN = '24h';
+const BCRYPT_SALT_ROUNDS = 12;
 const AIRPORT_COORDINATES = {
     // Egypt
     HBE: { code: "HBE", name: "Borg El Arab Airport", coords: [30.9177, 29.6964] },
@@ -591,6 +596,33 @@ function resolvePlaneType(flightIata, apiPlane) {
 // Middleware
 app.use(cors()); // Enable CORS for all routes
 app.use(express.json());
+
+// ==========================================
+// AUTH MIDDLEWARE & TOKEN BLACKLIST
+// ==========================================
+const tokenBlacklist = new Set();
+
+function authenticateToken(req, res, next) {
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.startsWith('Bearer ') ? authHeader.split(' ')[1] : null;
+
+    if (!token) {
+        return res.status(401).json({ error: 'Authentication required.' });
+    }
+
+    if (tokenBlacklist.has(token)) {
+        return res.status(401).json({ error: 'Token has been invalidated.' });
+    }
+
+    try {
+        const decoded = jwt.verify(token, JWT_SECRET);
+        req.user = decoded;
+        req.token = token;
+        next();
+    } catch (err) {
+        return res.status(401).json({ error: 'Invalid or expired token.' });
+    }
+}
 
 // FLEET INTELLIGENCE (For filling nulls)
 const fleetDatabase = {
@@ -1480,6 +1512,147 @@ app.post('/api/analytics/queue', async (req, res) => {
     } catch (err) {
         console.error('[Analytics] queue insert error:', err.message);
         return res.status(500).json({ error: 'Failed to save queue snapshot.' });
+    }
+});
+
+// ==========================================
+// 7. AUTH ENDPOINTS
+// ==========================================
+
+/**
+ * POST /api/signup
+ * Body: { username, full_name, email, password }
+ * Creates a new user account. Returns the user without password_hash.
+ */
+app.post('/api/signup', async (req, res) => {
+    try {
+        const { username, full_name, email, password } = req.body || {};
+
+        // Validate required fields
+        if (!username || !full_name || !email || !password) {
+            return res.status(400).json({ error: 'All fields are required: username, full_name, email, password.' });
+        }
+
+        if (typeof username !== 'string' || username.trim().length < 3) {
+            return res.status(400).json({ error: 'Username must be at least 3 characters.' });
+        }
+
+        if (typeof password !== 'string' || password.length < 8) {
+            return res.status(400).json({ error: 'Password must be at least 8 characters.' });
+        }
+
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (typeof email !== 'string' || !emailRegex.test(email.trim())) {
+            return res.status(400).json({ error: 'Invalid email format.' });
+        }
+
+        // Check for duplicate username
+        const existingUsername = await db.findUserByUsername(username.trim());
+        if (existingUsername) {
+            return res.status(409).json({ error: 'Username already taken.' });
+        }
+
+        // Check for duplicate email
+        const existingEmail = await db.findUserByEmail(email.trim());
+        if (existingEmail) {
+            return res.status(409).json({ error: 'Email already registered.' });
+        }
+
+        // Hash password and create user
+        const passwordHash = await bcrypt.hash(password, BCRYPT_SALT_ROUNDS);
+        const user = await db.createUser(username.trim(), full_name.trim(), email.trim(), passwordHash);
+
+        console.log(`✅ [Auth] User created: ${user.username} (id: ${user.id})`);
+        return res.status(201).json({ success: true, user });
+    } catch (error) {
+        console.error('[Auth] Signup error:', error.message);
+        return res.status(500).json({ error: 'Failed to create user.' });
+    }
+});
+
+/**
+ * POST /api/signin
+ * Body: { identifier, password } — identifier can be username or email
+ * Returns a JWT token on success.
+ */
+app.post('/api/signin', async (req, res) => {
+    try {
+        const { identifier, password } = req.body || {};
+
+        if (!identifier || !password) {
+            return res.status(400).json({ error: 'Both identifier (username or email) and password are required.' });
+        }
+
+        const user = await db.findUserByUsernameOrEmail(identifier.trim());
+        if (!user) {
+            return res.status(401).json({ error: 'Invalid credentials.' });
+        }
+
+        const passwordValid = await bcrypt.compare(password, user.password_hash);
+        if (!passwordValid) {
+            return res.status(401).json({ error: 'Invalid credentials.' });
+        }
+
+        const tokenPayload = { id: user.id, username: user.username, email: user.email };
+        const token = jwt.sign(tokenPayload, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
+
+        console.log(`✅ [Auth] User signed in: ${user.username} (id: ${user.id})`);
+        return res.status(200).json({
+            success: true,
+            token,
+            user: {
+                id: user.id,
+                username: user.username,
+                full_name: user.full_name,
+                email: user.email,
+                created_at: user.created_at,
+                updated_at: user.updated_at,
+            },
+        });
+    } catch (error) {
+        console.error('[Auth] Signin error:', error.message);
+        return res.status(500).json({ error: 'Failed to sign in.' });
+    }
+});
+
+/**
+ * POST /api/signout
+ * Requires: Authorization: Bearer <token>
+ * Invalidates the current token.
+ */
+app.post('/api/signout', authenticateToken, (req, res) => {
+    try {
+        tokenBlacklist.add(req.token);
+        console.log(`✅ [Auth] User signed out: ${req.user.username} (id: ${req.user.id})`);
+        return res.status(200).json({ success: true, message: 'Signed out successfully.' });
+    } catch (error) {
+        console.error('[Auth] Signout error:', error.message);
+        return res.status(500).json({ error: 'Failed to sign out.' });
+    }
+});
+
+/**
+ * DELETE /api/user
+ * Requires: Authorization: Bearer <token>
+ * Deletes the authenticated user's account.
+ */
+app.delete('/api/user', authenticateToken, async (req, res) => {
+    try {
+        const userId = req.user.id;
+
+        const deletedUser = await db.deleteUserById(userId);
+        if (!deletedUser) {
+            return res.status(404).json({ error: 'User not found.' });
+        }
+
+        // Invalidate the token after deletion
+        tokenBlacklist.add(req.token);
+
+        console.log(`✅ [Auth] User deleted: ${deletedUser.username} (id: ${deletedUser.id})`);
+        return res.status(200).json({ success: true, user: deletedUser });
+    } catch (error) {
+        console.error('[Auth] Delete user error:', error.message);
+        return res.status(500).json({ error: 'Failed to delete user.' });
     }
 });
 

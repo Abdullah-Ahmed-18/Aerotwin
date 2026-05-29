@@ -230,6 +230,77 @@ async function insertQueueSnapshot(airport, results) {
   }
 }
 
+// ── User helpers ───────────────────────────────────────────────────────────────
+
+/**
+ * Create a new user. Returns the inserted row (without password_hash).
+ */
+async function createUser(username, fullName, email, passwordHash) {
+  const { rows } = await query(
+    `INSERT INTO users (username, full_name, email, password_hash)
+     VALUES ($1, $2, LOWER($3), $4)
+     RETURNING id, username, full_name, email, created_at, updated_at`,
+    [username, fullName, email, passwordHash]
+  );
+  return rows[0];
+}
+
+/**
+ * Find a user by username (exact, case-sensitive).
+ */
+async function findUserByUsername(username) {
+  const { rows } = await query(
+    `SELECT * FROM users WHERE username = $1`,
+    [username]
+  );
+  return rows[0] || null;
+}
+
+/**
+ * Find a user by email (case-insensitive).
+ */
+async function findUserByEmail(email) {
+  const { rows } = await query(
+    `SELECT * FROM users WHERE LOWER(email) = LOWER($1)`,
+    [email]
+  );
+  return rows[0] || null;
+}
+
+/**
+ * Find a user by username OR email (for sign-in).
+ */
+async function findUserByUsernameOrEmail(identifier) {
+  const { rows } = await query(
+    `SELECT * FROM users WHERE username = $1 OR LOWER(email) = LOWER($1)`,
+    [identifier]
+  );
+  return rows[0] || null;
+}
+
+/**
+ * Find a user by id.
+ */
+async function findUserById(id) {
+  const { rows } = await query(
+    `SELECT id, username, full_name, email, created_at, updated_at FROM users WHERE id = $1`,
+    [id]
+  );
+  return rows[0] || null;
+}
+
+/**
+ * Delete a user by id. Returns the deleted row (without password_hash) or null.
+ */
+async function deleteUserById(id) {
+  const { rows } = await query(
+    `DELETE FROM users WHERE id = $1
+     RETURNING id, username, full_name, email, created_at, updated_at`,
+    [id]
+  );
+  return rows[0] || null;
+}
+
 // ── Analytics query helpers ────────────────────────────────────────────────────
 
 /**
@@ -410,4 +481,11 @@ module.exports = {
   getQueueHistory,
   // Search
   fullSearch,
+  // Users
+  createUser,
+  findUserByUsername,
+  findUserByEmail,
+  findUserByUsernameOrEmail,
+  findUserById,
+  deleteUserById,
 };

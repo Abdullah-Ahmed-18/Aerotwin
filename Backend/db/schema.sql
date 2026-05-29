@@ -145,3 +145,42 @@ SELECT add_retention_policy(
   INTERVAL '30 days',
   if_not_exists => TRUE
 );
+
+-- ── 4. Users ──────────────────────────────────────────────────────────────────
+CREATE TABLE IF NOT EXISTS users (
+  id            INT             GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  username      VARCHAR(100)    NOT NULL,
+  full_name     VARCHAR(200)    NOT NULL,
+  email         VARCHAR(255)    NOT NULL,
+  password_hash VARCHAR(255)    NOT NULL,
+  created_at    TIMESTAMPTZ     NOT NULL DEFAULT NOW(),
+  updated_at    TIMESTAMPTZ     NOT NULL DEFAULT NOW()
+);
+
+CREATE UNIQUE INDEX IF NOT EXISTS idx_users_username
+  ON users (username);
+
+CREATE UNIQUE INDEX IF NOT EXISTS idx_users_email_lower
+  ON users (LOWER(email));
+
+-- Auto-update updated_at on row modification
+CREATE OR REPLACE FUNCTION update_users_updated_at()
+RETURNS TRIGGER AS $$
+BEGIN
+  NEW.updated_at = NOW();
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_trigger WHERE tgname = 'trg_users_updated_at'
+  ) THEN
+    CREATE TRIGGER trg_users_updated_at
+      BEFORE UPDATE ON users
+      FOR EACH ROW
+      EXECUTE FUNCTION update_users_updated_at();
+  END IF;
+END;
+$$;
