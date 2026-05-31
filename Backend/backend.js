@@ -11,6 +11,8 @@ const jwt = require("jsonwebtoken");
 const db = require('./db');
 const app = express();
 const PORT = process.env.PORT || 5000;
+const swaggerUi = require("swagger-ui-express");
+const YAML = require("yamljs");
 
 // ==========================================
 // CONFIGURATION
@@ -597,6 +599,9 @@ function resolvePlaneType(flightIata, apiPlane) {
 app.use(cors()); // Enable CORS for all routes
 app.use(express.json());
 
+
+const swaggerSpec = YAML.load("./openapi.yaml");
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 // ==========================================
 // AUTH MIDDLEWARE & TOKEN BLACKLIST
 // ==========================================

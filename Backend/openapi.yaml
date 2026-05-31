@@ -1,0 +1,656 @@
+openapi: 3.0.3
+
+info:
+  title: AeroTwin Backend API
+  version: 1.0.0
+  description: >
+    REST API for the AeroTwin airport digital-twin project. Provides flight
+    tracking (AviationStack + OpenSky), airport coordinate resolution,
+    full-text search, TimescaleDB analytics, JWT-based authentication, and a
+    Unity-based passenger-flow simulation runner.
+
+servers:
+  - url: http://localhost:5000
+    description: Local development server
+
+tags:
+  - name: Flights
+    description: Active flight retrieval and export
+  - name: Airports
+    description: Airport coordinate resolution
+  - name: OpenSky
+    description: Live and historical OpenSky Network data
+  - name: Search
+    description: Full-text search across airports, aircraft, and flights
+  - name: Analytics
+    description: TimescaleDB time-series analytics
+  - name: Auth
+    description: User registration, sign-in, sign-out, and account deletion
+  - name: Simulation
+    description: Unity simulation runner (start runs, poll status, fetch results)
+  - name: Twin
+    description: Digital-twin data formatting
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+      example:
+        error: A description of what went wrong.
+    Airport:
+      type: object
+      properties:
+        code:
+          type: string
+          example: HBE
+        name:
+          type: string
+          example: Borg El Arab Airport
+        coords:
+          type: array
+          description: "[latitude, longitude]"
+          items:
+            type: number
+          example: [30.9177, 29.6964]
+
+paths:
+
+  /api/format-aerotwin-data:
+    post:
+      tags: [Twin]
+      summary: Format frontend checkpoint data for the digital twin
+      description: >
+        Accepts an array of checkpoint objects from the frontend editor and
+        returns a formatted payload with mapped keys and resolved
+        next-checkpoint anchors, split by departure/arrival flow.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: object
+            example:
+              - id: "node-1"
+                idCode: "CP_ENTRANCE"
+                flowType: "departure"
+                nextCheckpointIds: ["node-2"]
+      responses:
+        '200':
+          description: Formatted checkpoint payload.
+        '500':
+          description: Formatting failed.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+
+  /api/fetch-active-flights:
+    get:
+      tags: [Flights]
+      summary: Fetch active flights for an airport
+      description: >
+        Merges AviationStack arrivals/departures with OpenSky live states,
+        historical arrivals, and recent flights. Falls back to mock data when
+        no live flights are returned.
+      parameters:
+        - in: query
+          name: airport
+          schema: { type: string, default: HBE }
+          description: IATA or ICAO airport code.
+        - in: query
+          name: status
+          schema: { type: string, enum: [active, all], default: active }
+          description: Flight status filter.
+      responses:
+        '200':
+          description: Combined arrivals and departures with metadata.
+        '500':
+          description: Upstream fetch failed.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+
+  /api/save-active-flights:
+    post:
+      tags: [Flights]
+      summary: Persist active flights to disk and TimescaleDB
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                airport: { type: string, example: HBE }
+                flights:
+                  type: array
+                  items: { type: object }
+                meta: { type: object }
+      responses:
+        '200':
+          description: Flights saved.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success: { type: boolean }
+                  path: { type: string }
+                  count: { type: integer }
+        '400':
+          description: No flights provided for export.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+        '500':
+          description: Failed to save active flights JSON.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+
+  /api/airports-batch:
+    post:
+      tags: [Airports]
+      summary: Resolve coordinates for multiple airports (credit-saving)
+      description: >
+        Resolves only uncached codes via the AviationStack API; cached codes
+        are returned for free. Reports credits used vs saved.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                codes:
+                  type: array
+                  items: { type: string }
+              example:
+                codes: ["HBE", "CAI", "DXB"]
+      responses:
+        '200':
+          description: Resolved airports plus credit accounting.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  count: { type: integer }
+                  airports:
+                    type: object
+                    additionalProperties: { $ref: '#/components/schemas/Airport' }
+                  credits_saved: { type: integer }
+                  credits_used: { type: integer }
+        '500':
+          description: Batch lookup failed.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+
+  /api/airport-location:
+    get:
+      tags: [Airports]
+      summary: Resolve coordinates for a single airport
+      parameters:
+        - in: query
+          name: airport
+          required: true
+          schema: { type: string, default: HBE }
+          description: IATA airport code (e.g. HBE).
+      responses:
+        '200':
+          description: Resolved airport object.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Airport' }
+        '400':
+          description: Airport code missing.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+        '404':
+          description: No coordinates found.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+        '500':
+          description: Lookup failed.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+
+  /api/opensky/live:
+    get:
+      tags: [OpenSky]
+      summary: Live aircraft near an airport (real-time state vectors)
+      parameters:
+        - in: query
+          name: airport
+          schema: { type: string, default: HBE }
+          description: IATA code; must exist in AIRPORT_COORDINATES.
+      responses:
+        '200':
+          description: Live aircraft states with bounding-box metadata.
+        '400':
+          description: No coordinates configured for the airport.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+        '500':
+          description: Failed to fetch live OpenSky data.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+
+  /api/opensky/arrivals:
+    get:
+      tags: [OpenSky]
+      summary: Historical arrivals at an airport
+      parameters:
+        - in: query
+          name: airport
+          schema: { type: string, default: HBE }
+        - in: query
+          name: hours
+          schema: { type: integer, default: 48, maximum: 168 }
+          description: Hours of history to query (capped at 168).
+      responses:
+        '200':
+          description: Arrival records with metadata.
+        '500':
+          description: Failed to fetch OpenSky arrivals.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+
+  /api/search:
+    get:
+      tags: [Search]
+      summary: Full-text search across airports, aircraft, and flights
+      description: Queries GIN full-text indexes across three datasets in parallel.
+      parameters:
+        - in: query
+          name: q
+          required: true
+          schema: { type: string, minLength: 2 }
+          description: Search term (minimum 2 characters).
+        - in: query
+          name: type
+          schema: { type: string, enum: [all, airports, aircraft, flights], default: all }
+        - in: query
+          name: limit
+          schema: { type: integer, minimum: 1, maximum: 100, default: 20 }
+      responses:
+        '200':
+          description: Search results grouped by type.
+        '400':
+          description: Query under 2 characters.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+        '500':
+          description: Search failed.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+
+  /api/analytics/flights:
+    get:
+      tags: [Analytics]
+      summary: Raw flight snapshot rows for an airport/time window
+      parameters:
+        - in: query
+          name: airport
+          schema: { type: string, default: HBE }
+        - in: query
+          name: hours
+          schema: { type: integer, default: 24, minimum: 1, maximum: 720 }
+      responses:
+        '200':
+          description: Flight snapshots with metadata.
+        '500':
+          description: Failed to fetch flight analytics.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+
+  /api/analytics/status-trend:
+    get:
+      tags: [Analytics]
+      summary: Hourly flight-status counts (time-bucket aggregation)
+      parameters:
+        - in: query
+          name: airport
+          schema: { type: string, default: HBE }
+        - in: query
+          name: hours
+          schema: { type: integer, default: 6, minimum: 1, maximum: 168 }
+      responses:
+        '200':
+          description: Hourly status trend rows.
+        '500':
+          description: Failed to fetch status trend.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+
+  /api/analytics/queue:
+    get:
+      tags: [Analytics]
+      summary: 5-minute-bucket queue wait history
+      parameters:
+        - in: query
+          name: airport
+          schema: { type: string, default: HBE }
+        - in: query
+          name: hours
+          schema: { type: number, default: 1, minimum: 0.08, maximum: 168 }
+      responses:
+        '200':
+          description: Queue history rows with metadata.
+        '500':
+          description: Failed to fetch queue history.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+    post:
+      tags: [Analytics]
+      summary: Persist a queue snapshot
+      description: Called from the frontend QueueWaitEstimator to store checkpoint results.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                airport: { type: string, example: HBE }
+                results:
+                  type: array
+                  items: { type: object }
+      responses:
+        '201':
+          description: Snapshot saved.
+        '400':
+          description: No checkpoint results provided.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+        '500':
+          description: Failed to save queue snapshot.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+
+  /api/signup:
+    post:
+      tags: [Auth]
+      summary: Register a new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [username, full_name, email, password]
+              properties:
+                username: { type: string, minLength: 3 }
+                full_name: { type: string }
+                email: { type: string, format: email }
+                password: { type: string, minLength: 8 }
+      responses:
+        '201':
+          description: User created.
+        '400':
+          description: Validation failed (missing/invalid fields).
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+        '409':
+          description: Username or email already exists.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+
+  /api/signin:
+    post:
+      tags: [Auth]
+      summary: Sign in and receive a JWT
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [identifier, password]
+              properties:
+                identifier:
+                  type: string
+                  description: Username or email.
+                password: { type: string }
+      responses:
+        '200':
+          description: Signed in; returns a JWT and user info.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token: { type: string }
+                  user: { type: object }
+        '400':
+          description: Missing identifier or password.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+        '401':
+          description: Invalid credentials.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+
+  /api/signout:
+    post:
+      tags: [Auth]
+      summary: Sign out (blacklist the current token)
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Signed out successfully.
+        '401':
+          description: Missing or invalid token.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+        '500':
+          description: Failed to sign out.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+
+  /api/user:
+    delete:
+      tags: [Auth]
+      summary: Delete the authenticated user's account
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: User deleted; token invalidated.
+        '401':
+          description: Missing or invalid token.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+        '404':
+          description: User not found.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+        '500':
+          description: Failed to delete user.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+
+  /api/runs:
+    post:
+      tags: [Simulation]
+      summary: Start a new Unity simulation run
+      description: >
+        Writes the supplied config and flight schedule to a run directory and
+        spawns the Unity executable in batch mode. Returns a runId for polling.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [desconfig, flights]
+              properties:
+                desconfig:
+                  type: object
+                  description: AerotwinConfig.json contents.
+                flights:
+                  type: array
+                  items: { type: object }
+                absconfigs:
+                  description: Optional global persona weights (array or object).
+                  oneOf:
+                    - type: array
+                      items: { type: object }
+                    - type: object
+      responses:
+        '202':
+          description: Run accepted and started.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  runId: { type: string }
+                  status: { type: string, example: running }
+        '400':
+          description: Missing desconfig or flights array.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+        '503':
+          description: Unity executable not found.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+        '500':
+          description: Failed to start simulation run.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+
+  /api/runs/{id}/status:
+    get:
+      tags: [Simulation]
+      summary: Poll a simulation run's status
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: Run status, start time, elapsed ms, and any error.
+        '404':
+          description: Run not found.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+
+  /api/runs/{id}/results:
+    get:
+      tags: [Simulation]
+      summary: Fetch parsed KPI results for a completed run
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: Parsed summary, per-checkpoint, and per-flight metrics.
+        '400':
+          description: Run is not completed.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+        '404':
+          description: Run not found.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+        '500':
+          description: Could not parse simulation results.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+
+  /api/runs/{id}/events:
+    get:
+      tags: [Simulation]
+      summary: Fetch raw per-passenger event rows from a run's CSV
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string }
+        - in: query
+          name: flight
+          schema: { type: string }
+          description: Optional flight ID to filter rows.
+      responses:
+        '200':
+          description: Event rows (optionally filtered by flight).
+        '404':
+          description: Run not found or CSV output missing.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+        '500':
+          description: Failed to parse events.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+
+  /api/runs/{id}/replay:
+    get:
+      tags: [Simulation]
+      summary: Fetch replay data for a completed run
+      description: >
+        Reads from the in-memory run map, falling back to the on-disk run
+        directory. Requires both the output CSV and AerotwinConfig.json.
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: Replay data assembled from CSV and run config.
+        '404':
+          description: Run, CSV output, or config file not found.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+        '409':
+          description: Run is not completed.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
