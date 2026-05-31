@@ -1,14 +1,15 @@
 'use client';
 
-import { useState, useEffect, useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { ReactFlow, Background, Controls, useNodesState, useEdgesState, type Node, type Edge } from '@xyflow/react';
 import '@xyflow/react/dist/style.css'; // Required for React Flow to work!
 
 import ConfigurationSidebar, { Checkpoint } from '@/components/ConfigurationSidebar';
 import PassengerNode from '@/components/PassengerNode';
+import { useAppState } from '@/lib/AppStateContext';
 
 export default function Dashboard() {
-  const [checkpoints, setCheckpoints] = useState<Checkpoint[]>([]);
+  const { checkpoints, setCheckpoints } = useAppState();
 
   type FlowNodeData = {
     title: string;

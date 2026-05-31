@@ -177,9 +177,9 @@ function formatTime(secs: number): string {
 
 function statusColor(s: CheckpointResult['status']) {
   switch (s) {
-    case 'critical': return { bar: 'bg-rose-500', text: 'text-rose-400', border: 'border-rose-500/30', bg: 'bg-rose-500/10' };
-    case 'warning':  return { bar: 'bg-amber-400', text: 'text-amber-400', border: 'border-amber-500/30', bg: 'bg-amber-500/10' };
-    default:         return { bar: 'bg-emerald-500', text: 'text-emerald-400', border: 'border-emerald-500/20', bg: 'bg-emerald-500/5' };
+    case 'critical': return { bar: 'bg-rose-500', text: 'text-rose-600', border: 'border-rose-500/30', bg: 'bg-rose-500/10' };
+    case 'warning':  return { bar: 'bg-amber-400', text: 'text-amber-600', border: 'border-amber-500/30', bg: 'bg-amber-500/10' };
+    default:         return { bar: 'bg-emerald-500', text: 'text-emerald-600', border: 'border-emerald-500/20', bg: 'bg-emerald-500/5' };
   }
 }
 
@@ -265,17 +265,17 @@ export default function QueueWaitEstimator({ flights, airport = 'HBE' }: Props) 
     <div className="space-y-3">
       {/* Summary Row */}
       <div className="grid grid-cols-3 gap-2">
-        <div className="p-2 bg-slate-800/50 rounded-lg border border-slate-700/50 text-center">
+        <div className="p-2 bg-slate-50 rounded-lg border border-slate-200 text-center">
           <p className="text-slate-500 text-[9px] uppercase tracking-wider">Total Pax</p>
-          <p className="text-white font-bold text-sm mt-0.5">{totalPax.toLocaleString()}</p>
+          <p className="text-slate-800 font-bold text-sm mt-0.5">{totalPax.toLocaleString()}</p>
         </div>
-        <div className={`p-2 rounded-lg border text-center ${criticalCount > 0 ? 'bg-rose-500/10 border-rose-500/30' : 'bg-slate-800/50 border-slate-700/50'}`}>
+        <div className={`p-2 rounded-lg border text-center ${criticalCount > 0 ? 'bg-rose-500/10 border-rose-500/30' : 'bg-slate-50 border-slate-200'}`}>
           <p className="text-slate-500 text-[9px] uppercase tracking-wider">Critical</p>
-          <p className={`font-bold text-sm mt-0.5 ${criticalCount > 0 ? 'text-rose-400' : 'text-slate-400'}`}>{criticalCount}</p>
+          <p className={`font-bold text-sm mt-0.5 ${criticalCount > 0 ? 'text-rose-600' : 'text-slate-400'}`}>{criticalCount}</p>
         </div>
-        <div className="p-2 bg-slate-800/50 rounded-lg border border-slate-700/50 text-center">
+        <div className="p-2 bg-slate-50 rounded-lg border border-slate-200 text-center">
           <p className="text-slate-500 text-[9px] uppercase tracking-wider">Total Wait</p>
-          <p className="text-cyan-400 font-bold text-sm mt-0.5">{formatTime(totalWait)}</p>
+          <p className="text-cyan-600 font-bold text-sm mt-0.5">{formatTime(totalWait)}</p>
         </div>
       </div>
 
@@ -290,7 +290,7 @@ export default function QueueWaitEstimator({ flights, airport = 'HBE' }: Props) 
               className={`flex-1 py-1 rounded-md text-[9px] font-bold uppercase tracking-wide transition-all ${
                 windowMinutes === w
                   ? 'bg-cyan-600 text-white'
-                  : 'bg-slate-800 text-slate-400 hover:bg-slate-700'
+                  : 'bg-white text-slate-500 hover:bg-slate-50 border border-slate-200'
               }`}
             >
               {w}m
@@ -319,7 +319,7 @@ export default function QueueWaitEstimator({ flights, airport = 'HBE' }: Props) 
                 <span className="text-base shrink-0">{r.checkpoint.icon}</span>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center justify-between">
-                    <p className="text-slate-200 text-[10px] font-bold truncate">{r.checkpoint.label}</p>
+                    <p className="text-slate-700 text-[10px] font-bold truncate">{r.checkpoint.label}</p>
                     <div className="flex items-center gap-1.5 shrink-0">
                       {r.status === 'critical' && <AlertTriangle size={10} className="text-rose-400" />}
                       {r.status === 'ok' && <CheckCircle size={10} className="text-emerald-400" />}
@@ -330,7 +330,7 @@ export default function QueueWaitEstimator({ flights, airport = 'HBE' }: Props) 
                     </div>
                   </div>
                   {/* Utilisation bar */}
-                  <div className="mt-1 h-1.5 bg-slate-800 rounded-full overflow-hidden">
+                  <div className="mt-1 h-1.5 bg-slate-200 rounded-full overflow-hidden">
                     <div
                       className={`h-full rounded-full transition-all duration-500 ${c.bar}`}
                       style={{ width: `${utilisationPct}%` }}
@@ -341,31 +341,31 @@ export default function QueueWaitEstimator({ flights, airport = 'HBE' }: Props) 
 
               {/* Expanded Detail */}
               {isExpanded && (
-                <div className="px-3 pb-3 pt-0 border-t border-slate-700/30 space-y-2">
+                <div className="px-3 pb-3 pt-0 border-t border-slate-100 space-y-2">
                   <div className="grid grid-cols-2 gap-2 mt-2">
-                    <div className="bg-slate-900/60 rounded-md p-2">
+                    <div className="bg-slate-50 rounded-md p-2">
                       <p className="text-slate-500 text-[9px] uppercase">Utilisation</p>
                       <p className={`text-sm font-bold ${c.text}`}>{utilisationPct}%</p>
                     </div>
-                    <div className="bg-slate-900/60 rounded-md p-2">
+                    <div className="bg-slate-50 rounded-md p-2">
                       <p className="text-slate-500 text-[9px] uppercase">Pax / min</p>
-                      <p className="text-white text-sm font-bold">{(r.arrivalRate * 60).toFixed(1)}</p>
+                      <p className="text-slate-800 text-sm font-bold">{(r.arrivalRate * 60).toFixed(1)}</p>
                     </div>
-                    <div className="bg-slate-900/60 rounded-md p-2">
+                    <div className="bg-slate-50 rounded-md p-2">
                       <p className="text-slate-500 text-[9px] uppercase">Agents</p>
-                      <p className="text-white text-sm font-bold">{r.totalAgents}</p>
+                      <p className="text-slate-800 text-sm font-bold">{r.totalAgents}</p>
                     </div>
-                    <div className="bg-slate-900/60 rounded-md p-2">
+                    <div className="bg-slate-50 rounded-md p-2">
                       <p className="text-slate-500 text-[9px] uppercase">Queue Est.</p>
-                      <p className="text-white text-sm font-bold">{Math.ceil(r.queueLength)} pax</p>
+                      <p className="text-slate-800 text-sm font-bold">{Math.ceil(r.queueLength)} pax</p>
                     </div>
-                    <div className="bg-slate-900/60 rounded-md p-2">
+                    <div className="bg-slate-50 rounded-md p-2">
                       <p className="text-slate-500 text-[9px] uppercase">Svc Time</p>
-                      <p className="text-white text-sm font-bold">{formatTime(r.avgServiceTime)}</p>
+                      <p className="text-slate-800 text-sm font-bold">{formatTime(r.avgServiceTime)}</p>
                     </div>
-                    <div className="bg-slate-900/60 rounded-md p-2">
+                    <div className="bg-slate-50 rounded-md p-2">
                       <p className="text-slate-500 text-[9px] uppercase">Max Cap</p>
-                      <p className="text-white text-sm font-bold">{r.totalCapacity}</p>
+                      <p className="text-slate-800 text-sm font-bold">{r.totalCapacity}</p>
                     </div>
                   </div>
 
@@ -383,7 +383,7 @@ export default function QueueWaitEstimator({ flights, airport = 'HBE' }: Props) 
                   {r.status === 'critical' && (
                     <div className="flex items-start gap-2 p-2 bg-rose-500/10 rounded-md border border-rose-500/20">
                       <Zap size={10} className="text-rose-400 mt-0.5 shrink-0" />
-                      <p className="text-rose-300 text-[9px]">
+                      <p className="text-rose-600 text-[9px]">
                         Queue utilisation exceeds 90% — consider opening additional stations or diverting pax to alternate checkpoints.
                       </p>
                     </div>

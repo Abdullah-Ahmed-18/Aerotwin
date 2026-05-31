@@ -1,0 +1,777 @@
+{
+  "Checkpoints": [
+    {
+      "Checkpoint_ID": "1ST-SEC",
+      "Checkpoint_Type": "Security",
+      "Prev_Anchor": "Terminal_Entrance",
+      "Next_Anchor": [
+        "CHK-BAG",
+        "DIG-CHK"
+      ],
+      "Stations": [
+        {
+          "Station_ID": "First Lane",
+          "Staffing_No": 3,
+          "Avg_Service_Time": 60,
+          "Max_Queue_Cap": 30,
+          "Efficiency_Factor": 1,
+          "Allowed_Class": [
+            "All Classes"
+          ],
+          "Feature_Val": 0,
+          "Tasks": []
+        },
+        {
+          "Station_ID": "Lane 2",
+          "Staffing_No": 2,
+          "Avg_Service_Time": 60,
+          "Max_Queue_Cap": 30,
+          "Efficiency_Factor": 1,
+          "Allowed_Class": [
+            "All Classes"
+          ],
+          "Feature_Val": 0,
+          "Tasks": []
+        },
+        {
+          "Station_ID": "Lane 3",
+          "Staffing_No": 3,
+          "Avg_Service_Time": 60,
+          "Max_Queue_Cap": 30,
+          "Efficiency_Factor": 1,
+          "Allowed_Class": [
+            "All Classes"
+          ],
+          "Feature_Val": 1,
+          "Tasks": []
+        }
+      ]
+    },
+    {
+      "Checkpoint_ID": "CHK-BAG",
+      "Checkpoint_Type": "Check-in /w Baggage Tagging",
+      "Prev_Anchor": "1ST-SEC",
+      "Next_Anchor": [
+        "2ND-SEC",
+        "PAS-CHK"
+      ],
+      "Stations": [
+        {
+          "Station_ID": "Economy 1",
+          "Staffing_No": 1,
+          "Avg_Service_Time": 60,
+          "Max_Queue_Cap": 30,
+          "Efficiency_Factor": 1,
+          "Allowed_Class": [
+            "Economy"
+          ],
+          "Feature_Val": 0,
+          "Tasks": [
+            {
+              "Task_Name": "Greeting_And_ID_Request",
+              "Avg_Duration": 10,
+              "Probability": 1
+            },
+            {
+              "Task_Name": "Passport_Verification",
+              "Avg_Duration": 25,
+              "Probability": 1
+            },
+            {
+              "Task_Name": "Booking_Lookup",
+              "Avg_Duration": 20,
+              "Probability": 1
+            },
+            {
+              "Task_Name": "Seat_Assignment",
+              "Avg_Duration": 15,
+              "Probability": 1
+            },
+            {
+              "Task_Name": "Bag_Weighing",
+              "Avg_Duration": 20,
+              "Probability": 1
+            },
+            {
+              "Task_Name": "Overweight_Fee_Process",
+              "Avg_Duration": 60,
+              "Probability": 0.12
+            },
+            {
+              "Task_Name": "Bag_Tagging",
+              "Avg_Duration": 15,
+              "Probability": 1
+            },
+            {
+              "Task_Name": "Bag_Drop_Conveyor",
+              "Avg_Duration": 10,
+              "Probability": 1
+            },
+            {
+              "Task_Name": "Boarding_Pass_Print",
+              "Avg_Duration": 15,
+              "Probability": 1
+            },
+            {
+              "Task_Name": "Gate_Info_Briefing",
+              "Avg_Duration": 10,
+              "Probability": 1
+            },
+            {
+              "Task_Name": "Special_Assistance_Note",
+              "Avg_Duration": 40,
+              "Probability": 0.05
+            }
+          ]
+        },
+        {
+          "Station_ID": "Economy 2",
+          "Staffing_No": 1,
+          "Avg_Service_Time": 60,
+          "Max_Queue_Cap": 30,
+          "Efficiency_Factor": 1,
+          "Allowed_Class": [
+            "Economy"
+          ],
+          "Feature_Val": 0,
+          "Tasks": [
+            {
+              "Task_Name": "Greeting_And_ID_Request",
+              "Avg_Duration": 10,
+              "Probability": 1
+            },
+            {
+              "Task_Name": "Passport_Verification",
+              "Avg_Duration": 25,
+              "Probability": 1
+            },
+            {
+              "Task_Name": "Booking_Lookup",
+              "Avg_Duration": 20,
+              "Probability": 1
+            },
+            {
+              "Task_Name": "Seat_Assignment",
+              "Avg_Duration": 15,
+              "Probability": 1
+            },
+            {
+              "Task_Name": "Bag_Weighing",
+              "Avg_Duration": 20,
+              "Probability": 1
+            },
+            {
+              "Task_Name": "Overweight_Fee_Process",
+              "Avg_Duration": 60,
+              "Probability": 0.12
+            },
+            {
+              "Task_Name": "Bag_Tagging",
+              "Avg_Duration": 15,
+              "Probability": 1
+            },
+            {
+              "Task_Name": "Bag_Drop_Conveyor",
+              "Avg_Duration": 10,
+              "Probability": 1
+            },
+            {
+              "Task_Name": "Boarding_Pass_Print",
+              "Avg_Duration": 15,
+              "Probability": 1
+            },
+            {
+              "Task_Name": "Gate_Info_Briefing",
+              "Avg_Duration": 10,
+              "Probability": 1
+            },
+            {
+              "Task_Name": "Special_Assistance_Note",
+              "Avg_Duration": 40,
+              "Probability": 0.05
+            }
+          ]
+        },
+        {
+          "Station_ID": "Economy 3",
+          "Staffing_No": 1,
+          "Avg_Service_Time": 60,
+          "Max_Queue_Cap": 30,
+          "Efficiency_Factor": 1,
+          "Allowed_Class": [
+            "Economy"
+          ],
+          "Feature_Val": 0,
+          "Tasks": [
+            {
+              "Task_Name": "Greeting_And_ID_Request",
+              "Avg_Duration": 10,
+              "Probability": 1
+            },
+            {
+              "Task_Name": "Passport_Verification",
+              "Avg_Duration": 25,
+              "Probability": 1
+            },
+            {
+              "Task_Name": "Booking_Lookup",
+              "Avg_Duration": 20,
+              "Probability": 1
+            },
+            {
+              "Task_Name": "Seat_Assignment",
+              "Avg_Duration": 15,
+              "Probability": 1
+            },
+            {
+              "Task_Name": "Bag_Weighing",
+              "Avg_Duration": 20,
+              "Probability": 1
+            },
+            {
+              "Task_Name": "Overweight_Fee_Process",
+              "Avg_Duration": 60,
+              "Probability": 0.12
+            },
+            {
+              "Task_Name": "Bag_Tagging",
+              "Avg_Duration": 15,
+              "Probability": 1
+            },
+            {
+              "Task_Name": "Bag_Drop_Conveyor",
+              "Avg_Duration": 10,
+              "Probability": 1
+            },
+            {
+              "Task_Name": "Boarding_Pass_Print",
+              "Avg_Duration": 15,
+              "Probability": 1
+            },
+            {
+              "Task_Name": "Gate_Info_Briefing",
+              "Avg_Duration": 10,
+              "Probability": 1
+            },
+            {
+              "Task_Name": "Special_Assistance_Note",
+              "Avg_Duration": 40,
+              "Probability": 0.05
+            }
+          ]
+        },
+        {
+          "Station_ID": "Business 1",
+          "Staffing_No": 1,
+          "Avg_Service_Time": 60,
+          "Max_Queue_Cap": 30,
+          "Efficiency_Factor": 1,
+          "Allowed_Class": [
+            "Business"
+          ],
+          "Feature_Val": 0,
+          "Tasks": [
+            {
+              "Task_Name": "Greeting_And_ID_Request",
+              "Avg_Duration": 10,
+              "Probability": 1
+            },
+            {
+              "Task_Name": "Passport_Verification",
+              "Avg_Duration": 25,
+              "Probability": 1
+            },
+            {
+              "Task_Name": "Booking_Lookup",
+              "Avg_Duration": 20,
+              "Probability": 1
+            },
+            {
+              "Task_Name": "Seat_Assignment",
+              "Avg_Duration": 15,
+              "Probability": 1
+            },
+            {
+              "Task_Name": "Bag_Weighing",
+              "Avg_Duration": 20,
+              "Probability": 1
+            },
+            {
+              "Task_Name": "Overweight_Fee_Process",
+              "Avg_Duration": 60,
+              "Probability": 0.12
+            },
+            {
+              "Task_Name": "Bag_Tagging",
+              "Avg_Duration": 15,
+              "Probability": 1
+            },
+            {
+              "Task_Name": "Bag_Drop_Conveyor",
+              "Avg_Duration": 10,
+              "Probability": 1
+            },
+            {
+              "Task_Name": "Boarding_Pass_Print",
+              "Avg_Duration": 15,
+              "Probability": 1
+            },
+            {
+              "Task_Name": "Gate_Info_Briefing",
+              "Avg_Duration": 10,
+              "Probability": 1
+            },
+            {
+              "Task_Name": "Special_Assistance_Note",
+              "Avg_Duration": 40,
+              "Probability": 0.05
+            }
+          ]
+        },
+        {
+          "Station_ID": "Other",
+          "Staffing_No": 1,
+          "Avg_Service_Time": 60,
+          "Max_Queue_Cap": 30,
+          "Efficiency_Factor": 1,
+          "Allowed_Class": [
+            "PRM",
+            "First Class",
+            "VIP"
+          ],
+          "Feature_Val": 0,
+          "Tasks": [
+            {
+              "Task_Name": "Greeting_And_ID_Request",
+              "Avg_Duration": 10,
+              "Probability": 1
+            },
+            {
+              "Task_Name": "Passport_Verification",
+              "Avg_Duration": 25,
+              "Probability": 1
+            },
+            {
+              "Task_Name": "Booking_Lookup",
+              "Avg_Duration": 20,
+              "Probability": 1
+            },
+            {
+              "Task_Name": "Seat_Assignment",
+              "Avg_Duration": 15,
+              "Probability": 1
+            },
+            {
+              "Task_Name": "Bag_Weighing",
+              "Avg_Duration": 20,
+              "Probability": 1
+            },
+            {
+              "Task_Name": "Overweight_Fee_Process",
+              "Avg_Duration": 60,
+              "Probability": 0.12
+            },
+            {
+              "Task_Name": "Bag_Tagging",
+              "Avg_Duration": 15,
+              "Probability": 1
+            },
+            {
+              "Task_Name": "Bag_Drop_Conveyor",
+              "Avg_Duration": 10,
+              "Probability": 1
+            },
+            {
+              "Task_Name": "Boarding_Pass_Print",
+              "Avg_Duration": 15,
+              "Probability": 1
+            },
+            {
+              "Task_Name": "Gate_Info_Briefing",
+              "Avg_Duration": 10,
+              "Probability": 1
+            },
+            {
+              "Task_Name": "Special_Assistance_Note",
+              "Avg_Duration": 40,
+              "Probability": 0.05
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Checkpoint_ID": "DIG-CHK",
+      "Checkpoint_Type": "Digital Check-in",
+      "Prev_Anchor": "1ST-SEC",
+      "Next_Anchor": [
+        "SLF-BAG"
+      ],
+      "Stations": [
+        {
+          "Station_ID": "First Kiosk",
+          "Staffing_No": 1,
+          "Avg_Service_Time": 60,
+          "Max_Queue_Cap": 30,
+          "Efficiency_Factor": 1,
+          "Allowed_Class": [
+            "All Classes"
+          ],
+          "Feature_Val": 0,
+          "Tasks": [
+            {
+              "Task_Name": "Greeting_And_ID_Request",
+              "Avg_Duration": 10,
+              "Probability": 1
+            },
+            {
+              "Task_Name": "Passport_Verification",
+              "Avg_Duration": 25,
+              "Probability": 1
+            },
+            {
+              "Task_Name": "Booking_Lookup",
+              "Avg_Duration": 20,
+              "Probability": 1
+            },
+            {
+              "Task_Name": "Seat_Assignment",
+              "Avg_Duration": 15,
+              "Probability": 1
+            },
+            {
+              "Task_Name": "Bag_Weighing",
+              "Avg_Duration": 20,
+              "Probability": 1
+            },
+            {
+              "Task_Name": "Overweight_Fee_Process",
+              "Avg_Duration": 60,
+              "Probability": 0.12
+            },
+            {
+              "Task_Name": "Bag_Tagging",
+              "Avg_Duration": 15,
+              "Probability": 1
+            },
+            {
+              "Task_Name": "Bag_Drop_Conveyor",
+              "Avg_Duration": 10,
+              "Probability": 1
+            },
+            {
+              "Task_Name": "Boarding_Pass_Print",
+              "Avg_Duration": 15,
+              "Probability": 1
+            },
+            {
+              "Task_Name": "Gate_Info_Briefing",
+              "Avg_Duration": 10,
+              "Probability": 1
+            },
+            {
+              "Task_Name": "Special_Assistance_Note",
+              "Avg_Duration": 40,
+              "Probability": 0.05
+            }
+          ]
+        },
+        {
+          "Station_ID": "Second Kiosk",
+          "Staffing_No": 1,
+          "Avg_Service_Time": 60,
+          "Max_Queue_Cap": 30,
+          "Efficiency_Factor": 1,
+          "Allowed_Class": [
+            "All Classes"
+          ],
+          "Feature_Val": 0,
+          "Tasks": [
+            {
+              "Task_Name": "Greeting_And_ID_Request",
+              "Avg_Duration": 10,
+              "Probability": 1
+            },
+            {
+              "Task_Name": "Passport_Verification",
+              "Avg_Duration": 25,
+              "Probability": 1
+            },
+            {
+              "Task_Name": "Booking_Lookup",
+              "Avg_Duration": 20,
+              "Probability": 1
+            },
+            {
+              "Task_Name": "Seat_Assignment",
+              "Avg_Duration": 15,
+              "Probability": 1
+            },
+            {
+              "Task_Name": "Bag_Weighing",
+              "Avg_Duration": 20,
+              "Probability": 1
+            },
+            {
+              "Task_Name": "Overweight_Fee_Process",
+              "Avg_Duration": 60,
+              "Probability": 0.12
+            },
+            {
+              "Task_Name": "Bag_Tagging",
+              "Avg_Duration": 15,
+              "Probability": 1
+            },
+            {
+              "Task_Name": "Bag_Drop_Conveyor",
+              "Avg_Duration": 10,
+              "Probability": 1
+            },
+            {
+              "Task_Name": "Boarding_Pass_Print",
+              "Avg_Duration": 15,
+              "Probability": 1
+            },
+            {
+              "Task_Name": "Gate_Info_Briefing",
+              "Avg_Duration": 10,
+              "Probability": 1
+            },
+            {
+              "Task_Name": "Special_Assistance_Note",
+              "Avg_Duration": 40,
+              "Probability": 0.05
+            }
+          ]
+        },
+        {
+          "Station_ID": "Third Kiosk",
+          "Staffing_No": 1,
+          "Avg_Service_Time": 60,
+          "Max_Queue_Cap": 30,
+          "Efficiency_Factor": 1,
+          "Allowed_Class": [
+            "All Classes"
+          ],
+          "Feature_Val": 0,
+          "Tasks": [
+            {
+              "Task_Name": "Greeting_And_ID_Request",
+              "Avg_Duration": 10,
+              "Probability": 1
+            },
+            {
+              "Task_Name": "Passport_Verification",
+              "Avg_Duration": 25,
+              "Probability": 1
+            },
+            {
+              "Task_Name": "Booking_Lookup",
+              "Avg_Duration": 20,
+              "Probability": 1
+            },
+            {
+              "Task_Name": "Seat_Assignment",
+              "Avg_Duration": 15,
+              "Probability": 1
+            },
+            {
+              "Task_Name": "Bag_Weighing",
+              "Avg_Duration": 20,
+              "Probability": 1
+            },
+            {
+              "Task_Name": "Overweight_Fee_Process",
+              "Avg_Duration": 60,
+              "Probability": 0.12
+            },
+            {
+              "Task_Name": "Bag_Tagging",
+              "Avg_Duration": 15,
+              "Probability": 1
+            },
+            {
+              "Task_Name": "Bag_Drop_Conveyor",
+              "Avg_Duration": 10,
+              "Probability": 1
+            },
+            {
+              "Task_Name": "Boarding_Pass_Print",
+              "Avg_Duration": 15,
+              "Probability": 1
+            },
+            {
+              "Task_Name": "Gate_Info_Briefing",
+              "Avg_Duration": 10,
+              "Probability": 1
+            },
+            {
+              "Task_Name": "Special_Assistance_Note",
+              "Avg_Duration": 40,
+              "Probability": 0.05
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Checkpoint_ID": "SLF-BAG",
+      "Checkpoint_Type": "Self-Service Bag Drop",
+      "Prev_Anchor": "DIG-CHK",
+      "Next_Anchor": [
+        "PAS-CHK",
+        "2ND-SEC"
+      ],
+      "Stations": [
+        {
+          "Station_ID": "Bag Drop 1",
+          "Staffing_No": 1,
+          "Avg_Service_Time": 60,
+          "Max_Queue_Cap": 30,
+          "Efficiency_Factor": 1,
+          "Allowed_Class": [
+            "All Classes"
+          ],
+          "Feature_Val": 0,
+          "Tasks": []
+        },
+        {
+          "Station_ID": "Bag Drop 2",
+          "Staffing_No": 1,
+          "Avg_Service_Time": 60,
+          "Max_Queue_Cap": 30,
+          "Efficiency_Factor": 1,
+          "Allowed_Class": [
+            "All Classes"
+          ],
+          "Feature_Val": 0,
+          "Tasks": []
+        },
+        {
+          "Station_ID": "Bag Drop 3",
+          "Staffing_No": 1,
+          "Avg_Service_Time": 60,
+          "Max_Queue_Cap": 30,
+          "Efficiency_Factor": 1,
+          "Allowed_Class": [
+            "All Classes"
+          ],
+          "Feature_Val": 0,
+          "Tasks": []
+        }
+      ]
+    },
+    {
+      "Checkpoint_ID": "PAS-CHK",
+      "Checkpoint_Type": "Passport Check",
+      "Prev_Anchor": "SLF-BAG",
+      "Next_Anchor": [
+        "2ND-SEC"
+      ],
+      "Stations": [
+        {
+          "Station_ID": "Passport Check 1",
+          "Staffing_No": 1,
+          "Avg_Service_Time": 60,
+          "Max_Queue_Cap": 30,
+          "Efficiency_Factor": 1,
+          "Allowed_Class": [
+            "All Classes"
+          ],
+          "Feature_Val": 0,
+          "Tasks": []
+        },
+        {
+          "Station_ID": "Passport Check 2",
+          "Staffing_No": 1,
+          "Avg_Service_Time": 60,
+          "Max_Queue_Cap": 30,
+          "Efficiency_Factor": 1,
+          "Allowed_Class": [
+            "All Classes"
+          ],
+          "Feature_Val": 0,
+          "Tasks": []
+        }
+      ]
+    },
+    {
+      "Checkpoint_ID": "2ND-SEC",
+      "Checkpoint_Type": "Security",
+      "Prev_Anchor": "PAS-CHK",
+      "Next_Anchor": [
+        "DEPARTING-TERMINAL"
+      ],
+      "Stations": [
+        {
+          "Station_ID": "Sec Lane 1",
+          "Staffing_No": 1,
+          "Avg_Service_Time": 60,
+          "Max_Queue_Cap": 30,
+          "Efficiency_Factor": 1,
+          "Allowed_Class": [
+            "All Classes"
+          ],
+          "Feature_Val": 0,
+          "Tasks": []
+        },
+        {
+          "Station_ID": "Sec Lane 2",
+          "Staffing_No": 2,
+          "Avg_Service_Time": 60,
+          "Max_Queue_Cap": 30,
+          "Efficiency_Factor": 1,
+          "Allowed_Class": [
+            "All Classes"
+          ],
+          "Feature_Val": 0,
+          "Tasks": []
+        }
+      ]
+    },
+    {
+      "Checkpoint_ID": "BRD-GAT",
+      "Checkpoint_Type": "Boarding",
+      "Prev_Anchor": "DEPARTING-TERMINAL",
+      "Next_Anchor": [
+        "Boarding_Gate"
+      ],
+      "Stations": [
+        {
+          "Station_ID": "Boarding Gate 1",
+          "Staffing_No": 1,
+          "Avg_Service_Time": 60,
+          "Max_Queue_Cap": 30,
+          "Efficiency_Factor": 1,
+          "Allowed_Class": [
+            "All Classes"
+          ],
+          "Feature_Val": 0,
+          "Tasks": []
+        }
+      ]
+    },
+    {
+      "Checkpoint_ID": "DEPARTING-TERMINAL",
+      "Checkpoint_Type": "Departing Terminal",
+      "Prev_Anchor": "2ND-SEC",
+      "Next_Anchor": [
+        "BRD-GAT"
+      ],
+      "Stations": [
+        {
+          "Station_ID": "Seat Capacity",
+          "Staffing_No": 0,
+          "Avg_Service_Time": 0,
+          "Max_Queue_Cap": 60,
+          "Efficiency_Factor": 1,
+          "Allowed_Class": [
+            "All Classes"
+          ],
+          "Feature_Val": 0,
+          "Tasks": []
+        }
+      ]
+    }
+  ]
+}

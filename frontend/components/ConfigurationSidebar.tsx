@@ -350,6 +350,11 @@ export default function ConfigurationSidebar({ checkpoints = [], setCheckpoints 
                 link.click();
                 document.body.removeChild(link);
                 URL.revokeObjectURL(url);
+
+                // Save to localStorage for simulation runner
+                try {
+                    localStorage.setItem('aerotwin_desconfig', JSON.stringify(result.data));
+                } catch {}
             }
             
             setFormatStatus({

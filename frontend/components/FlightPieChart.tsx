@@ -25,9 +25,9 @@ const statusColors: Record<string, string> = {
 const CustomTooltip = ({ active, payload }: any) => {
   if (active && payload && payload.length) {
     return (
-      <div className="bg-slate-800 border border-slate-600 rounded-lg px-3 py-2 shadow-lg">
-        <p className="text-slate-300 text-xs font-medium">{payload[0].name}</p>
-        <p className="text-white text-sm font-bold">{payload[0].value}</p>
+      <div className="bg-white border border-slate-200 rounded-lg px-3 py-2 shadow-lg">
+        <p className="text-slate-700 text-xs font-medium">{payload[0].name}</p>
+        <p className="text-slate-800 text-sm font-bold">{payload[0].value}</p>
       </div>
     );
   }
@@ -44,9 +44,9 @@ export default function FlightPieChart({ data, title }: FlightPieChartProps) {
   const total = chartData.reduce((sum, item) => sum + item.value, 0);
 
   return (
-    <div className="bg-slate-900/80 backdrop-blur-sm rounded-xl border border-slate-700/50 p-4">
+    <div className="bg-white/80 backdrop-blur-sm rounded-xl border border-slate-200 shadow-sm p-4">
       {title && (
-        <h3 className="text-slate-300 text-xs font-bold uppercase tracking-wider mb-2">
+        <h3 className="text-slate-700 text-xs font-bold uppercase tracking-wider mb-2">
           {title}
         </h3>
       )}
@@ -80,14 +80,14 @@ export default function FlightPieChart({ data, title }: FlightPieChartProps) {
               style={{ backgroundColor: item.color }}
             />
             <span className="text-slate-400 text-[10px] flex-1 truncate">{item.name}</span>
-            <span className="text-white text-[10px] font-mono">{item.value}</span>
+            <span className="text-slate-800 text-[10px] font-mono">{item.value}</span>
           </div>
         ))}
       </div>
       {/* Center Total */}
       <div className="text-center mt-1">
         <span className="text-slate-500 text-[10px]">Total: </span>
-        <span className="text-white text-xs font-bold">{total}</span>
+        <span className="text-slate-800 text-xs font-bold">{total}</span>
       </div>
     </div>
   );

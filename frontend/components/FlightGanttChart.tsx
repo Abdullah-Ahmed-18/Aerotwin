@@ -82,9 +82,9 @@ export default function FlightGanttChart({ arrivalsCount, departuresCount, title
   };
 
   return (
-    <div className="bg-slate-900/80 backdrop-blur-sm rounded-xl border border-slate-700/50 p-4">
+    <div className="bg-white/80 backdrop-blur-sm rounded-xl border border-slate-200 shadow-sm p-4">
       {title && (
-        <h3 className="text-slate-300 text-xs font-bold uppercase tracking-wider mb-3 flex items-center gap-2">
+        <h3 className="text-slate-700 text-xs font-bold uppercase tracking-wider mb-3 flex items-center gap-2">
           <Plane size={14} className="text-blue-400" />
           {title}
         </h3>
@@ -98,7 +98,7 @@ export default function FlightGanttChart({ arrivalsCount, departuresCount, title
       </div>
 
       {/* Gantt Bars */}
-      <div className="relative h-32 bg-slate-800/50 rounded-lg overflow-hidden">
+      <div className="relative h-32 bg-slate-50 rounded-lg overflow-hidden">
         {/* Current Time Indicator */}
         <div
           className="absolute top-0 bottom-0 w-0.5 bg-amber-400 z-20"
@@ -109,12 +109,12 @@ export default function FlightGanttChart({ arrivalsCount, departuresCount, title
 
         {/* Timeline Grid */}
         <div className="absolute inset-0 flex flex-col">
-          <div className="flex-1 border-b border-slate-700/50 relative">
+          <div className="flex-1 border-b border-slate-200 relative">
             {/* Grid lines */}
             {[...Array(5)].map((_, i) => (
               <div
                 key={i}
-                className="absolute top-0 bottom-0 w-px bg-slate-700/30"
+                className="absolute top-0 bottom-0 w-px bg-slate-200/70"
                 style={{ left: `${(i + 1) * 20}%` }}
               />
             ))}
@@ -138,7 +138,7 @@ export default function FlightGanttChart({ arrivalsCount, departuresCount, title
                   top: `${index * 12}px`,
                 }}
               >
-                <span className="text-white text-[8px] font-mono truncate group-hover:overflow-visible">
+                <span className="text-slate-800 text-[8px] font-mono truncate group-hover:overflow-visible">
                   {bar.label}
                 </span>
               </div>
@@ -162,7 +162,7 @@ export default function FlightGanttChart({ arrivalsCount, departuresCount, title
                   top: `${index * 12}px`,
                 }}
               >
-                <span className="text-white text-[8px] font-mono truncate group-hover:overflow-visible">
+                <span className="text-slate-800 text-[8px] font-mono truncate group-hover:overflow-visible">
                   {bar.label}
                 </span>
               </div>

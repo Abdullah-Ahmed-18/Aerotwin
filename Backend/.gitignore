@@ -1,0 +1,14 @@
+# Simulation run artifacts
+runs/
+runs/*
+*.csv
+*_STATS.txt
+*_results.json
+
+# Unity builds
+Build/
+Builds/
+*.exe
+*.dll
+*.so
+*.dylib

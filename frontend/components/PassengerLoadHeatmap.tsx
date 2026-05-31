@@ -112,18 +112,18 @@ function HeatTooltip({ active, payload }: TooltipProps) {
   if (!active || !payload?.length) return null;
   const d = payload[0].payload;
   return (
-    <div className="bg-slate-900 border border-slate-600 rounded-xl px-3 py-2.5 shadow-2xl min-w-[160px]">
-      <p className="text-white text-xs font-bold mb-1">{d.flightId}</p>
-      <p className="text-slate-400 text-[10px] mb-1.5">{d.route}</p>
+    <div className="bg-white border border-slate-200 rounded-xl px-3 py-2.5 shadow-2xl min-w-[160px]">
+      <p className="text-slate-800 text-xs font-bold mb-1">{d.flightId}</p>
+      <p className="text-slate-500 text-[10px] mb-1.5">{d.route}</p>
       <div className="flex items-center gap-2 mb-1">
         <div className="w-2 h-2 rounded-sm" style={{ backgroundColor: loadColor(d.loadPct) }} />
-        <span className="text-white text-xs font-bold">{d.loadPct}%</span>
+        <span className="text-slate-800 text-xs font-bold">{d.loadPct}%</span>
         <span className="text-slate-500 text-[10px]">({loadLabel(d.loadPct)})</span>
       </div>
-      <p className="text-slate-400 text-[10px]">
+      <p className="text-slate-500 text-[10px]">
         {d.pax} / {d.capacity} pax · {d.aircraftType}
       </p>
-      <p className="text-slate-500 text-[10px] mt-1">
+      <p className="text-slate-400 text-[10px] mt-1">
         {String(d.hour).padStart(2, '0')}:00 UTC
       </p>
     </div>
@@ -206,16 +206,16 @@ export default function PassengerLoadHeatmap({ flights }: Props) {
     <div className="space-y-3">
       {/* Summary Row */}
       <div className="grid grid-cols-3 gap-2">
-        <div className="p-2 bg-slate-800/50 rounded-lg border border-slate-700/50 text-center">
+        <div className="p-2 bg-slate-50 rounded-lg border border-slate-200 text-center">
           <p className="text-slate-500 text-[9px] uppercase tracking-wider">Avg Load</p>
-          <p className="text-white font-bold text-sm mt-0.5"
+          <p className="text-slate-800 font-bold text-sm mt-0.5"
              style={{ color: loadColor(avgLoad) }}>{avgLoad}%</p>
         </div>
-        <div className="p-2 bg-slate-800/50 rounded-lg border border-slate-700/50 text-center">
+        <div className="p-2 bg-slate-50 rounded-lg border border-slate-200 text-center">
           <p className="text-slate-500 text-[9px] uppercase tracking-wider">Flights</p>
-          <p className="text-white font-bold text-sm mt-0.5">{cells.length}</p>
+          <p className="text-slate-800 font-bold text-sm mt-0.5">{cells.length}</p>
         </div>
-        <div className="p-2 bg-slate-800/50 rounded-lg border border-slate-700/50 text-center">
+        <div className="p-2 bg-slate-50 rounded-lg border border-slate-200 text-center">
           <p className="text-slate-500 text-[9px] uppercase tracking-wider">Peak</p>
           <p className="font-bold text-sm mt-0.5"
              style={{ color: peakCell ? loadColor(peakCell.loadPct) : '#fff' }}>
@@ -235,7 +235,7 @@ export default function PassengerLoadHeatmap({ flights }: Props) {
       </div>
 
       {/* Heatmap Chart */}
-      <div className="rounded-lg overflow-hidden border border-slate-700/40">
+      <div className="rounded-lg overflow-hidden border border-slate-200">
         <ResponsiveContainer width="100%" height={180}>
           <ScatterChart margin={{ top: 8, right: 8, bottom: 4, left: -8 }}>
             <XAxis
@@ -274,7 +274,7 @@ export default function PassengerLoadHeatmap({ flights }: Props) {
         <div className="flex items-center gap-2 p-2 rounded-lg bg-rose-500/10 border border-rose-500/20">
           <div className="w-2 h-2 rounded-full bg-rose-500 animate-pulse shrink-0" />
           <div className="min-w-0">
-            <p className="text-rose-300 text-[10px] font-bold truncate">
+            <p className="text-rose-600 text-[10px] font-bold truncate">
               Peak: {peakCell.flightId} ({peakCell.route})
             </p>
             <p className="text-slate-500 text-[9px]">

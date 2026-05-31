@@ -55,8 +55,8 @@ function parseNum(raw: string | number | undefined, fallback = 0): number {
 function BarTooltip({ active, payload, label }: any) {
   if (!active || !payload?.length) return null;
   return (
-    <div className="bg-slate-900 border border-slate-600 rounded-lg px-3 py-2 shadow-xl">
-      <p className="text-white text-xs font-bold mb-1">{label}</p>
+    <div className="bg-white border border-slate-200 rounded-lg px-3 py-2 shadow-xl">
+      <p className="text-slate-800 text-xs font-bold mb-1">{label}</p>
       {payload.map((p: any) => (
         <p key={p.name} className="text-[10px]" style={{ color: p.fill }}>
           {p.name}: <span className="font-bold">{p.value}</span>
@@ -159,17 +159,17 @@ export default function AirlineAnalytics({ flights }: Props) {
 
       {/* KPI Row */}
       <div className="grid grid-cols-3 gap-2">
-        <div className="p-2 bg-slate-800/50 rounded-lg border border-slate-700/50 text-center">
+        <div className="p-2 bg-slate-50 rounded-lg border border-slate-200 text-center">
           <p className="text-slate-500 text-[9px] uppercase tracking-wider">Airlines</p>
-          <p className="text-white font-bold text-sm mt-0.5">{airlines.length}</p>
+          <p className="text-slate-800 font-bold text-sm mt-0.5">{airlines.length}</p>
         </div>
-        <div className="p-2 bg-slate-800/50 rounded-lg border border-slate-700/50 text-center">
+        <div className="p-2 bg-slate-50 rounded-lg border border-slate-200 text-center">
           <p className="text-slate-500 text-[9px] uppercase tracking-wider">Flights</p>
-          <p className="text-white font-bold text-sm mt-0.5">{totalFlights}</p>
+          <p className="text-slate-800 font-bold text-sm mt-0.5">{totalFlights}</p>
         </div>
-        <div className="p-2 bg-slate-800/50 rounded-lg border border-slate-700/50 text-center">
+        <div className="p-2 bg-slate-50 rounded-lg border border-slate-200 text-center">
           <p className="text-slate-500 text-[9px] uppercase tracking-wider">Total Pax</p>
-          <p className="text-indigo-400 font-bold text-sm mt-0.5">{totalPax.toLocaleString()}</p>
+          <p className="text-indigo-600 font-bold text-sm mt-0.5">{totalPax.toLocaleString()}</p>
         </div>
       </div>
 
@@ -178,7 +178,7 @@ export default function AirlineAnalytics({ flights }: Props) {
         <div className="flex items-center gap-2 p-2 rounded-lg bg-indigo-500/10 border border-indigo-500/20">
           <Award size={12} className="text-indigo-400 shrink-0" />
           <div className="min-w-0 flex-1">
-            <p className="text-indigo-300 text-[10px] font-bold truncate">
+            <p className="text-indigo-600 text-[10px] font-bold truncate">
               Top Carrier: {topAirline.name} ({topAirline.iata})
             </p>
             <p className="text-slate-500 text-[9px]">
@@ -203,7 +203,7 @@ export default function AirlineAnalytics({ flights }: Props) {
                 className={`px-2 py-0.5 rounded text-[9px] font-bold uppercase transition-all ${
                   chartMetric === m
                     ? 'bg-indigo-600 text-white'
-                    : 'bg-slate-800 text-slate-400 hover:bg-slate-700'
+                    : 'bg-white text-slate-500 hover:bg-slate-50 border border-slate-200'
                 }`}
               >
                 {m === 'flights' ? '✈ Flights' : '👤 Pax'}
@@ -211,7 +211,7 @@ export default function AirlineAnalytics({ flights }: Props) {
             ))}
           </div>
         </div>
-        <div className="rounded-lg overflow-hidden border border-slate-700/40 bg-slate-900/40">
+        <div className="rounded-lg overflow-hidden border border-slate-200 bg-white/40">
           <ResponsiveContainer width="100%" height={110}>
             <BarChart data={chartData} margin={{ top: 8, right: 8, bottom: 2, left: -16 }} barCategoryGap="30%">
               <XAxis dataKey="name" tick={{ fill: '#64748b', fontSize: 9 }} axisLine={false} tickLine={false} />
@@ -238,7 +238,7 @@ export default function AirlineAnalytics({ flights }: Props) {
               className={`px-2 py-0.5 rounded text-[9px] font-bold uppercase tracking-wide transition-all ${
                 sortKey === k
                   ? 'bg-indigo-600 text-white'
-                  : 'bg-slate-800 text-slate-400 hover:bg-slate-700'
+                  : 'bg-white text-slate-500 hover:bg-slate-50 border border-slate-200'
               }`}
             >
               {k === 'flights' ? 'Flights' : k === 'pax' ? 'Pax' : 'Load'}
@@ -258,7 +258,7 @@ export default function AirlineAnalytics({ flights }: Props) {
           return (
             <div
               key={a.iata}
-              className="rounded-lg border border-slate-700/50 bg-slate-800/30 overflow-hidden"
+              className="rounded-lg border border-slate-200 bg-slate-50 overflow-hidden"
             >
               {/* Row header */}
               <button
@@ -271,10 +271,10 @@ export default function AirlineAnalytics({ flights }: Props) {
                 {/* Airline name + share bar */}
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center justify-between mb-0.5">
-                    <p className="text-slate-200 text-[10px] font-bold truncate">{a.iata} · {a.name}</p>
+                    <p className="text-slate-700 text-[10px] font-bold truncate">{a.iata} · {a.name}</p>
                     <p className="text-slate-400 text-[9px] shrink-0 ml-1">{a.flights} flt</p>
                   </div>
-                  <div className="h-1 bg-slate-700 rounded-full overflow-hidden">
+                  <div className="h-1 bg-slate-200 rounded-full overflow-hidden">
                     <div
                       className="h-full rounded-full transition-all duration-500"
                       style={{ width: `${share}%`, backgroundColor: a.color }}
@@ -292,27 +292,27 @@ export default function AirlineAnalytics({ flights }: Props) {
 
               {/* Expanded detail */}
               {isExp && (
-                <div className="px-2.5 pb-2.5 pt-0 border-t border-slate-700/30 space-y-2">
+                <div className="px-2.5 pb-2.5 pt-0 border-t border-slate-100 space-y-2">
                   <div className="grid grid-cols-2 gap-1.5 mt-2">
-                    <div className="bg-slate-900/60 rounded-md p-1.5">
+                    <div className="bg-slate-50 rounded-md p-1.5">
                       <p className="text-slate-500 text-[8px] uppercase">Total Pax</p>
-                      <p className="text-white text-xs font-bold">{a.totalPax.toLocaleString()}</p>
+                      <p className="text-slate-800 text-xs font-bold">{a.totalPax.toLocaleString()}</p>
                     </div>
-                    <div className="bg-slate-900/60 rounded-md p-1.5">
+                    <div className="bg-slate-50 rounded-md p-1.5">
                       <p className="text-slate-500 text-[8px] uppercase">Pax / Flight</p>
-                      <p className="text-white text-xs font-bold">
+                      <p className="text-slate-800 text-xs font-bold">
                         {a.flights > 0 ? Math.round(a.totalPax / a.flights) : '—'}
                       </p>
                     </div>
-                    <div className="bg-slate-900/60 rounded-md p-1.5">
+                    <div className="bg-slate-50 rounded-md p-1.5">
                       <p className="text-slate-500 text-[8px] uppercase">Top Status</p>
-                      <p className="text-xs font-bold" style={{ color: STATUS_COLORS[dominant?.[0]] || '#fff' }}>
+                      <p className="text-xs font-bold" style={{ color: STATUS_COLORS[dominant?.[0]] || '#1e293b' }}>
                         {dominant ? `${dominant[0]} (${dominant[1]})` : '—'}
                       </p>
                     </div>
-                    <div className="bg-slate-900/60 rounded-md p-1.5">
+                    <div className="bg-slate-50 rounded-md p-1.5">
                       <p className="text-slate-500 text-[8px] uppercase">Fleet Type</p>
-                      <p className="text-white text-xs font-bold">{topType?.[0] || '—'}</p>
+                      <p className="text-slate-800 text-xs font-bold">{topType?.[0] || '—'}</p>
                     </div>
                   </div>
 
@@ -326,7 +326,7 @@ export default function AirlineAnalytics({ flights }: Props) {
                         return (
                           <div key={status} className="flex items-center gap-2">
                             <span className="text-[8px] text-slate-400 w-14 capitalize truncate">{status}</span>
-                            <div className="flex-1 h-1 bg-slate-700 rounded-full overflow-hidden">
+                            <div className="flex-1 h-1 bg-slate-200 rounded-full overflow-hidden">
                               <div
                                 className="h-full rounded-full"
                                 style={{ width: `${pct}%`, backgroundColor: STATUS_COLORS[status] || '#475569' }}
@@ -347,7 +347,7 @@ export default function AirlineAnalytics({ flights }: Props) {
                       {Array.from(a.routes).slice(0, 6).map(r => (
                         <span
                           key={r}
-                          className="px-1.5 py-0.5 bg-slate-700/60 rounded text-[8px] text-slate-300 font-mono"
+                          className="px-1.5 py-0.5 bg-slate-100 rounded text-[8px] text-slate-600 font-mono"
                         >
                           {r}
                         </span>

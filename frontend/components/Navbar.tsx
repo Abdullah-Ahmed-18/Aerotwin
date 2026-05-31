@@ -66,13 +66,6 @@ export default function Navbar() {
 
             {/* Right: Status & User (Search removed) */}
             <div className="flex items-center gap-5">
-                <div className="hidden lg:flex items-center gap-2 bg-emerald-50 px-3 py-1.5 rounded-full border border-emerald-100">
-                    <div className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.6)] animate-pulse"></div>
-                    <span className="text-[9px] font-bold text-emerald-600 tracking-widest uppercase">
-                        System Online
-                    </span>
-                </div>
-
                 <div className="flex items-center gap-4 border-l border-slate-200 pl-5">
                     <Bell size={18} className="text-slate-400 cursor-pointer hover:text-slate-600 transition-colors" />
                     <div className="w-8 h-8 rounded-full bg-[#1E3A8A] flex items-center justify-center text-white text-xs font-bold shadow-sm cursor-pointer">

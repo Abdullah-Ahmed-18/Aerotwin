@@ -143,7 +143,7 @@ async function resolveAirportLocation(airportCodeRaw) {
 
         airportLookupCache.set(airportCode, resolved);
         saveAirportCacheToDisk(); // persist to JSON (fallback)
-        db.upsertAirport(airportCode, resolved).catch(() => {}); // persist to DB
+        db.upsertAirport(airportCode, resolved).catch(() => { }); // persist to DB
         console.log(`💾 Airport ${airportCode}: cached and saved to disk + DB`);
         return resolved;
     } catch (error) {
@@ -241,7 +241,7 @@ async function fetchOpenSkyLiveNearAirport(iataCode, airportCoords) {
         console.log(`🛫 OpenSky: Fetching live aircraft near ${iataCode} [${lat}, ${lon}]...`);
         const response = await axios.get(`${OPENSKY_API_BASE}/states/all`, {
             headers,
-            params: { lamin: lat-0.5, lamax: lat+0.5, lomin: lon-0.5, lomax: lon+0.5, extended: 1 },
+            params: { lamin: lat - 0.5, lamax: lat + 0.5, lomin: lon - 0.5, lomax: lon + 0.5, extended: 1 },
             timeout: 15000,
         });
         const states = response.data?.states || [];
@@ -552,22 +552,22 @@ const aerotwinConfig = require('./AerotwinConfig.json');
 // Helper function to get tasks template based on checkpoint type and feature value
 function getTasksForCheckpoint(checkpointType, featureVal, avgServiceTime) {
     const checkpoints = aerotwinConfig.Checkpoints;
-    
+
     for (const checkpoint of checkpoints) {
-        if (checkpoint.Checkpoint_Type === checkpointType || 
+        if (checkpoint.Checkpoint_Type === checkpointType ||
             (checkpointType.includes("Check-in") && checkpoint.Checkpoint_Type === "Checkin")) {
-            
+
             // For Security checkpoints, match by Feature_Val or Avg_Service_Time
             if (checkpointType === "Security") {
                 // Default to full security screening (Security_2)
                 // Only use simple security (Security_1) if Feature_Val explicitly set to 1
                 const isSimpleScreening = featureVal === 1;
-                
+
                 // Find Security_1 or Security_2 based on screening type
-                const targetCheckpoint = isSimpleScreening ? 
+                const targetCheckpoint = isSimpleScreening ?
                     checkpoints.find(cp => cp.Checkpoint_ID === "Security_1") :
                     checkpoints.find(cp => cp.Checkpoint_ID === "Security_2");
-                
+
                 if (targetCheckpoint && targetCheckpoint.Stations[0]) {
                     return targetCheckpoint.Stations[0].Tasks || [];
                 }
@@ -578,19 +578,19 @@ function getTasksForCheckpoint(checkpointType, featureVal, avgServiceTime) {
             }
         }
     }
-    
+
     return [];
 }
 //ACTIVE FLIGHTS
 function resolvePlaneType(flightIata, apiPlane) {
     // If API provides it, use it. Otherwise, mark it Dummy.
     if (apiPlane) return apiPlane;
-    
+
     const fleet = { MS: ["B738", "A320"], FZ: ["B38M"], G9: ["A320"], SV: ["A333"] };
     const airline = flightIata?.substring(0, 2).toUpperCase();
     const fleetMatch = fleet[airline];
     const fallback = fleetMatch ? fleetMatch[Math.floor(Math.random() * fleetMatch.length)] : "A320";
-    
+
     return `${fallback} (Dummy)`;
 }
 // Middleware
@@ -626,14 +626,14 @@ function authenticateToken(req, res, next) {
 
 // FLEET INTELLIGENCE (For filling nulls)
 const fleetDatabase = {
-  MS: ["B738", "A320", "A220"],
-  FZ: ["B38M", "B738"],
-  G9: ["A320", "A321"],
-  SV: ["A320", "A321", "A333"],
-  J9: ["A320"],
-  TK: ["B738", "A321"],
-  W6: ["A321", "A21N"],
-  AT: ["AT72"],
+    MS: ["B738", "A320", "A220"],
+    FZ: ["B38M", "B738"],
+    G9: ["A320", "A321"],
+    SV: ["A320", "A321", "A333"],
+    J9: ["A320"],
+    TK: ["B738", "A321"],
+    W6: ["A321", "A21N"],
+    AT: ["AT72"],
 };
 
 
@@ -665,13 +665,13 @@ app.post('/api/format-aerotwin-data', (req, res) => {
             ...checkpoint,
             flowType: checkpoint.flowType === 'arrival' ? 'arrival' : 'departure'
         }));
-        
+
         console.log("\n=== INCOMING DATA DEBUG ===");
         console.log("Number of checkpoints:", normalizedIncoming.length);
         normalizedIncoming.forEach(cp => {
             console.log(`  [${cp.flowType}] ${cp.idCode}: nextCheckpointIds =`, cp.nextCheckpointIds);
         });
-        
+
         // Step 0: Create mapping from frontend checkpoint IDs to their Checkpoint_ID (idCode)
         const frontendIdToCheckpointId = {};
         const frontendIdToFlowType = {};
@@ -681,7 +681,7 @@ app.post('/api/format-aerotwin-data', (req, res) => {
         });
 
         console.log("\nFrontend ID to Checkpoint ID mapping:", frontendIdToCheckpointId);
-        
+
         // Step 1: Pass the deeply nested payload through the recursive formatter
         let finalPayload = mapKeysDeep(normalizedIncoming, keyMapping);
 
@@ -715,9 +715,9 @@ app.post('/api/format-aerotwin-data', (req, res) => {
                         return mapped;
                     })
                     .filter(id => id); // Remove undefined values
-                
+
                 console.log(`  [${flowType}] ${checkpoint.idCode} will have Next_Anchor:`, nextCheckpointIds);
-                
+
                 if (nextCheckpointIds.length > 0) {
                     checkpointNextMapByFlow[flowType][checkpoint.idCode] = nextCheckpointIds;
                 }
@@ -981,10 +981,10 @@ app.get('/api/fetch-active-flights', async (req, res) => {
                 fetchOpenSkyRecentFlights().catch(() => []),
             ]);
 
-            arrivalsRaw        = aviationStackArrivalsRes.data?.data || [];
-            departuresRaw      = aviationStackDeparturesRes.data?.data || [];
-            openskyStates      = liveStates;
-            openskyArrivals    = historicArrivals;
+            arrivalsRaw = aviationStackArrivalsRes.data?.data || [];
+            departuresRaw = aviationStackDeparturesRes.data?.data || [];
+            openskyStates = liveStates;
+            openskyArrivals = historicArrivals;
             openskyRecentFlights = recentFlights;
 
             // Check if we got any real data - if not, use mock data
@@ -1095,7 +1095,7 @@ app.get('/api/fetch-active-flights', async (req, res) => {
 
             const lookupCode = aircraftCode.split(' ')[0];
             const maxCapacity = AIRCRAFT_CAPACITIES[lookupCode] || 180;
-            
+
             const loadFactor = (Math.random() * (0.20) + 0.75);
             const estimatedPax = Math.floor(maxCapacity * loadFactor);
 
@@ -1121,7 +1121,7 @@ app.get('/api/fetch-active-flights', async (req, res) => {
                 airline_logo: f.airline?.iata ? `/airline-logos/${f.airline.iata}.png` : null,
                 flight_status: f.flight_status || "unknown",
                 flight_type: flightType,
-                
+
                 route: {
                     source: sourceIata,
                     source_icao: sourceIcao,
@@ -1139,8 +1139,8 @@ app.get('/api/fetch-active-flights', async (req, res) => {
                         actual_departure: f.departure?.actual || null,
                     }
                 },
-                
-                aircraft: { 
+
+                aircraft: {
                     type: aircraftCode,
                     type_source: aircraftSource,
                     capacity: `${maxCapacity} (Simulated)`,
@@ -1192,7 +1192,7 @@ app.get('/api/fetch-active-flights', async (req, res) => {
 
         // All possible flight statuses (matching frontend filters)
         const ALL_STATUSES = ["scheduled", "active", "landed", "cancelled", "incident", "diverted", "unknown"];
-        
+
         // Count flights by status with aircraft source breakdown
         const statusCounts = {};
         ALL_STATUSES.forEach(s => {
@@ -1218,8 +1218,8 @@ app.get('/api/fetch-active-flights', async (req, res) => {
         });
 
         const finalPayload = {
-            meta: { 
-                updated: new Date().toISOString(), 
+            meta: {
+                updated: new Date().toISOString(),
                 airport: airportIata,
                 airport_icao: airportIcao,
                 count: formattedFlights.length,
@@ -1417,8 +1417,8 @@ app.get('/api/opensky/arrivals', async (req, res) => {
  */
 app.get('/api/search', async (req, res) => {
     try {
-        const term  = String(req.query.q || '').trim();
-        const type  = ['all','airports','aircraft','flights'].includes(req.query.type)
+        const term = String(req.query.q || '').trim();
+        const type = ['all', 'airports', 'aircraft', 'flights'].includes(req.query.type)
             ? req.query.type : 'all';
         const limit = Math.min(Math.max(parseInt(req.query.limit) || 20, 1), 100);
 
@@ -1653,6 +1653,816 @@ app.delete('/api/user', authenticateToken, async (req, res) => {
     } catch (error) {
         console.error('[Auth] Delete user error:', error.message);
         return res.status(500).json({ error: 'Failed to delete user.' });
+    }
+});
+
+// 7. SIMULATION RUNNER
+// ==========================================
+
+const RUNS_DIR = path.join(__dirname, 'runs');
+if (!fs.existsSync(RUNS_DIR)) {
+    fs.mkdirSync(RUNS_DIR, { recursive: true });
+}
+
+// In-memory run state
+const runs = new Map();
+
+// Unity executable resolution
+function resolveUnityExecutable() {
+    const envPath = process.env.UNITY_EXE_PATH;
+    if (envPath && fs.existsSync(envPath)) {
+        return path.resolve(envPath);
+    }
+
+    // Common search paths relative to project root
+    const candidates = [
+        path.join(__dirname, '..', 'My project', 'Build', 'AeroTwin.exe'),
+        path.join(__dirname, '..', 'My project', 'Build', 'AeroTwin.x86_64'),
+        path.join(__dirname, '..', 'Build', 'AeroTwin.exe'),
+        path.join(__dirname, '..', 'Build', 'AeroTwin.x86_64'),
+        path.join(__dirname, '..', 'My project', 'Builds', 'AeroTwin.exe'),
+        path.join(__dirname, '..', 'UnityBuild', 'AeroTwin.exe'),
+    ];
+
+    for (const candidate of candidates) {
+        if (fs.existsSync(candidate)) {
+            return candidate;
+        }
+    }
+
+    return null;
+}
+
+function generateRunId() {
+    const ts = Date.now().toString(36).toUpperCase();
+    const rand = Math.random().toString(36).substring(2, 6).toUpperCase();
+    return `RUN_${ts}_${rand}`;
+}
+
+function parseTimeToSeconds(timeStr) {
+    if (!timeStr || timeStr === '0:00') return 0;
+    const parts = String(timeStr).split(':');
+    if (parts.length === 2) {
+        return parseInt(parts[0], 10) * 60 + parseInt(parts[1], 10);
+    }
+    return parseInt(parts[0], 10) || 0;
+}
+
+// Fallback parser: reads CSV + STATS and builds JSON if Unity JSON is missing
+function parseSimulationResults(runDir, csvFileName) {
+    const csvPath = path.join(runDir, csvFileName);
+    const statsPath = path.join(runDir, csvFileName.replace('.csv', '_STATS.txt'));
+    const jsonPath = path.join(runDir, csvFileName.replace('.csv', '_results.json'));
+
+    // Prefer Unity-generated JSON if available
+    if (fs.existsSync(jsonPath)) {
+        return JSON.parse(fs.readFileSync(jsonPath, 'utf8'));
+    }
+
+    // Fallback: parse CSV + STATS text
+    const records = [];
+    if (fs.existsSync(csvPath)) {
+        const lines = fs.readFileSync(csvPath, 'utf8').split('\n').filter(l => l.trim());
+        const headerLine = lines.find(l => l.startsWith('Passenger') || l.startsWith('Flight_ID'));
+        if (!headerLine) return null;
+
+        const headers = headerLine.split(',').map(h => h.trim());
+        const flightIdx = headers.indexOf('Flight_ID');
+        const paxIdx = headers.indexOf('Passenger');
+        const classIdx = headers.indexOf('Class');
+        const ageIdx = headers.indexOf('Age');
+        const kioskIdx = headers.indexOf('KioskAffinity');
+        const cpIdx = headers.indexOf('Checkpoint');
+        const stationIdx = headers.indexOf('Station');
+        const tasksIdx = headers.indexOf('Tasks');
+        const arrIdx = headers.indexOf('ArrivalTime');
+        const qjIdx = headers.indexOf('QueueJoinTime');
+        const ssIdx = headers.indexOf('ServiceStartTime');
+        const seIdx = headers.indexOf('ServiceEndTime');
+        const exIdx = headers.indexOf('ExitTime');
+        const waitIdx = headers.indexOf('WaitTime');
+        const svcIdx = headers.indexOf('ServiceTime');
+        const dwellIdx = headers.indexOf('TotalDwell');
+        const statusIdx = headers.indexOf('Status');
+
+        for (let i = 1; i < lines.length; i++) {
+            const line = lines[i].trim();
+            if (!line || line.startsWith('#')) continue;
+            const cols = line.split(',');
+            if (cols.length < headers.length) continue;
+
+            // Handle quoted tasks field
+            let taskVal = '';
+            let taskStart = -1, taskEnd = -1;
+            for (let c = 0; c < line.length; c++) {
+                if (line[c] === '"' && taskStart === -1) taskStart = c;
+                else if (line[c] === '"' && taskStart !== -1) { taskEnd = c; break; }
+            }
+            if (taskStart !== -1 && taskEnd !== -1) {
+                taskVal = line.substring(taskStart + 1, taskEnd);
+            }
+
+            // Re-split carefully: replace the quoted segment temporarily
+            const safeLine = line.substring(0, taskStart) + taskVal.replace(/,/g, '|') + line.substring(taskEnd + 1);
+            const safeCols = safeLine.split(',');
+
+            records.push({
+                flightId: flightIdx >= 0 ? (safeCols[flightIdx]?.trim() || 'N/A') : 'N/A',
+                passengerName: safeCols[paxIdx]?.trim() || '',
+                passengerClass: safeCols[classIdx]?.trim() || '',
+                passengerAge: parseInt(safeCols[ageIdx], 10) || 0,
+                kioskAffinity: parseFloat(safeCols[kioskIdx]) || 0,
+                checkpointID: safeCols[cpIdx]?.trim() || '',
+                stationID: safeCols[stationIdx]?.trim() || '',
+                tasksPerformed: taskVal,
+                arrivalTime: parseTimeToSeconds(safeCols[arrIdx]),
+                queueJoinTime: parseTimeToSeconds(safeCols[qjIdx]),
+                serviceStartTime: parseTimeToSeconds(safeCols[ssIdx]),
+                serviceEndTime: parseTimeToSeconds(safeCols[seIdx]),
+                exitTime: parseTimeToSeconds(safeCols[exIdx]),
+                WaitTime: parseTimeToSeconds(safeCols[waitIdx]),
+                ServiceTime: parseTimeToSeconds(safeCols[svcIdx]),
+                TotalDwell: parseTimeToSeconds(safeCols[dwellIdx]),
+                status: statusIdx >= 0 ? (safeCols[statusIdx]?.trim() || 'INCOMPLETE') : 'COMPLETED'
+            });
+        }
+    }
+
+    // Group all records by passenger name to determine outcomes
+    const paxRecords = records.reduce((acc, r) => {
+        if (!acc[r.passengerName]) acc[r.passengerName] = [];
+        acc[r.passengerName].push(r);
+        return acc;
+    }, {});
+
+    const completedPassengerNames = new Set();
+    for (const [paxName, g] of Object.entries(paxRecords)) {
+        // Find the record with the maximum arrivalTime
+        let lastRec = g[0];
+        for (let i = 1; i < g.length; i++) {
+            if (g[i].arrivalTime > lastRec.arrivalTime) {
+                lastRec = g[i];
+            }
+        }
+        if (lastRec.status === 'COMPLETED') {
+            completedPassengerNames.add(paxName);
+        }
+    }
+
+    // Exclude non-completing passengers from KPI metrics
+    const completed = records.filter(r => completedPassengerNames.has(r.passengerName) && r.status === 'COMPLETED');
+    const paxGroups = completed.reduce((acc, r) => {
+        if (!acc[r.passengerName]) acc[r.passengerName] = [];
+        acc[r.passengerName].push(r);
+        return acc;
+    }, {});
+
+    const fullJourneys = [];
+    for (const g of Object.values(paxGroups)) {
+        const first = Math.min(...g.map(r => r.arrivalTime));
+        const last = Math.max(...g.map(r => r.exitTime));
+        if (last > first) fullJourneys.push(last - first);
+    }
+    fullJourneys.sort((a, b) => a - b);
+
+    const summary = {
+        totalPassengers: Object.keys(paxGroups).length,
+        completedPassengers: Object.keys(paxGroups).length,
+        meanJourneyTime: fullJourneys.length > 0 ? fullJourneys.reduce((a, b) => a + b, 0) / fullJourneys.length : 0,
+        p90JourneyTime: fullJourneys.length > 0 ? fullJourneys[Math.floor(fullJourneys.length * 0.9)] || fullJourneys[fullJourneys.length - 1] : 0,
+        weightedKpiScore: 0
+    };
+
+    // Simple weighted score
+    const maxExpectedJourney = 1800;
+    const journeyScore = summary.meanJourneyTime > 0 ? Math.max(0, 1 - (summary.meanJourneyTime / maxExpectedJourney)) : 0;
+    const waitPenalty = completed.length > 0 ? (completed.reduce((a, r) => a + r.WaitTime, 0) / completed.length) / 300 : 0;
+    summary.weightedKpiScore = Math.max(0, journeyScore - Math.min(1, waitPenalty)) * 100;
+
+    // Checkpoints
+    const checkpoints = [];
+    const cpGroups = completed.reduce((acc, r) => {
+        if (!acc[r.checkpointID]) acc[r.checkpointID] = [];
+        acc[r.checkpointID].push(r);
+        return acc;
+    }, {});
+
+    for (const [cpId, cpList] of Object.entries(cpGroups)) {
+        const waits = cpList.map(r => r.WaitTime).sort((a, b) => a - b);
+        const dwells = cpList.map(r => r.TotalDwell).sort((a, b) => a - b);
+        const firstArr = Math.min(...cpList.map(r => r.arrivalTime));
+        const lastExit = Math.max(...cpList.map(r => r.exitTime));
+        const duration = lastExit - firstArr;
+        const throughput = duration > 0 ? (cpList.length / duration) * 3600 : 0;
+
+        checkpoints.push({
+            id: cpId,
+            mqt: waits.length > 0 ? waits.reduce((a, b) => a + b, 0) / waits.length : 0,
+            mqs: waits.length > 0 ? waits[waits.length - 1] : 0,
+            p90Wait: waits.length > 0 ? waits[Math.floor(waits.length * 0.9)] || waits[waits.length - 1] : 0,
+            meanDwell: dwells.length > 0 ? dwells.reduce((a, b) => a + b, 0) / dwells.length : 0,
+            throughput,
+            timeProfile: []
+        });
+    }
+
+    // Flights
+    const flights = [];
+    const recordsByFlight = completed.reduce((acc, r) => {
+        const fid = r.flightId && r.flightId !== 'N/A' ? r.flightId : null;
+        if (!fid) {
+            // Try to parse from name like Passenger_MS441_1_...
+            const m = r.passengerName.match(/^Passenger_([^_]+)_\d+/);
+            if (m) {
+                const parsedFid = m[1];
+                if (!acc[parsedFid]) acc[parsedFid] = [];
+                acc[parsedFid].push(r);
+            }
+            return acc;
+        }
+        if (!acc[fid]) acc[fid] = [];
+        acc[fid].push(r);
+        return acc;
+    }, {});
+
+    for (const [flightId, flightRecords] of Object.entries(recordsByFlight)) {
+        const flightPax = flightRecords.reduce((acc, r) => {
+            if (!acc.includes(r.passengerName)) acc.push(r.passengerName);
+            return acc;
+        }, []);
+
+        const flightJourneys = [];
+        for (const paxName of flightPax) {
+            const paxRecs = flightRecords.filter(r => r.passengerName === paxName);
+            const first = Math.min(...paxRecs.map(r => r.arrivalTime));
+            const last = Math.max(...paxRecs.map(r => r.exitTime));
+            if (last > first) flightJourneys.push(last - first);
+        }
+        flightJourneys.sort((a, b) => a - b);
+
+        const worst = Object.entries(flightRecords.reduce((acc, r) => {
+            if (!acc[r.checkpointID]) acc[r.checkpointID] = [];
+            acc[r.checkpointID].push(r.WaitTime);
+            return acc;
+        }, {})).map(([cpId, waits]) => ({ cp: cpId, mqt: waits.reduce((a, b) => a + b, 0) / waits.length }))
+            .sort((a, b) => b.mqt - a.mqt)[0];
+
+        const onTime = flightJourneys.length > 0 ? (flightJourneys[Math.floor(flightJourneys.length * 0.9)] || flightJourneys[flightJourneys.length - 1]) <= 1800 : false;
+
+        flights.push({
+            flightId,
+            passengers: flightPax.length,
+            meanJourneyTime: flightJourneys.length > 0 ? flightJourneys.reduce((a, b) => a + b, 0) / flightJourneys.length : 0,
+            worstCheckpoint: worst?.cp || 'N/A',
+            onTimeClearance: onTime,
+            kpiVector: [
+                flightJourneys.length > 0 ? flightJourneys.reduce((a, b) => a + b, 0) / flightJourneys.length : 0,
+                flightJourneys.length > 0 ? (flightJourneys[Math.floor(flightJourneys.length * 0.9)] || flightJourneys[flightJourneys.length - 1]) : 0,
+                flightRecords.length > 0 ? Math.max(...flightRecords.map(r => r.WaitTime)) : 0,
+                flightRecords.length > 0 ? flightRecords.reduce((a, r) => a + r.TotalDwell, 0) / flightRecords.length : 0,
+                flightRecords.length / Math.max(1, (completed.reduce((a, r) => Math.max(a, r.exitTime), 0)) / 3600),
+                1
+            ]
+        });
+    }
+
+    return { runId: path.basename(runDir), status: 'completed', summary, checkpoints, flights };
+}
+
+// Cleanup stale runs on startup
+function cleanupStaleRuns() {
+    try {
+        const entries = fs.readdirSync(RUNS_DIR);
+        for (const entry of entries) {
+            const runDir = path.join(RUNS_DIR, entry);
+            const stat = fs.statSync(runDir);
+            if (!stat.isDirectory()) continue;
+            const ageHours = (Date.now() - stat.mtimeMs) / (1000 * 60 * 60);
+            if (ageHours > 48) {
+                fs.rmSync(runDir, { recursive: true, force: true });
+                console.log(`[SimRunner] Cleaned up stale run directory: ${entry}`);
+            }
+        }
+    } catch (err) {
+        console.warn('[SimRunner] Cleanup error:', err.message);
+    }
+}
+cleanupStaleRuns();
+
+// POST /api/runs — queue a new simulation run
+app.post('/api/runs', (req, res) => {
+    try {
+        const { desconfig, absconfigs, flights } = req.body;
+        if (!desconfig || !flights || !Array.isArray(flights)) {
+            return res.status(400).json({ error: 'Missing desconfig or flights array.' });
+        }
+
+        const runId = generateRunId();
+        const runDir = path.join(RUNS_DIR, runId);
+        fs.mkdirSync(runDir, { recursive: true });
+
+        // Write desconfig (AerotwinConfig.json format)
+        const desconfigPath = path.join(runDir, 'AerotwinConfig.json');
+        fs.writeFileSync(desconfigPath, JSON.stringify(desconfig, null, 2));
+
+        // Write active_flights.json (flights with personas)
+        const activeFlightsPayload = {
+            meta: {
+                updated: new Date().toISOString(),
+                airport: TARGET_AIRPORT,
+                airport_icao: 'HEBA',
+                count: flights.length,
+                source: 'simulation-run'
+            },
+            flights
+        };
+        const flightsPath = path.join(runDir, 'active_flights.json');
+        fs.writeFileSync(flightsPath, JSON.stringify(activeFlightsPayload, null, 2));
+
+        // Write absconfig if provided (global persona weights fallback)
+        let absconfigPath = null;
+        if (absconfigs) {
+            absconfigPath = path.join(runDir, 'absconfig.json');
+            if (Array.isArray(absconfigs)) {
+                fs.writeFileSync(absconfigPath, JSON.stringify({ weights: absconfigs }, null, 2));
+            } else {
+                fs.writeFileSync(absconfigPath, JSON.stringify(absconfigs, null, 2));
+            }
+        }
+
+        // Output paths
+        const outputCsv = path.join(runDir, 'output.csv');
+
+        const unityExe = resolveUnityExecutable();
+        if (!unityExe) {
+            fs.rmSync(runDir, { recursive: true, force: true });
+            return res.status(503).json({ error: 'Unity executable not found. Set UNITY_EXE_PATH env var or place build in expected location.' });
+        }
+
+        const args = [
+            '-batchmode',
+            '-logFile', path.join(runDir, 'batch_log.txt'),
+            '-simSpeed', '50',
+            '-aeroConfig', desconfigPath,
+            '-flightSchedule', flightsPath,
+            '-logOutput', outputCsv
+        ];
+
+        if (absconfigPath) {
+            args.push('-absConfig', absconfigPath);
+        }
+
+        console.log(`[SimRunner] Starting run ${runId}`);
+        console.log(`[SimRunner] Unity: ${unityExe}`);
+        console.log(`[SimRunner] Args: ${args.join(' ')}`);
+
+        const proc = spawn(unityExe, args, {
+            cwd: runDir,
+            detached: false,
+            windowsHide: true
+        });
+
+        runs.set(runId, {
+            id: runId,
+            status: 'running',
+            startTime: Date.now(),
+            pid: proc.pid,
+            exitCode: null,
+            runDir,
+            outputCsv: 'output.csv',
+            desconfigPath,
+            flightsPath,
+            absconfigPath
+        });
+
+        proc.on('exit', (code) => {
+            const run = runs.get(runId);
+            if (run) {
+                run.exitCode = code;
+                run.status = code === 0 ? 'completed' : 'failed';
+                console.log(`[SimRunner] Run ${runId} finished with code ${code} (${run.status})`);
+            }
+        });
+
+        proc.on('error', (err) => {
+            const run = runs.get(runId);
+            if (run) {
+                run.status = 'failed';
+                run.error = err.message;
+                console.error(`[SimRunner] Run ${runId} process error:`, err.message);
+            }
+        });
+
+        // Safety timeout: mark failed after 30 minutes
+        setTimeout(() => {
+            const run = runs.get(runId);
+            if (run && run.status === 'running') {
+                try { process.kill(run.pid, 'SIGTERM'); } catch { }
+                run.status = 'failed';
+                run.error = 'Timeout after 30 minutes';
+                console.warn(`[SimRunner] Run ${runId} timed out and was terminated.`);
+            }
+        }, 30 * 60 * 1000);
+
+        return res.status(202).json({ runId, status: 'running' });
+    } catch (error) {
+        console.error('[SimRunner] POST /api/runs error:', error);
+        return res.status(500).json({ error: 'Failed to start simulation run.' });
+    }
+});
+
+// GET /api/runs/:id/status
+app.get('/api/runs/:id/status', (req, res) => {
+    const run = runs.get(req.params.id);
+    if (!run) {
+        return res.status(404).json({ error: 'Run not found.' });
+    }
+    return res.status(200).json({
+        runId: run.id,
+        status: run.status,
+        startTime: run.startTime,
+        elapsedMs: Date.now() - run.startTime,
+        error: run.error || undefined
+    });
+});
+
+// GET /api/runs/:id/results
+app.get('/api/runs/:id/results', (req, res) => {
+    const run = runs.get(req.params.id);
+    if (!run) {
+        return res.status(404).json({ error: 'Run not found.' });
+    }
+    if (run.status !== 'completed') {
+        return res.status(400).json({ error: `Run is ${run.status}.` });
+    }
+
+    try {
+        const results = parseSimulationResults(run.runDir, run.outputCsv);
+        if (!results) {
+            return res.status(500).json({ error: 'Could not parse simulation results.' });
+        }
+        return res.status(200).json(results);
+    } catch (err) {
+        console.error('[SimRunner] Results parse error:', err);
+        return res.status(500).json({ error: 'Failed to parse results.' });
+    }
+});
+
+// GET /api/runs/:id/events?flight=FLIGHT_ID
+app.get('/api/runs/:id/events', (req, res) => {
+    const run = runs.get(req.params.id);
+    if (!run) {
+        return res.status(404).json({ error: 'Run not found.' });
+    }
+
+    const flightId = req.query.flight;
+    const csvPath = path.join(run.runDir, run.outputCsv);
+
+    if (!fs.existsSync(csvPath)) {
+        return res.status(404).json({ error: 'CSV output not found.' });
+    }
+
+    try {
+        const lines = fs.readFileSync(csvPath, 'utf8').split('\n').filter(l => l.trim());
+        const headerLine = lines.find(l => l.startsWith('Passenger') || l.startsWith('Flight_ID'));
+        if (!headerLine) {
+            return res.status(500).json({ error: 'Invalid CSV format.' });
+        }
+
+        const headers = headerLine.split(',').map(h => h.trim());
+        const flightIdx = headers.indexOf('Flight_ID');
+        const hasFlightCol = flightIdx >= 0;
+
+        // Parse passenger names for flight ID fallback
+        const nameFlightRegex = /^Passenger_([^_]+)_\d+/;
+
+        const rows = [];
+        for (let i = 1; i < lines.length; i++) {
+            const line = lines[i].trim();
+            if (!line || line.startsWith('#')) continue;
+
+            // Extract quoted tasks field
+            let taskVal = '';
+            let taskStart = -1, taskEnd = -1;
+            for (let c = 0; c < line.length; c++) {
+                if (line[c] === '"' && taskStart === -1) taskStart = c;
+                else if (line[c] === '"' && taskStart !== -1) { taskEnd = c; break; }
+            }
+            const safeLine = taskStart !== -1 && taskEnd !== -1
+                ? line.substring(0, taskStart) + taskVal.replace(/,/g, '|') + line.substring(taskEnd + 1)
+                : line;
+            const cols = safeLine.split(',');
+            if (cols.length < headers.length) continue;
+
+            const rowFlightId = hasFlightCol
+                ? (cols[flightIdx]?.trim() || 'N/A')
+                : (() => {
+                    const name = cols[0]?.trim() || '';
+                    const m = name.match(nameFlightRegex);
+                    return m ? m[1] : 'N/A';
+                })();
+
+            if (flightId && rowFlightId !== flightId) continue;
+
+            const row = {};
+            headers.forEach((h, idx) => {
+                row[h] = cols[idx]?.trim() || '';
+            });
+            rows.push(row);
+        }
+
+        return res.status(200).json({
+            runId: run.id,
+            flight: flightId || null,
+            count: rows.length,
+            rows
+        });
+    } catch (err) {
+        console.error('[SimRunner] Events parse error:', err);
+        return res.status(500).json({ error: 'Failed to parse events.' });
+    }
+});
+
+// ────────────────────────────────────────────────────────────────────────────
+// GET /api/runs/:id/replay — replay event stream (additive, isolated route)
+// ────────────────────────────────────────────────────────────────────────────
+
+/**
+ * Parse output.csv into a flat, time-sorted event stream for the replay viewer.
+ * This is intentionally a separate function from parseSimulationResults() —
+ * replay needs raw per-event data, not KPI aggregates.
+ */
+function parseReplayEvents(csvPath) {
+    const raw = fs.readFileSync(csvPath, 'utf8');
+    const lines = raw.split('\n').filter(l => l.trim());
+
+    // Find header
+    const headerLine = lines.find(l => l.startsWith('Flight_ID') || l.startsWith('Passenger'));
+    if (!headerLine) throw new Error('CSV has no recognizable header');
+
+    const headers = headerLine.split(',').map(h => h.trim());
+    const col = (name) => headers.indexOf(name);
+
+    const iFlightId = col('Flight_ID');
+    const iPassenger = col('Passenger');
+    const iClass = col('Class');
+    const iCheckpoint = col('Checkpoint');
+    const iStation = col('Station');
+    const iArrival = col('ArrivalTime');
+    const iQueueJoin = col('QueueJoinTime');
+    const iServiceStart = col('ServiceStartTime');
+    const iServiceEnd = col('ServiceEndTime');
+    const iExit = col('ExitTime');
+    const iStatus = headers.indexOf('Status'); // may be -1
+
+    // Regex fallback for flight ID from passenger name
+    const nameFlightRe = /^Passenger_([^_]+)_\d+/;
+
+    const events = [];
+    let maxExitSec = 0;
+    let globalMinSec = Infinity;
+
+    // First pass: find global minimum time for t=0 normalization
+    for (let i = 1; i < lines.length; i++) {
+        const line = lines[i].trim();
+        if (!line || line.startsWith('#')) continue;
+
+        // Handle quoted Tasks field — strip quotes, replace inner commas
+        let safeLine = line;
+        const q1 = line.indexOf('"');
+        if (q1 !== -1) {
+            const q2 = line.indexOf('"', q1 + 1);
+            if (q2 !== -1) {
+                const inner = line.substring(q1 + 1, q2).replace(/,/g, '|');
+                safeLine = line.substring(0, q1) + inner + line.substring(q2 + 1);
+            }
+        }
+        const cols = safeLine.split(',');
+        if (cols.length < headers.length - 1) continue;
+
+        const arrSec = parseTimeToSeconds(cols[iArrival]?.trim());
+        if (arrSec > 0 && arrSec < globalMinSec) globalMinSec = arrSec;
+    }
+
+    if (!isFinite(globalMinSec) || globalMinSec <= 0) globalMinSec = 0;
+
+    // Second pass: build events
+    for (let i = 1; i < lines.length; i++) {
+        const line = lines[i].trim();
+        if (!line || line.startsWith('#')) continue;
+
+        let safeLine = line;
+        const q1 = line.indexOf('"');
+        if (q1 !== -1) {
+            const q2 = line.indexOf('"', q1 + 1);
+            if (q2 !== -1) {
+                const inner = line.substring(q1 + 1, q2).replace(/,/g, '|');
+                safeLine = line.substring(0, q1) + inner + line.substring(q2 + 1);
+            }
+        }
+        const cols = safeLine.split(',');
+        if (cols.length < headers.length - 1) continue;
+
+        const passengerId = cols[iPassenger]?.trim() || '';
+        const checkpointId = cols[iCheckpoint]?.trim() || '';
+        const stationId = cols[iStation]?.trim() || '';
+        const passengerClass = cols[iClass]?.trim() || '';
+        const status = iStatus >= 0 ? (cols[iStatus]?.trim() || '') : '';
+
+        // Extract flight ID: prefer column, fall back to name regex
+        let flightId = '';
+        if (iFlightId >= 0) {
+            flightId = cols[iFlightId]?.trim() || '';
+        }
+        if (!flightId || flightId === 'N/A') {
+            const m = passengerId.match(nameFlightRe);
+            if (m) flightId = m[1];
+        }
+
+        // Parse the 5 timestamp columns
+        const times = {
+            arrive: parseTimeToSeconds(cols[iArrival]?.trim()),
+            queueJoin: parseTimeToSeconds(cols[iQueueJoin]?.trim()),
+            serviceStart: parseTimeToSeconds(cols[iServiceStart]?.trim()),
+            serviceEnd: parseTimeToSeconds(cols[iServiceEnd]?.trim()),
+            exit: parseTimeToSeconds(cols[iExit]?.trim()),
+        };
+
+        // Explode into discrete events, normalizing to t=0
+        const eventTypes = ['arrive', 'queueJoin', 'serviceStart', 'serviceEnd', 'exit'];
+        for (const type of eventTypes) {
+            const rawSec = times[type];
+            if (!rawSec || rawSec <= 0) continue;
+            const t = rawSec - globalMinSec;
+            events.push({
+                t,
+                type,
+                passengerId,
+                checkpointId,
+                stationId: (type === 'arrive' || type === 'exit') ? null : stationId,
+                flightId,
+                passengerClass,
+                status: type === 'exit' ? status : undefined,
+            });
+            if (t > maxExitSec) maxExitSec = t;
+        }
+    }
+
+    // Sort globally by t, tie-break by event type order
+    const typeOrder = { arrive: 0, queueJoin: 1, serviceStart: 2, serviceEnd: 3, exit: 4 };
+    events.sort((a, b) => a.t - b.t || (typeOrder[a.type] || 0) - (typeOrder[b.type] || 0));
+
+    return { events, durationSec: maxExitSec };
+}
+
+/**
+ * Build checkpoint topology from AerotwinConfig.json.
+ * Returns an array of { id, type, flowType, depth, stationCount, stations[] }.
+ * Computes BFS depth from root anchors.
+ */
+function buildCheckpointTopology(configPath) {
+    const config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
+
+    // Collect all checkpoints from both Departure and Arrival flows
+    const allCheckpoints = [];
+
+    if (config.Departure && Array.isArray(config.Departure.Checkpoints)) {
+        for (const cp of config.Departure.Checkpoints) {
+            allCheckpoints.push({ ...cp, _flowType: 'departure' });
+        }
+    }
+    if (config.Arrival && Array.isArray(config.Arrival.Checkpoints)) {
+        for (const cp of config.Arrival.Checkpoints) {
+            allCheckpoints.push({ ...cp, _flowType: 'arrival' });
+        }
+    }
+    // Legacy flat format (no Departure/Arrival wrapper)
+    if (allCheckpoints.length === 0 && Array.isArray(config.Checkpoints)) {
+        for (const cp of config.Checkpoints) {
+            allCheckpoints.push({ ...cp, _flowType: cp.Flow_Type || 'departure' });
+        }
+    }
+
+    // Build adjacency for BFS depth
+    const cpById = new Map();
+    for (const cp of allCheckpoints) {
+        cpById.set(cp.Checkpoint_ID, cp);
+    }
+
+    // Find root(s): checkpoints whose Prev_Anchor is NOT another checkpoint ID
+    const cpIds = new Set(cpById.keys());
+    const roots = [];
+    for (const cp of allCheckpoints) {
+        if (!cpIds.has(cp.Prev_Anchor)) {
+            roots.push(cp.Checkpoint_ID);
+        }
+    }
+
+    // BFS to compute depth
+    const depth = new Map();
+    const queue = [...roots.map(id => ({ id, d: 0 }))];
+    while (queue.length > 0) {
+        const { id, d } = queue.shift();
+        if (depth.has(id)) continue;
+        depth.set(id, d);
+        const cp = cpById.get(id);
+        if (cp && Array.isArray(cp.Next_Anchor)) {
+            for (const next of cp.Next_Anchor) {
+                if (cpIds.has(next) && !depth.has(next)) {
+                    queue.push({ id: next, d: d + 1 });
+                }
+            }
+        }
+    }
+
+    // Build result
+    return allCheckpoints.map(cp => ({
+        id: cp.Checkpoint_ID,
+        type: cp.Checkpoint_Type,
+        flowType: cp._flowType,
+        depth: depth.get(cp.Checkpoint_ID) ?? 0,
+        prevAnchor: cp.Prev_Anchor,
+        nextAnchors: cp.Next_Anchor || [],
+        stationCount: Array.isArray(cp.Stations) ? cp.Stations.length : 0,
+        stations: Array.isArray(cp.Stations) ? cp.Stations.map(s => s.Station_ID) : [],
+    }));
+}
+
+app.get('/api/runs/:id/replay', (req, res) => {
+    const runId = req.params.id;
+
+    // Try in-memory first, then fall back to on-disk directory
+    let run = runs.get(runId);
+    let runDir, outputCsvName;
+
+    if (run) {
+        runDir = run.runDir;
+        outputCsvName = run.outputCsv || 'output.csv';
+        if (run.status !== 'completed') {
+            return res.status(409).json({ error: `Run is not completed (status: ${run.status}).` });
+        }
+    } else {
+        // Fallback: check runs/ directory on disk
+        runDir = path.join(RUNS_DIR, runId);
+        outputCsvName = 'output.csv';
+        if (!fs.existsSync(runDir)) {
+            return res.status(404).json({ error: 'Run not found.' });
+        }
+    }
+
+    const csvPath = path.join(runDir, outputCsvName);
+    if (!fs.existsSync(csvPath)) {
+        return res.status(404).json({ error: 'CSV output not found — run may not be complete.' });
+    }
+
+    const configPath = path.join(runDir, 'AerotwinConfig.json');
+    if (!fs.existsSync(configPath)) {
+        return res.status(404).json({ error: 'AerotwinConfig.json not found for this run.' });
+    }
+
+    // Check for cached replay JSON
+    const cachePath = path.join(runDir, '_replay.json');
+    if (fs.existsSync(cachePath)) {
+        try {
+            const cached = JSON.parse(fs.readFileSync(cachePath, 'utf8'));
+            return res.status(200).json(cached);
+        } catch (_) {
+            // Corrupted cache — rebuild
+        }
+    }
+
+    try {
+        const { events, durationSec } = parseReplayEvents(csvPath);
+        const checkpoints = buildCheckpointTopology(configPath);
+
+        // Layout spacing constants — single source of truth for any renderer.
+        // These match the CheckpointManager inspector defaults in the Unity sim scene.
+        const layoutConstants = {
+            zSpacing: -20,
+            xStationGap: -5,
+            xCheckpointPadding: 10,
+            flowSpacing: 100,
+        };
+
+        const result = {
+            runId,
+            durationSec,
+            layoutConstants,
+            checkpoints,
+            events,
+        };
+
+        // Cache to disk
+        try {
+            fs.writeFileSync(cachePath, JSON.stringify(result));
+        } catch (cacheErr) {
+            console.error('[Replay] Failed to cache replay JSON:', cacheErr.message);
+        }
+
+        return res.status(200).json(result);
+    } catch (err) {
+        console.error('[Replay] Parse error:', err);
+        return res.status(500).json({ error: 'Failed to build replay data.', detail: err.message });
     }
 });
 

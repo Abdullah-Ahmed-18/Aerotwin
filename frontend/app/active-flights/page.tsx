@@ -1,8 +1,10 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
+import { useAppState } from '@/lib/AppStateContext';
 import dynamic from 'next/dynamic';
-import { Plane, Info, Globe, Activity, Navigation, ChevronDown, Users, Radar, Repeat, Crown, Clock, X, PieChart, Save } from 'lucide-react';
+import { Plane, Info, Globe, Activity, Navigation, ChevronDown, Users, Radar, Repeat, Crown, Clock, X, PieChart, Save, Play, Loader2, AlertCircle, CheckCircle2 } from 'lucide-react';
+import { useSimulation } from '@/lib/SimulationContext';
 import FlightSelector from '@/components/FlightSelector';
 import { lerpCoords, calculateBearing } from '@/lib/geo';
 import { lookupAirport, partitionAirports } from '@/lib/airports';
@@ -180,12 +182,22 @@ function isLandedCard(eta: number): boolean {
 }
 
 export default function ActiveFlightsPage() {
-    const [selectedAirportCode, setSelectedAirportCode] = useState('HBE');
+    const {
+        fetchedFlights,
+        setFetchedFlights,
+        selectedStatusFilters,
+        setSelectedStatusFilters,
+        selectedFlightIds,
+        setSelectedFlightIds,
+        selectedAirportCode,
+        setSelectedAirportCode,
+        selectedId,
+        setSelectedId,
+        manageId,
+        setManageId,
+    } = useAppState();
+
     const [selectedAirportCenter, setSelectedAirportCenter] = useState<[number, number]>([30.9177, 29.6964]);
-    const [selectedStatusFilters, setSelectedStatusFilters] = useState<string[]>(['all']);
-    const [fetchedFlights, setFetchedFlights] = useState<any[]>([]);
-    const [selectedId, setSelectedId] = useState<string | null>('MS-441');
-    const [manageId, setManageId] = useState<string | null>(null);
     const [time, setTime] = useState(new Date());
     const [lastFetchTimestamp, setLastFetchTimestamp] = useState(Date.now());
     const [mounted, setMounted] = useState(false);
@@ -194,6 +206,8 @@ export default function ActiveFlightsPage() {
     const [mapAirports, setMapAirports] = useState<any[]>([]);
     const [airportLookup, setAirportLookup] = useState<Record<string, { code: string; name: string; coords: [number, number] }>>({});
     const [focusTarget, setFocusTarget] = useState<[number, number] | null>(null);
+
+    const simulation = useSimulation();
 
     const [flights, setFlights] = useState([
         {
@@ -225,6 +239,64 @@ export default function ActiveFlightsPage() {
     const flightStatuses = ['all', 'scheduled', 'active', 'landed', 'cancelled', 'incident', 'diverted'];
     const sourceFlightCount = fetchedFlights.length > 0 ? fetchedFlights.length : flights.length;
     const filteredFlightCount = flights.length;
+
+    const toggleFlightSelection = (flightId: string) => {
+        setSelectedFlightIds(prev => {
+            const next = new Set(prev);
+            if (next.has(flightId)) next.delete(flightId);
+            else next.add(flightId);
+            return next;
+        });
+    };
+
+    const selectAllFlights = () => setSelectedFlightIds(new Set(flights.map(f => f.id)));
+    const deselectAllFlights = () => setSelectedFlightIds(new Set());
+
+    const handleRunSimulation = async () => {
+        if (selectedFlightIds.size === 0) return;
+        const desconfigRaw = localStorage.getItem('aerotwin_desconfig');
+        if (!desconfigRaw) {
+            alert('No configuration found. Please go to the Config page and click "Format & Send Config" first.');
+            return;
+        }
+        const desconfig = JSON.parse(desconfigRaw);
+        const selectedFlights = flights.filter(f => selectedFlightIds.has(f.id));
+        // Map to active_flights.json format expected by backend
+        const flightsPayload = selectedFlights.map(f => {
+            const isDeparture = f.origin === selectedAirportCode;
+            const departureLeadTime = isDeparture ? 250 * 60000 : 0; // 250 minutes (4h 10m) offset to ensure all spawn events occur after sim start
+
+            return {
+                flight_id: f.id,
+                flight_iata: f.id,
+                flight_status: 'scheduled',
+                flight_type: 'International',
+                route: {
+                    source: f.origin,
+                    destination: f.dest,
+                    details: { origin_name: f.originName, gate_id: 'T1-G1' }
+                },
+                aircraft: { type: f.aircraft, capacity: '180 (Simulated)' },
+                payload_stats: {
+                    total_passengers: `${f.passengers} (Simulated)`,
+                    estimated_groups: `${Math.ceil(f.passengers / 2.4)} (Simulated)`,
+                    total_bags: `${Math.round(f.passengers * 0.8)} (Simulated)`
+                },
+                personas: f.personas,
+                schedule: {
+                    departure: { 
+                        scheduled: new Date(Date.now() + departureLeadTime).toISOString(), 
+                        estimated: new Date(Date.now() + departureLeadTime).toISOString() 
+                    },
+                    arrival: { 
+                        scheduled: new Date(Date.now() + departureLeadTime + f.eta * 60000).toISOString(), 
+                        estimated: new Date(Date.now() + departureLeadTime + f.eta * 60000).toISOString() 
+                    }
+                }
+            };
+        });
+        await simulation.startRun(desconfig, flightsPayload, undefined);
+    };
 
     const toggleStatusFilter = (status: string) => {
         setSelectedStatusFilters((currentStatuses) => {
@@ -565,7 +637,7 @@ export default function ActiveFlightsPage() {
     const premiumTotal = activeFlight ? activeFlight.personas.p7 : 0;
 
     return (
-        <div className="h-screen w-full bg-[#F8FAFC] text-slate-900 font-sans overflow-hidden flex flex-col">
+        <div className="h-full w-full bg-[#F8FAFC] text-slate-900 font-sans overflow-hidden flex flex-col">
             <div className="flex flex-1 min-h-0 p-8 gap-8 overflow-hidden">
 
                 {/* SIDEBAR */}
@@ -590,6 +662,12 @@ export default function ActiveFlightsPage() {
                             <span className="text-[9px] font-black uppercase tracking-widest text-blue-600 bg-blue-50 border border-blue-100 rounded-full px-2.5 py-1">
                                 {filteredFlightCount} / {sourceFlightCount} Flights
                             </span>
+                        </div>
+                        <div className="flex items-center gap-2 mb-3">
+                            <button onClick={selectAllFlights} className="text-[9px] font-bold text-blue-600 hover:text-blue-700 uppercase tracking-wider">Select All</button>
+                            <span className="text-slate-300">|</span>
+                            <button onClick={deselectAllFlights} className="text-[9px] font-bold text-slate-500 hover:text-slate-700 uppercase tracking-wider">Deselect All</button>
+                            <span className="text-[9px] font-black text-slate-400 ml-auto">{selectedFlightIds.size} selected</span>
                         </div>
                         <div className="flex flex-wrap gap-2">
                             {flightStatuses.map((status) => {
@@ -628,7 +706,7 @@ export default function ActiveFlightsPage() {
                                         setShowCard(true);
                                         setFocusTarget(f.coords);
                                     }}
-                                    className={`group rounded-[28px] border transition-all duration-500 cursor-pointer overflow-hidden ${selectedId === f.id
+                                    className={`group rounded-[28px] border transition-all duration-500 cursor-pointer overflow-hidden relative ${selectedId === f.id
                                         ? landedCard
                                             ? 'bg-emerald-50 border-emerald-400 shadow-2xl shadow-emerald-500/10 scale-[1.01]'
                                             : 'bg-white border-blue-600 shadow-2xl shadow-blue-600/10 scale-[1.01]'
@@ -637,6 +715,15 @@ export default function ActiveFlightsPage() {
                                             : 'bg-white/60 border-slate-200 hover:border-slate-300 shadow-sm'
                                         }`}
                                 >
+                                    <div className="absolute top-4 left-4 z-10">
+                                        <input
+                                            type="checkbox"
+                                            checked={selectedFlightIds.has(f.id)}
+                                            onClick={(e) => e.stopPropagation()}
+                                            onChange={() => toggleFlightSelection(f.id)}
+                                            className="w-4 h-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500 cursor-pointer"
+                                        />
+                                    </div>
                                     <div className="p-7">
                                         <div className="flex justify-between items-start mb-6">
                                             <div className="flex items-center gap-3">
@@ -741,12 +828,12 @@ export default function ActiveFlightsPage() {
                         {/* ========================================== */}
                         {/* ✈️ CONTROL PANEL RESTORED TO THE BOTTOM */}
                         {/* ========================================== */}
-                        <div className="mt-6 pt-6 border-t border-slate-200">
+                        <div className="mt-6 pt-6 border-t border-slate-200 space-y-3">
                             <FlightSelector onFlightsFetched={handleFlightsFetched} onAirportChange={setSelectedAirportCode} />
                             <button
                                 onClick={handleExportActiveFlightsJson}
                                 disabled={fetchedFlights.length === 0 || flights.length === 0}
-                                className={`w-full mt-3 py-2.5 rounded-lg text-xs font-black transition-all flex items-center justify-center gap-2 border ${
+                                className={`w-full py-2.5 rounded-lg text-xs font-black transition-all flex items-center justify-center gap-2 border ${
                                     fetchedFlights.length === 0 || flights.length === 0
                                         ? 'bg-slate-100 border-slate-200 text-slate-400 cursor-not-allowed'
                                         : 'bg-emerald-500 hover:bg-emerald-600 border-emerald-500 text-white shadow-sm'
@@ -755,6 +842,75 @@ export default function ActiveFlightsPage() {
                                 <Save size={14} />
                                 Export active_flights.json (with Personas)
                             </button>
+                            <button
+                                onClick={handleRunSimulation}
+                                disabled={selectedFlightIds.size === 0 || simulation.runStatus === 'running' || simulation.runStatus === 'queued'}
+                                className={`w-full py-3 rounded-xl text-xs font-black transition-all flex items-center justify-center gap-2 border ${
+                                    selectedFlightIds.size === 0 || simulation.runStatus === 'running' || simulation.runStatus === 'queued'
+                                        ? 'bg-slate-100 border-slate-200 text-slate-400 cursor-not-allowed'
+                                        : 'bg-blue-600 hover:bg-blue-500 border-blue-600 text-white shadow-lg shadow-blue-600/20'
+                                }`}
+                            >
+                                {simulation.runStatus === 'running' || simulation.runStatus === 'queued' ? (
+                                    <Loader2 size={14} className="animate-spin" />
+                                ) : (
+                                    <Play size={14} />
+                                )}
+                                {simulation.runStatus === 'running' ? 'Running Simulation...' : simulation.runStatus === 'queued' ? 'Starting...' : 'Run Simulation'}
+                            </button>
+
+                            {/* Simulation Progress */}
+                            {(simulation.runStatus === 'running' || simulation.runStatus === 'queued') && (
+                                <div className="p-4 bg-blue-50 rounded-xl border border-blue-100 space-y-2">
+                                    <div className="flex items-center justify-between">
+                                        <span className="text-[10px] font-black text-blue-700 uppercase tracking-widest">
+                                            {simulation.runStatus === 'queued' ? 'Queueing...' : 'Simulating...'}
+                                        </span>
+                                        <span className="text-[10px] font-black text-blue-600">{Math.round(simulation.progress)}%</span>
+                                    </div>
+                                    <div className="h-2 w-full bg-blue-100 rounded-full overflow-hidden">
+                                        <div className="h-full bg-blue-600 rounded-full transition-all duration-500" style={{ width: `${simulation.progress}%` }} />
+                                    </div>
+                                </div>
+                            )}
+
+                            {simulation.runStatus === 'completed' && simulation.results && (
+                                <div className="p-4 bg-emerald-50 rounded-xl border border-emerald-100 space-y-2">
+                                    <div className="flex items-center gap-2">
+                                        <CheckCircle2 size={16} className="text-emerald-600" />
+                                        <span className="text-[10px] font-black text-emerald-700 uppercase tracking-widest">Simulation Complete</span>
+                                    </div>
+                                    <div className="grid grid-cols-2 gap-2">
+                                        <div className="p-2 bg-white rounded-lg border border-emerald-100">
+                                            <p className="text-[9px] font-bold text-slate-400 uppercase">PAX</p>
+                                            <p className="text-sm font-black text-emerald-700">{simulation.results.summary.totalPassengers}</p>
+                                        </div>
+                                        <div className="p-2 bg-white rounded-lg border border-emerald-100">
+                                            <p className="text-[9px] font-bold text-slate-400 uppercase">KPI Score</p>
+                                            <p className="text-sm font-black text-emerald-700">{simulation.results.summary.weightedKpiScore.toFixed(1)}</p>
+                                        </div>
+                                    </div>
+                                    <a href="/dashboard" className="block w-full py-2 bg-emerald-600 hover:bg-emerald-500 text-white text-[10px] font-black uppercase tracking-widest text-center rounded-lg transition-colors">
+                                        View Results on Dashboard
+                                    </a>
+                                    <button onClick={simulation.clearRun} className="block w-full py-1.5 text-[9px] font-bold text-slate-500 hover:text-slate-700 uppercase tracking-wider text-center">
+                                        Dismiss
+                                    </button>
+                                </div>
+                            )}
+
+                            {simulation.runStatus === 'failed' && (
+                                <div className="p-4 bg-rose-50 rounded-xl border border-rose-100 space-y-2">
+                                    <div className="flex items-center gap-2">
+                                        <AlertCircle size={16} className="text-rose-600" />
+                                        <span className="text-[10px] font-black text-rose-700 uppercase tracking-widest">Simulation Failed</span>
+                                    </div>
+                                    <p className="text-[10px] text-rose-600 font-medium">{simulation.error || 'Unknown error'}</p>
+                                    <button onClick={simulation.clearRun} className="block w-full py-1.5 text-[9px] font-bold text-slate-500 hover:text-slate-700 uppercase tracking-wider text-center">
+                                        Dismiss
+                                    </button>
+                                </div>
+                            )}
                         </div>
                     </div>
                 </div>

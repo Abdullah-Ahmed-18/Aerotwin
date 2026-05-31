@@ -117,15 +117,15 @@ export default function FlightTrendChart({ airport = 'HBE', hours = 12 }: Props)
 
       {/* Hover tooltip */}
       {hovered && (
-        <div className="flex flex-wrap gap-3 p-2.5 bg-slate-800/70 rounded-lg border border-slate-700/50">
-          <span className="text-slate-300 text-xs font-mono w-full">{hovered.hour}</span>
+        <div className="flex flex-wrap gap-3 p-2.5 bg-white rounded-lg border border-slate-200 shadow-sm">
+          <span className="text-slate-700 text-xs font-mono w-full">{hovered.hour}</span>
           {statuses.filter(s => (hovered[s] as number) > 0).map(s => (
             <div key={s} className="flex items-center gap-1.5">
               <div className="w-2 h-2 rounded-sm" style={{ background: STATUS_COLOR[s as string] }} />
-              <span className="text-slate-300 text-[10px] capitalize">{s}: <strong>{hovered[s] as number}</strong></span>
+              <span className="text-slate-700 text-[10px] capitalize">{s}: <strong>{hovered[s] as number}</strong></span>
             </div>
           ))}
-          <span className="text-slate-400 text-[10px] ml-auto">Total: {hovered.total}</span>
+          <span className="text-slate-500 text-[10px] ml-auto">Total: {hovered.total}</span>
         </div>
       )}
 
@@ -159,7 +159,7 @@ export default function FlightTrendChart({ airport = 'HBE', hours = 12 }: Props)
       {/* Refresh */}
       <button
         onClick={load}
-        className="flex items-center gap-1.5 text-[10px] text-slate-500 hover:text-slate-300 transition-colors"
+        className="flex items-center gap-1.5 text-[10px] text-slate-500 hover:text-slate-700 transition-colors"
         id="flight-trend-refresh-btn"
       >
         <RefreshCw size={10} />
