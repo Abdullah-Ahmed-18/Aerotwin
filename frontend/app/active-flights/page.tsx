@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
+import { useRouter } from 'next/navigation';
 import { useAppState } from '@/lib/AppStateContext';
 import dynamic from 'next/dynamic';
 import { Plane, Info, Globe, Activity, Navigation, ChevronDown, Users, Radar, Repeat, Crown, Clock, X, PieChart, Save, Play, Loader2, AlertCircle, CheckCircle2 } from 'lucide-react';
@@ -208,6 +209,7 @@ export default function ActiveFlightsPage() {
     const [focusTarget, setFocusTarget] = useState<[number, number] | null>(null);
 
     const simulation = useSimulation();
+    const router = useRouter();
 
     const [flights, setFlights] = useState([
         {
@@ -264,7 +266,7 @@ export default function ActiveFlightsPage() {
         // Map to active_flights.json format expected by backend
         const flightsPayload = selectedFlights.map(f => {
             const isDeparture = f.origin === selectedAirportCode;
-            const departureLeadTime = isDeparture ? 250 * 60000 : 0; // 250 minutes (4h 10m) offset to ensure all spawn events occur after sim start
+            const departureLeadTime = isDeparture ? 250 * 60000 : 0;
 
             return {
                 flight_id: f.id,
@@ -295,7 +297,18 @@ export default function ActiveFlightsPage() {
                 }
             };
         });
-        await simulation.startRun(desconfig, flightsPayload, undefined);
+
+        // Start Unity simulation (runs in background with polling)
+        simulation.startRun(desconfig, flightsPayload, undefined).catch(() => {});
+
+        // Run AI optimization against the same config + flights
+        try {
+            await simulation.startOptimization(desconfig, flightsPayload);
+            // Redirect to insights when optimization completes
+            router.push('/insights');
+        } catch (err: any) {
+            alert(`AI Optimization failed: ${err.message}`);
+        }
     };
 
     const toggleStatusFilter = (status: string) => {
@@ -844,19 +857,25 @@ export default function ActiveFlightsPage() {
                             </button>
                             <button
                                 onClick={handleRunSimulation}
-                                disabled={selectedFlightIds.size === 0 || simulation.runStatus === 'running' || simulation.runStatus === 'queued'}
+                                disabled={selectedFlightIds.size === 0 || simulation.runStatus === 'running' || simulation.runStatus === 'queued' || simulation.optimization.status === 'running'}
                                 className={`w-full py-3 rounded-xl text-xs font-black transition-all flex items-center justify-center gap-2 border ${
-                                    selectedFlightIds.size === 0 || simulation.runStatus === 'running' || simulation.runStatus === 'queued'
+                                    selectedFlightIds.size === 0 || simulation.runStatus === 'running' || simulation.runStatus === 'queued' || simulation.optimization.status === 'running'
                                         ? 'bg-slate-100 border-slate-200 text-slate-400 cursor-not-allowed'
                                         : 'bg-blue-600 hover:bg-blue-500 border-blue-600 text-white shadow-lg shadow-blue-600/20'
                                 }`}
                             >
-                                {simulation.runStatus === 'running' || simulation.runStatus === 'queued' ? (
+                                {simulation.runStatus === 'running' || simulation.runStatus === 'queued' || simulation.optimization.status === 'running' ? (
                                     <Loader2 size={14} className="animate-spin" />
                                 ) : (
                                     <Play size={14} />
                                 )}
-                                {simulation.runStatus === 'running' ? 'Running Simulation...' : simulation.runStatus === 'queued' ? 'Starting...' : 'Run Simulation'}
+                                {simulation.optimization.status === 'running'
+                                    ? 'Optimizing with AI...'
+                                    : simulation.runStatus === 'running'
+                                    ? 'Running Simulation...'
+                                    : simulation.runStatus === 'queued'
+                                    ? 'Starting...'
+                                    : 'Run Simulation'}
                             </button>
 
                             {/* Simulation Progress */}
@@ -871,6 +890,31 @@ export default function ActiveFlightsPage() {
                                     <div className="h-2 w-full bg-blue-100 rounded-full overflow-hidden">
                                         <div className="h-full bg-blue-600 rounded-full transition-all duration-500" style={{ width: `${simulation.progress}%` }} />
                                     </div>
+                                </div>
+                            )}
+
+                            {/* AI Optimization Progress */}
+                            {simulation.optimization.status === 'running' && (
+                                <div className="p-4 bg-violet-50 rounded-xl border border-violet-100 space-y-2">
+                                    <div className="flex items-center gap-2">
+                                        <Loader2 size={14} className="animate-spin text-violet-600" />
+                                        <span className="text-[10px] font-black text-violet-700 uppercase tracking-widest">
+                                            Running AI optimization...
+                                        </span>
+                                    </div>
+                                    <p className="text-[10px] text-violet-600 leading-relaxed">
+                                        Inferring DRL model against your config and comparing baseline vs optimized using the same flight schedule.
+                                    </p>
+                                </div>
+                            )}
+
+                            {simulation.optimization.status === 'failed' && simulation.optimization.error && (
+                                <div className="p-4 bg-red-50 rounded-xl border border-red-100 space-y-1">
+                                    <div className="flex items-center gap-2">
+                                        <AlertCircle size={14} className="text-red-600" />
+                                        <span className="text-[10px] font-black text-red-700 uppercase tracking-widest">Optimization Failed</span>
+                                    </div>
+                                    <p className="text-[10px] text-red-600">{simulation.optimization.error}</p>
                                 </div>
                             )}
 

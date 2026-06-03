@@ -1,0 +1,9 @@
+fastapi
+uvicorn
+torch
+stable-baselines3
+gymnasium
+numpy
+pandas
+d3rlpy  # only if you keep IQL comparison endpoint
+google-generativeai

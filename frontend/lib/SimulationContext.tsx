@@ -45,16 +45,24 @@ export interface SimulationResults {
   flights: SimulationFlight[];
 }
 
+interface OptimizationState {
+  status: 'idle' | 'running' | 'completed' | 'failed';
+  result: any | null;
+  error: string | null;
+}
+
 interface SimulationState {
   currentRunId: string | null;
   runStatus: 'idle' | 'queued' | 'running' | 'completed' | 'failed';
   results: SimulationResults | null;
   error: string | null;
   progress: number; // 0-100
+  optimization: OptimizationState;
 }
 
 interface SimulationContextValue extends SimulationState {
   startRun: (desconfig: any, flights: any[], absconfigs?: any) => Promise<void>;
+  startOptimization: (desconfig: any, flights: any[]) => Promise<any>;
   pollStatus: () => Promise<void>;
   clearRun: () => void;
   viewReplay: (runId: string) => void;
@@ -71,6 +79,7 @@ export function SimulationProvider({ children }: { children: ReactNode }) {
     results: null,
     error: null,
     progress: 0,
+    optimization: { status: 'idle', result: null, error: null },
   });
 
   const router = useRouter();
@@ -83,13 +92,14 @@ export function SimulationProvider({ children }: { children: ReactNode }) {
         const resultsRes = await fetch(`${API_BASE}/api/runs/${runId}/results`);
         const resultsData = await resultsRes.json();
         if (resultsRes.ok) {
-          setState({
+          setState(prev => ({
+            ...prev,
             currentRunId: runId,
             runStatus: 'completed',
             results: resultsData,
             error: null,
             progress: 100,
-          });
+          }));
         }
       } catch (err) {
         console.error('Failed to load results for replay:', err);
@@ -113,13 +123,14 @@ export function SimulationProvider({ children }: { children: ReactNode }) {
       const savedResults = localStorage.getItem('aerotwin:simResults');
       if (savedRunId && savedResults) {
         const parsed = JSON.parse(savedResults);
-        setState({
+        setState(prev => ({
+          ...prev,
           currentRunId: savedRunId,
           runStatus: 'completed',
           results: parsed,
           error: null,
           progress: 100,
-        });
+        }));
       }
     } catch (e) {
       console.error('Failed to hydrate simulation state:', e);
@@ -140,13 +151,14 @@ export function SimulationProvider({ children }: { children: ReactNode }) {
 
   const startRun = useCallback(async (desconfig: any, flights: any[], absconfigs?: any) => {
     clearPoll();
-    setState({
+    setState(prev => ({
+      ...prev,
       currentRunId: null,
       runStatus: 'queued',
       results: null,
       error: null,
       progress: 5,
-    });
+    }));
 
     try {
       const response = await fetch(`${API_BASE}/api/runs`, {
@@ -224,6 +236,35 @@ export function SimulationProvider({ children }: { children: ReactNode }) {
     } catch {}
   }, [state.currentRunId]);
 
+  const startOptimization = useCallback(async (desconfig: any, flights: any[]) => {
+    setState(prev => ({
+      ...prev,
+      optimization: { status: 'running', result: null, error: null },
+    }));
+    try {
+      const response = await fetch(`${API_BASE}/api/optimize`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ aero_config: desconfig, flights }),
+      });
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.error || 'Optimization failed');
+      }
+      setState(prev => ({
+        ...prev,
+        optimization: { status: 'completed', result: data, error: null },
+      }));
+      return data;
+    } catch (err: any) {
+      setState(prev => ({
+        ...prev,
+        optimization: { status: 'failed', result: null, error: err.message },
+      }));
+      throw err;
+    }
+  }, []);
+
   const clearRun = useCallback(() => {
     clearPoll();
     if (typeof window !== 'undefined') {
@@ -238,11 +279,12 @@ export function SimulationProvider({ children }: { children: ReactNode }) {
       results: null,
       error: null,
       progress: 0,
+      optimization: { status: 'idle', result: null, error: null },
     });
   }, [clearPoll]);
 
   return (
-    <SimulationContext.Provider value={{ ...state, startRun, pollStatus, clearRun, viewReplay }}>
+    <SimulationContext.Provider value={{ ...state, startRun, startOptimization, pollStatus, clearRun, viewReplay }}>
       {children}
     </SimulationContext.Provider>
   );

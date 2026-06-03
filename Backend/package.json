@@ -1,7 +1,9 @@
 {
   "scripts": {
     "start": "node backend.js",
-    "dev": "node backend.js"
+    "start:node": "node backend.js",
+    "start:ppo": "cd PPO && uvicorn main:app --port 8000",
+    "dev": "concurrently \"npm run start:node\" \"npm run start:ppo\""
   },
   "dependencies": {
     "axios": "^1.13.6",
@@ -12,8 +14,13 @@
     "dotenv": "^17.4.1",
     "express": "^5.2.1",
     "jsonwebtoken": "^9.0.3",
+    "form-data": "^4.0.5",
+    "multer": "^2.1.1",
     "pg": "^8.21.0",
     "swagger-ui-express": "^5.0.1",
     "yamljs": "^0.3.0"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1"
   }
 }

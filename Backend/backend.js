@@ -13,6 +13,8 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 const swaggerUi = require("swagger-ui-express");
 const YAML = require("yamljs");
+const multer = require('multer');
+const upload = multer({ storage: multer.memoryStorage() });
 
 // ==========================================
 // CONFIGURATION
@@ -2471,6 +2473,215 @@ app.get('/api/runs/:id/replay', (req, res) => {
     }
 });
 
+
+// ==========================================
+// 8. PPO / DIGITAL TWIN INFERENCE PROXY
+// ==========================================
+const PPO_SERVICE_URL = process.env.PPO_SERVICE_URL || "http://127.0.0.1:8000";
+
+/**
+ * POST /api/infer
+ * Proxies to the Python PPO FastAPI service.
+ * Accepts JSON body OR multipart file upload (abs_file + optional aero_file).
+ * Returns: { aero_config, action_norm }
+ */
+app.post('/api/infer', upload.fields([{ name: 'abs_file', maxCount: 1 }, { name: 'aero_file', maxCount: 1 }]), async (req, res) => {
+    let payload;
+    try {
+        if (req.files && (req.files['abs_file'] || req.files['aero_file'])) {
+            const absFile = req.files['abs_file']?.[0];
+            const aeroFile = req.files['aero_file']?.[0];
+            if (!absFile) {
+                return res.status(400).json({ error: 'abs_file is required' });
+            }
+            payload = { abs_config: JSON.parse(absFile.buffer.toString()) };
+            if (aeroFile) {
+                payload.aero_config = JSON.parse(aeroFile.buffer.toString());
+            }
+        } else {
+            payload = req.body;
+        }
+
+        const response = await axios.post(`${PPO_SERVICE_URL}/infer`, payload, {
+            headers: { 'Content-Type': 'application/json' },
+            timeout: 30000,
+        });
+        return res.status(200).json(response.data);
+    } catch (err) {
+        console.error('[PPO Proxy] /infer error:', err.response?.data || err.message);
+        const status = err.response?.status || 500;
+        const message = err.response?.data?.detail || err.message || 'PPO inference failed';
+        return res.status(status).json({ error: message });
+    }
+});
+
+/**
+ * POST /api/optimize
+ * End-to-end optimization flow: derives ABS config from flight personas,
+ * runs PPO inference against the user's AERO config (baseline), then runs
+ * DES on both baseline and inferred configs using the same ABS/seed.
+ * Returns the full comparison + saved file path.
+ */
+app.post('/api/optimize', async (req, res) => {
+    try {
+        const { aero_config, flights, seed = 42, pax_count = 100 } = req.body;
+
+        if (!aero_config) {
+            return res.status(400).json({ error: 'aero_config is required' });
+        }
+        if (!flights || !Array.isArray(flights) || flights.length === 0) {
+            return res.status(400).json({ error: 'flights array is required and must not be empty' });
+        }
+
+        // Derive ABS config from flight personas weighted by passenger count
+        const weights = [0, 0, 0, 0, 0, 0, 0];
+        let totalPax = 0;
+
+        for (const flight of flights) {
+            let pax = 0;
+            if (flight.payload_stats && flight.payload_stats.total_passengers) {
+                const match = String(flight.payload_stats.total_passengers).match(/(\d+)/);
+                if (match) pax = parseInt(match[1], 10);
+            }
+            if (!pax && flight.passengers) {
+                pax = parseInt(flight.passengers, 10) || 0;
+            }
+            if (!pax) pax = 100; // fallback
+
+            const personas = flight.personas || {};
+            for (let i = 0; i < 7; i++) {
+                weights[i] += (personas[`p${i + 1}`] || 0) * pax;
+            }
+            totalPax += pax;
+        }
+
+        if (totalPax > 0) {
+            for (let i = 0; i < 7; i++) {
+                weights[i] = weights[i] / totalPax;
+            }
+        }
+
+        const abs_config = { weights };
+
+        // Call PPO service for inference + comparison
+        const response = await axios.post(`${PPO_SERVICE_URL}/infer`, {
+            aero_config,
+            abs_config,
+            seed,
+            pax_count,
+        }, {
+            headers: { 'Content-Type': 'application/json' },
+            timeout: 120000, // 2 min — DES can be slow
+        });
+
+        return res.status(200).json({
+            success: true,
+            comparison: response.data.comparison,
+            savedTo: response.data.saved_to,
+            inferredAero: response.data.aero_config,
+            actionNorm: response.data.action_norm,
+            absConfig: abs_config,
+        });
+    } catch (err) {
+        console.error('[PPO Proxy] /optimize error:', err.response?.data || err.message);
+        const status = err.response?.status || 500;
+        let message = err.response?.data?.detail || err.message || 'Optimization failed';
+        if (err.code === 'ECONNREFUSED' || err.code === 'ENOTFOUND') {
+            message = 'PPO optimization service is not running. Please start it with `npm run dev` in the Backend directory.';
+        }
+        return res.status(status).json({ error: message });
+    }
+});
+
+/**
+ * POST /api/simulate
+ * Proxies to the Python PPO FastAPI service.
+ * Body: { aero_config, abs_config, pax_count }
+ * Returns: simulation stats
+ */
+app.post('/api/simulate', async (req, res) => {
+    try {
+        const response = await axios.post(`${PPO_SERVICE_URL}/simulate`, req.body, {
+            headers: { 'Content-Type': 'application/json' },
+            timeout: 60000,
+        });
+        return res.status(200).json(response.data);
+    } catch (err) {
+        console.error('[PPO Proxy] /simulate error:', err.response?.data || err.message);
+        const status = err.response?.status || 500;
+        const message = err.response?.data?.detail || err.message || 'PPO simulation failed';
+        return res.status(status).json({ error: message });
+    }
+});
+
+/**
+ * POST /api/insights
+ * Generate natural-language insights from a saved comparison file.
+ * Accepts JSON body { comparison_file: "..." } OR multipart file upload.
+ */
+app.post('/api/insights', upload.single('comparison_file'), async (req, res) => {
+    try {
+        let response;
+        if (req.file) {
+            const FormData = require('form-data');
+            const form = new FormData();
+            form.append('comparison_file', req.file.buffer, req.file.originalname);
+            response = await axios.post(`${PPO_SERVICE_URL}/insights`, form, {
+                headers: form.getHeaders(),
+                timeout: 30000,
+            });
+        } else {
+            response = await axios.post(`${PPO_SERVICE_URL}/insights`, req.body, {
+                headers: { 'Content-Type': 'application/json' },
+                timeout: 30000,
+            });
+        }
+        return res.status(200).json(response.data);
+    } catch (err) {
+        console.error('[PPO Proxy] /insights error:', err.response?.data || err.message);
+        const status = err.response?.status || 500;
+        const message = err.response?.data?.detail || err.message || 'Insights generation failed';
+        return res.status(status).json({ error: message });
+    }
+});
+
+/**
+ * GET /api/infer/health
+ * Health check for the Python PPO service.
+ */
+app.get('/api/infer/health', async (req, res) => {
+    try {
+        const response = await axios.get(`${PPO_SERVICE_URL}/health`, { timeout: 5000 });
+        return res.status(200).json(response.data);
+    } catch (err) {
+        console.error('[PPO Proxy] health check error:', err.message);
+        return res.status(503).json({ status: 'unavailable', model: 'ppo_v1', error: err.message });
+    }
+});
+
+/**
+ * GET /api/comparisons/latest
+ * Returns the filename of the most recent comparison file.
+ */
+app.get('/api/comparisons/latest', (req, res) => {
+    try {
+        const compDir = path.join(__dirname, 'PPO', 'comparisons');
+        if (!fs.existsSync(compDir)) {
+            return res.status(404).json({ error: 'No comparisons found' });
+        }
+        const files = fs.readdirSync(compDir)
+            .filter(f => f.startsWith('comparison_') && f.endsWith('.json'))
+            .sort();
+        if (files.length === 0) {
+            return res.status(404).json({ error: 'No comparisons found' });
+        }
+        return res.json({ filename: files[files.length - 1] });
+    } catch (err) {
+        console.error('[Comparisons] latest error:', err.message);
+        return res.status(500).json({ error: err.message });
+    }
+});
+
 // START — init DB schema, load CSV database, then start server
 db.initDB()
     .then(() => loadAirportCacheFromDB()) // enrich airport cache from DB
@@ -2482,9 +2693,13 @@ db.initDB()
         });
     })
     .catch(err => {
-        console.error('❌ Startup failed:', err.message);
-        // If DB fails, still try to start without it
-        if (err.message?.includes('ECONNREFUSED') || err.message?.includes('connect')) {
+        console.error('❌ Startup failed:', err.message || err.code);
+        const isDbUnavailable = err.code === 'ECONNREFUSED'
+            || err.message?.includes('ECONNREFUSED')
+            || err.message?.includes('connect')
+            || (Array.isArray(err.errors) && err.errors.some(e => e.code === 'ECONNREFUSED' || e.message?.includes('connect')));
+
+        if (isDbUnavailable) {
             console.warn('⚠️  DB unavailable — starting without TimescaleDB (JSON fallback active)');
             loadAircraftCSV()
                 .then(() => {
@@ -2495,7 +2710,7 @@ db.initDB()
                     process.exit(1);
                 });
         } else {
-            console.error('❌ Cannot start server:', err.message);
+            console.error('❌ Cannot start server:', err.message || err.code);
             process.exit(1);
         }
     });

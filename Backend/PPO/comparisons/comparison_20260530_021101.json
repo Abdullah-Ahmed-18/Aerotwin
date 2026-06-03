@@ -1,0 +1,195 @@
+{
+  "timestamp": "20260530_021101",
+  "seed": 42,
+  "pax_count": 50,
+  "abs_config": {
+    "weights": [
+      0.1,
+      0.2,
+      0.3,
+      0.1,
+      0.1,
+      0.1,
+      0.1
+    ]
+  },
+  "baseline_aero": {
+    "Departure": {
+      "Checkpoints": [
+        {
+          "Checkpoint_ID": "1ST-SEC",
+          "Checkpoint_Type": "Security",
+          "Flow_Type": "departure",
+          "Prev_Anchor": "Terminal_Entrance",
+          "Next_Anchor": [
+            "DEPARTING-TERMINAL"
+          ],
+          "Stations": [
+            {
+              "Station_ID": "SEC-01",
+              "Staffing_No": 3,
+              "Avg_Service_Time": 45,
+              "Max_Queue_Cap": 20,
+              "Efficiency_Factor": 1.0,
+              "Allowed_Class": [
+                "All Classes"
+              ],
+              "Feature_Val": 0,
+              "Tasks": [
+                {
+                  "Task_Name": "ID_Check",
+                  "Avg_Duration": 15,
+                  "Probability": 1.0
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "Arrival": {
+      "Checkpoints": []
+    }
+  },
+  "inferred_aero": {
+    "Departure": {
+      "Checkpoints": [
+        {
+          "Checkpoint_ID": "1ST-SEC",
+          "Checkpoint_Type": "Security",
+          "Flow_Type": "departure",
+          "Prev_Anchor": "Terminal_Entrance",
+          "Next_Anchor": [
+            "DEPARTING-TERMINAL"
+          ],
+          "Stations": [
+            {
+              "Station_ID": "SEC-01",
+              "Staffing_No": 6,
+              "Avg_Service_Time": 45,
+              "Max_Queue_Cap": 70,
+              "Efficiency_Factor": 1.0,
+              "Allowed_Class": [
+                "All Classes"
+              ],
+              "Feature_Val": 0,
+              "Tasks": [
+                {
+                  "Task_Name": "ID_Check",
+                  "Avg_Duration": 15,
+                  "Probability": 1.0
+                }
+              ]
+            },
+            {
+              "Station_ID": "SEC-01_PAR01",
+              "Staffing_No": 4,
+              "Avg_Service_Time": 45,
+              "Max_Queue_Cap": 70,
+              "Efficiency_Factor": 1.0,
+              "Allowed_Class": [
+                "All Classes"
+              ],
+              "Feature_Val": 0,
+              "Tasks": [
+                {
+                  "Task_Name": "ID_Check",
+                  "Avg_Duration": 15,
+                  "Probability": 1.0
+                }
+              ],
+              "Station_Name": "Station (Parallel)"
+            },
+            {
+              "Station_ID": "SEC-01_PAR02",
+              "Staffing_No": 4,
+              "Avg_Service_Time": 45,
+              "Max_Queue_Cap": 70,
+              "Efficiency_Factor": 1.0,
+              "Allowed_Class": [
+                "All Classes"
+              ],
+              "Feature_Val": 0,
+              "Tasks": [
+                {
+                  "Task_Name": "ID_Check",
+                  "Avg_Duration": 15,
+                  "Probability": 1.0
+                }
+              ],
+              "Station_Name": "Station (Parallel)"
+            },
+            {
+              "Station_ID": "SEC-01_PAR03",
+              "Staffing_No": 4,
+              "Avg_Service_Time": 45,
+              "Max_Queue_Cap": 70,
+              "Efficiency_Factor": 1.0,
+              "Allowed_Class": [
+                "All Classes"
+              ],
+              "Feature_Val": 0,
+              "Tasks": [
+                {
+                  "Task_Name": "ID_Check",
+                  "Avg_Duration": 15,
+                  "Probability": 1.0
+                }
+              ],
+              "Station_Name": "Station (Parallel)"
+            }
+          ]
+        }
+      ]
+    },
+    "Arrival": {
+      "Checkpoints": []
+    },
+    "_metadata": {
+      "config_id": "ppo_structural_v3",
+      "quality_label": "predicted",
+      "perturbation_profile": "ppo_agent_130dim"
+    }
+  },
+  "comparison": {
+    "baseline": {
+      "reward": 8.3592,
+      "completion_rate": 1.0,
+      "mean_journey_min": 6.0,
+      "p95_journey_min": 11.0,
+      "per_checkpoint": {
+        "1ST-SEC": {
+          "mqt": 5.566666666666666,
+          "p95": 10.633333333333333,
+          "throughput": 242.3
+        }
+      }
+    },
+    "inferred": {
+      "reward": 8.3592,
+      "completion_rate": 1.0,
+      "mean_journey_min": 6.0,
+      "p95_journey_min": 11.0,
+      "per_checkpoint": {
+        "1ST-SEC": {
+          "mqt": 5.566666666666666,
+          "p95": 10.633333333333333,
+          "throughput": 242.3
+        }
+      }
+    },
+    "delta": {
+      "reward": 0.0,
+      "completion_rate": 0.0,
+      "mean_journey_min": 0.0,
+      "p95_journey_min": 0.0,
+      "per_checkpoint": {
+        "1ST-SEC": {
+          "mqt": 0.0,
+          "p95": 0.0,
+          "throughput": 0.0
+        }
+      }
+    }
+  }
+}
