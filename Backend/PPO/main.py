@@ -11,7 +11,7 @@ from structural_decoder import action_to_aeroconfig_structural
 from iata_reward import compute_reward_iata, IATA_LOS
 from des_engine import run_single
 from des_output import write_stats, write_csv
-from insights import generate_insights, generate_insights_fallback, GEMINI_AVAILABLE
+from insights import generate_insights, generate_insights_fallback, GEMINI_AVAILABLE, _load_comparison
 
 app = FastAPI()
 
@@ -278,6 +278,35 @@ async def insights_endpoint(request: Request):
             raise HTTPException(status_code=400, detail="comparison_file is required")
         filename = os.path.basename(filename)
         filepath = os.path.join(COMPARISONS_DIR, filename)
+
+    # Load comparison data first to check for regressions
+    try:
+        comparison_data = _load_comparison(filepath)
+        baseline_reward = comparison_data.get("comparison", {}).get("baseline", {}).get("reward", 0)
+        inferred_reward = comparison_data.get("comparison", {}).get("inferred", {}).get("reward", 0)
+        reward_delta = inferred_reward - baseline_reward
+    except Exception:
+        baseline_reward = inferred_reward = reward_delta = None
+
+    # If the AI config is worse or equal to baseline, don't show regressions
+    if reward_delta is not None and reward_delta <= 0:
+        return {
+            "summary": "Your current configuration is already well-optimized. The AI model found no improvements over your baseline.",
+            "already_optimized": True,
+            "structured": {
+                "baseline_reward": round(baseline_reward, 2),
+                "inferred_reward": round(inferred_reward, 2),
+                "reward_delta": round(reward_delta, 2),
+                "top_improvements": [],
+                "top_regressions": [],
+                "station_improvements": [],
+                "station_regressions": [],
+                "iata_compliance": {},
+                "operational_changes": [],
+            },
+            "model_used": "regression_guard",
+            "comparison_file": filepath,
+        }
 
     api_key = os.environ.get("GEMINI_API_KEY")
 

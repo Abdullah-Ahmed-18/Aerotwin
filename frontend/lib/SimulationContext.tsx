@@ -179,49 +179,62 @@ export function SimulationProvider({ children }: { children: ReactNode }) {
         progress: 10,
       }));
 
-      // Start polling
-      pollIntervalRef.current = setInterval(async () => {
-        try {
-          const statusRes = await fetch(`${API_BASE}/api/runs/${data.runId}/status`);
-          const statusData = await statusRes.json();
+      // Poll until the run completes and resolve the returned promise
+      return new Promise<void>((resolve, reject) => {
+        const doPoll = async () => {
+          try {
+            const statusRes = await fetch(`${API_BASE}/api/runs/${data.runId}/status`);
+            const statusData = await statusRes.json();
 
-          if (!statusRes.ok) {
-            setState(prev => ({ ...prev, runStatus: 'failed', error: statusData.error, progress: 0 }));
-            clearPoll();
-            return;
-          }
-
-          // Calculate pseudo-progress based on elapsed time (typical run ~2-5 min)
-          const elapsedMin = (Date.now() - (statusData.startTime || Date.now())) / 60000;
-          const pseudoProgress = Math.min(90, 10 + elapsedMin * 15);
-
-          setState(prev => ({
-            ...prev,
-            runStatus: statusData.status,
-            progress: statusData.status === 'completed' ? 100 : pseudoProgress,
-          }));
-
-          if (statusData.status === 'completed') {
-            clearPoll();
-            // Fetch results
-            const resultsRes = await fetch(`${API_BASE}/api/runs/${data.runId}/results`);
-            const resultsData = await resultsRes.json();
-            if (resultsRes.ok) {
-              setState(prev => ({ ...prev, results: resultsData, progress: 100 }));
-            } else {
-              setState(prev => ({ ...prev, error: resultsData.error, runStatus: 'failed', progress: 0 }));
+            if (!statusRes.ok) {
+              setState(prev => ({ ...prev, runStatus: 'failed', error: statusData.error, progress: 0 }));
+              clearPoll();
+              reject(new Error(statusData.error || 'Simulation failed'));
+              return;
             }
-          } else if (statusData.status === 'failed') {
+
+            // Calculate pseudo-progress based on elapsed time (typical run ~2-5 min)
+            const elapsedMin = (Date.now() - (statusData.startTime || Date.now())) / 60000;
+            const pseudoProgress = Math.min(90, 10 + elapsedMin * 15);
+
+            setState(prev => ({
+              ...prev,
+              runStatus: statusData.status,
+              progress: statusData.status === 'completed' ? 100 : pseudoProgress,
+            }));
+
+            if (statusData.status === 'completed') {
+              clearPoll();
+              // Fetch results
+              const resultsRes = await fetch(`${API_BASE}/api/runs/${data.runId}/results`);
+              const resultsData = await resultsRes.json();
+              if (resultsRes.ok) {
+                setState(prev => ({ ...prev, results: resultsData, progress: 100 }));
+                resolve();
+              } else {
+                setState(prev => ({ ...prev, error: resultsData.error, runStatus: 'failed', progress: 0 }));
+                reject(new Error(resultsData.error || 'Simulation failed'));
+              }
+            } else if (statusData.status === 'failed') {
+              clearPoll();
+              setState(prev => ({ ...prev, error: statusData.error || 'Simulation failed', progress: 0 }));
+              reject(new Error(statusData.error || 'Simulation failed'));
+            } else {
+              // Still running — schedule next poll
+              pollIntervalRef.current = setTimeout(doPoll, 2000);
+            }
+          } catch (err: any) {
+            setState(prev => ({ ...prev, error: err.message, runStatus: 'failed', progress: 0 }));
             clearPoll();
-            setState(prev => ({ ...prev, error: statusData.error || 'Simulation failed', progress: 0 }));
+            reject(err);
           }
-        } catch (err: any) {
-          setState(prev => ({ ...prev, error: err.message, runStatus: 'failed', progress: 0 }));
-          clearPoll();
-        }
-      }, 2000);
+        };
+
+        pollIntervalRef.current = setTimeout(doPoll, 2000);
+      });
     } catch (err: any) {
       setState(prev => ({ ...prev, error: err.message, runStatus: 'failed', progress: 0 }));
+      throw err;
     }
   }, [clearPoll]);
 

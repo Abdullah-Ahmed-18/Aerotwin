@@ -298,16 +298,17 @@ export default function ActiveFlightsPage() {
             };
         });
 
-        // Start Unity simulation (runs in background with polling)
-        simulation.startRun(desconfig, flightsPayload, undefined).catch(() => {});
+        // Start Unity simulation and AI optimization in parallel
+        const runPromise = simulation.startRun(desconfig, flightsPayload, undefined);
 
-        // Run AI optimization against the same config + flights
         try {
             await simulation.startOptimization(desconfig, flightsPayload);
-            // Redirect to insights when optimization completes
-            router.push('/insights');
+            // Wait for the Unity simulation to finish before redirecting
+            await runPromise;
+            // Redirect to dashboard when both are complete
+            router.push('/dashboard');
         } catch (err: any) {
-            alert(`AI Optimization failed: ${err.message}`);
+            alert(`AI Optimization or Simulation failed: ${err.message}`);
         }
     };
 

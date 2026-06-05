@@ -5,6 +5,8 @@ import {
   Monitor,
   Maximize2,
   Plane,
+  Sparkles,
+  X,
 } from 'lucide-react';
 import { useSimulation } from '@/lib/SimulationContext';
 import Link from 'next/link';
@@ -42,9 +44,14 @@ function DashboardReplayPlayer({ runId }: { runId: string }) {
 
 export default function DashboardPage() {
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [dismissedInsights, setDismissedInsights] = useState(false);
   const simulation = useSimulation();
 
   const showBottomPanel = !!simulation.results;
+  const showInsightsNotification =
+    !dismissedInsights &&
+    simulation.optimization.status === 'completed' &&
+    simulation.runStatus === 'completed';
 
   return (
     <div className="flex-1 bg-[#F8FAFC] p-6 flex flex-col gap-4 overflow-hidden">
@@ -77,6 +84,33 @@ export default function DashboardPage() {
           </Link>
         </div>
       </div>
+
+      {/* Insights Ready Notification */}
+      {showInsightsNotification && (
+        <div className="shrink-0 p-3 bg-gradient-to-r from-emerald-50 to-teal-50 rounded-xl border border-emerald-200 flex items-center justify-between gap-4">
+          <div className="flex items-center gap-3">
+            <Sparkles size={18} className="text-emerald-600" />
+            <div>
+              <p className="text-sm font-bold text-emerald-700">AI Optimization Complete</p>
+              <p className="text-xs text-emerald-600">Optimization results are ready for viewing.</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <Link
+              href="/insights"
+              className="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold rounded-lg transition-colors"
+            >
+              View Insights
+            </Link>
+            <button
+              onClick={() => setDismissedInsights(true)}
+              className="p-1.5 text-emerald-500 hover:text-emerald-700 hover:bg-emerald-100 rounded-md transition-colors"
+            >
+              <X size={14} />
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Main Content Area */}
       <div className="flex-1 flex gap-4 min-h-0">

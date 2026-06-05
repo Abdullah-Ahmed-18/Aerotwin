@@ -10,7 +10,7 @@ export default function Navbar() {
     const navItems = [
         { name: 'Dashboard', icon: LayoutDashboard, path: '/dashboard' },
         { name: 'Insights', icon: BarChart2, path: '/insights' },
-        { name: 'Config', icon: Settings, path: '/' },
+        { name: 'Config', icon: Settings, path: '/configuration' },
         { name: 'Flights', icon: Plane, path: '/active-flights' },
     ];
 

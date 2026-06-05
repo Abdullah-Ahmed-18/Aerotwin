@@ -15,6 +15,7 @@ import {
   AlertTriangle,
   Clock,
   Wrench,
+  CheckCircle2,
 } from 'lucide-react';
 
 interface StationInsight {
@@ -63,6 +64,7 @@ interface InsightsData {
   structured: InsightsStructured;
   model_used: string;
   comparison_file: string;
+  already_optimized?: boolean;
 }
 
 function formatMin(m: number): string {
@@ -132,6 +134,34 @@ export default function InsightsPanel() {
   }
 
   if (!insights) return null;
+
+  if (insights.already_optimized) {
+    return (
+      <div className="flex flex-col items-center justify-center h-screen bg-[#f7f9fb] p-8">
+        <div className="max-w-xl w-full bg-white rounded-2xl border border-emerald-200 shadow-sm p-8 text-center space-y-6">
+          <div className="w-16 h-16 rounded-full bg-emerald-50 flex items-center justify-center mx-auto">
+            <CheckCircle2 size={32} className="text-emerald-600" />
+          </div>
+          <div>
+            <h2 className="text-xl font-bold text-slate-800 mb-2">Already Well-Optimized</h2>
+            <p className="text-sm text-slate-600 leading-relaxed">{insights.summary}</p>
+          </div>
+          <div className="bg-slate-50 rounded-xl p-4 text-left space-y-2">
+            <p className="text-xs font-bold text-slate-500 uppercase tracking-wider">Current Performance</p>
+            <div className="flex justify-between text-sm">
+              <span className="text-slate-600">Baseline Reward</span>
+              <span className="font-mono font-bold text-slate-800">{insights.structured.baseline_reward?.toFixed(2)}</span>
+            </div>
+            <div className="flex justify-between text-sm">
+              <span className="text-slate-600">AI Reward</span>
+              <span className="font-mono font-bold text-slate-800">{insights.structured.inferred_reward?.toFixed(2)}</span>
+            </div>
+          </div>
+          <p className="text-xs text-slate-400">No configuration changes are recommended at this time.</p>
+        </div>
+      </div>
+    );
+  }
 
   const s = insights.structured;
   // Fallbacks for old comparison files generated before total-delta fields were added
