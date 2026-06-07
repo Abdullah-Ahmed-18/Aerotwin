@@ -1,7 +1,7 @@
 # AeroTwin API Contract
 
-> **Version:** 1.1.0  
-> **Date:** 2026-06-02  
+> **Version:** 2.0.0  
+> **Date:** 2026-06-08  
 > **Services:** Node.js Express (`:5000`) + Python FastAPI (`:8000`)
 
 ---
@@ -28,17 +28,17 @@
 ```
 
 - **Express** handles auth, flight data, analytics, simulation runner, and proxies ML calls.
-- **FastAPI** runs the PPO policy + DES engine locally for inference & insights.
+- **FastAPI** runs the PPO v2 policy + DES engine locally for inference & insights.
 - **Frontend** calls Express only; Express forwards ML requests to FastAPI.
 
-### End-to-End Optimization Flow (v1.1.0)
+### End-to-End Optimization Flow (v2.0.0)
 
 ```
 User config + selected flights
         │
         ▼
-   POST /api/optimize  ──▶  Derives ABS from flight personas
-        │                     Runs PPO inference (baseline → inferred)
+   POST /api/optimize  ──▶  Derives ABS + 15-dim obs from flight PAX
+        │                     Runs PPO v2 inference (baseline → inferred)
         │                     Runs DES on both configs
         │                     Saves comparison_*.json
         ▼
@@ -46,7 +46,7 @@ User config + selected flights
                               Displays baseline vs. inferred metrics
 ```
 
-**Key integration:** `POST /api/optimize` accepts the user's AERO config and flight schedule, derives passenger persona weights, runs the DRL model against the baseline config, simulates both configurations with the same ABS/seed, and persists a comparison file for the insights page.
+**Key integration:** `POST /api/optimize` accepts the user's AERO config and flight schedule, derives passenger persona weights **and** a 15-dim observation vector (PAX scale, flow ratios, peak hour, etc.), runs the DRL v2 model against the baseline config, simulates both configurations with the same ABS/seed, and persists a comparison file for the insights page.
 
 ---
 
@@ -63,27 +63,36 @@ Health-check for the PPO service.
 |---|---|
 | **Auth** | None |
 | **Request** | — |
-| **Response** | `{ "status": "ok", "model": "ppo_v1" }` |
+| **Response** | `{ "status": "ok", "model": "ppo_v2" }` |
 
 ---
 
 ### 2.2 `POST /infer`
-Runs PPO inference and optionally simulates baseline vs. inferred configs.
+Runs PPO v2 inference and optionally simulates baseline vs. inferred configs.
 
 | | |
 |---|---|
 | **Auth** | None |
 | **Content-Type** | `application/json` **or** `multipart/form-data` |
 
-**JSON Body:**
+**JSON Body (v2):**
 ```json
 {
-  "abs_config": { /* ABS passenger persona weights */ },
+  "abs_config": { "weights": [0.2, 0.3, 0.1, 0.1, 0.1, 0.1, 0.1] },
   "aero_config?": { /* optional baseline AERO config */ },
+  "observation?": [0.2, 0.3, 0.1, 0.1, 0.1, 0.1, 0.1, 0.175, 0.1, 0.35, 0.5, 0.5, 0.5, 0.2, 0.7],
+  "schedule?": [
+    { "flight_id": "MS123", "pax_count": 200, "flow": "departure", "hour": 9, "abs_id": "morning", "abs_weights": [0.2, 0.3, 0.1, 0.1, 0.1, 0.1, 0.1] }
+  ],
   "seed?": 42,
   "pax_count?": 100
 }
 ```
+
+**Field priorities for building the 15-dim observation:**
+1. `observation` — used as-is (must be 15 floats, clipped to `[0,1]`)
+2. `schedule` — converted via `schedule_to_obs()` (PAX-weighted ABS mix + demand features)
+3. `abs_config` — fallback: weights padded with defaults (`pax_count/2000`, `0.5` dep/arr split, noon hour)
 
 **Multipart Fields:**
 - `abs_file` (required) — JSON upload
@@ -91,21 +100,24 @@ Runs PPO inference and optionally simulates baseline vs. inferred configs.
 - `seed` (optional, default `42`)
 - `pax_count` (optional, default `100`)
 
+> **Note:** Multipart uploads do **not** support `flights`/`schedule`/`observation`. Use JSON body for schedule-aware inference.
+
 **Responses:**
 
 *Without baseline:*
 ```json
 {
   "aero_config": { /* inferred AERO checkpoint config */ },
-  "action_norm": [0.12, 0.88, ...]
+  "action_norm": [0.12, 0.88, ..., 0.45]
 }
 ```
+> `action_norm` is now **52-dim** (13 checkpoints × 4 features: lanes, staff/lane, cap/lane, efficiency). Previously 130-dim in v1.
 
 *With baseline:*
 ```json
 {
   "aero_config": { /* inferred AERO checkpoint config */ },
-  "action_norm": [0.12, 0.88, ...],
+  "action_norm": [0.12, 0.88, ..., 0.45],
   "comparison": {
     "baseline": { "reward", "completion_rate", "mean_journey_min", "p95_journey_min", "per_checkpoint", "per_station" },
     "inferred": { /* same keys */ },
@@ -486,7 +498,7 @@ All routes below forward to the Python FastAPI service (`PPO_SERVICE_URL`, defau
 | `GET`  | `/api/comparisons/latest` | — (local filesystem) | — |
 
 #### `POST /api/optimize`
-End-to-end optimization flow. Derives an ABS config from the provided flights' personas (weighted by passenger count), runs PPO inference against the user's AERO config as baseline, then runs DES on both baseline and inferred configs.
+End-to-end optimization flow. Derives an ABS config **and** a 15-dim PPO v2 observation from the provided flights' personas & PAX counts, runs PPO inference against the user's AERO config as baseline, then runs DES on both baseline and inferred configs.
 
 | | |
 |---|---|
@@ -502,14 +514,54 @@ End-to-end optimization flow. Derives an ABS config from the provided flights' p
   "flights": [
     {
       "flight_id": "MS-441",
+      "flight_iata": "MS441",
       "personas": { "p1": 0, "p2": 0, "p3": 0, "p4": 70, "p5": 0, "p6": 20, "p7": 10 },
-      "payload_stats": { "total_passengers": "150 (Simulated)" }
+      "payload_stats": { "total_passengers": "150 (Simulated)" },
+      "passengers": 150,
+      "route": { "source": "CAI", "destination": "HBE" },
+      "schedule": {
+        "departure": { "scheduled": "2026-06-08T09:00:00Z" },
+        "arrival": { "scheduled": "2026-06-08T10:30:00Z" }
+      }
     }
   ],
   "seed": 42,
   "pax_count": 100
 }
 ```
+
+**How the backend builds the 15-dim observation from `flights`:**
+1. Extracts `pax` from `payload_stats.total_passengers` or `passengers`
+2. Computes PAX-weighted persona `weights` (7-dim)
+3. Detects departure vs arrival from `route.source/destination` vs `TARGET_AIRPORT`
+4. Finds `peak_pax`, `first_hour` from schedule, `unique_abs` count
+5. Builds and forwards the full 15-dim observation to the PPO service
+
+---
+
+#### `POST /api/infer`
+Direct inference proxy. Accepts JSON body **or** multipart file upload.
+
+**JSON body with flights (recommended for v2):**
+```json
+{
+  "aero_config": { "Departure": { "Checkpoints": [...] } },
+  "flights": [
+    {
+      "flight_id": "MS123",
+      "passengers": 200,
+      "personas": { "p1": 20, "p2": 30, "p3": 10, "p4": 10, "p5": 10, "p6": 10, "p7": 10 },
+      "route": { "source": "HBE", "destination": "CAI" },
+      "schedule": { "departure": { "scheduled": "2026-06-08T14:00:00Z" } }
+    }
+  ]
+}
+```
+When `flights` is provided, the Express backend computes the 15-dim observation automatically and sends it to FastAPI.
+
+**Multipart:** same as before — `abs_file` + optional `aero_file`. No flight data; falls back to `abs_config` + defaults.
+
+---
 
 #### `GET /api/comparisons/latest`
 Returns the most recent comparison filename.
@@ -558,7 +610,32 @@ interface ABSConfig {
 }
 ```
 
-### 4.3 DES Stats
+### 4.3 PPO v2 Observation (15-dim)
+```typescript
+interface PPOV2Observation {
+  // Dims 0-6: PAX-weighted ABS class proportions
+  dims_0_6: [number, number, number, number, number, number, number];
+  // Dim 7: total_pax / 2000  (demand scale)
+  dim_7_total_pax: number;
+  // Dim 8: num_flights / 10  (schedule density)
+  dim_8_num_flights: number;
+  // Dim 9: peak_pax / 1000  (busiest single flight)
+  dim_9_peak_pax: number;
+  // Dim 10: dep_pax / total_pax  (departure proportion)
+  dim_10_dep_ratio: number;
+  // Dim 11: arr_pax / total_pax  (arrival proportion)
+  dim_11_arr_ratio: number;
+  // Dim 12: first_flight_hour / 24  (time of day)
+  dim_12_first_hour: number;
+  // Dim 13: unique_abs_count / 5  (passenger diversity)
+  dim_13_unique_abs: number;
+  // Dim 14: avg_pax_per_flight / 500  (average flight size)
+  dim_14_avg_pax: number;
+}
+```
+All values are clipped to `[0.0, 1.0]`.
+
+### 4.4 DES Stats
 ```typescript
 interface DESStats {
   per_checkpoint: Record<string, {
@@ -578,7 +655,7 @@ interface DESStats {
 }
 ```
 
-### 4.4 Comparison File
+### 4.5 Comparison File
 ```typescript
 interface ComparisonFile {
   timestamp: string;
@@ -597,7 +674,96 @@ interface ComparisonFile {
 
 ---
 
-## 5. Auth & Security
+## 5. Testing with cURL
+
+### Health check
+```bash
+curl http://localhost:5000/api/infer/health
+```
+
+### Direct inference (legacy — no flight data)
+```bash
+curl -X POST http://localhost:5000/api/infer \
+  -H "Content-Type: application/json" \
+  -d '{
+    "abs_config": { "weights": [0.2, 0.3, 0.1, 0.1, 0.1, 0.1, 0.1] },
+    "pax_count": 200
+  }'
+```
+
+### Schedule-aware inference (v2 — with flights)
+```bash
+curl -X POST http://localhost:5000/api/infer \
+  -H "Content-Type: application/json" \
+  -d '{
+    "aero_config": { "Departure": { "Checkpoints": [] } },
+    "flights": [
+      {
+        "flight_id": "MS123",
+        "passengers": 350,
+        "personas": { "p1": 10, "p2": 20, "p3": 30, "p4": 10, "p5": 10, "p6": 10, "p7": 10 },
+        "route": { "source": "HBE", "destination": "CAI" },
+        "schedule": { "departure": { "scheduled": "2026-06-08T09:00:00Z" } }
+      },
+      {
+        "flight_id": "MS456",
+        "passengers": 200,
+        "personas": { "p1": 20, "p2": 20, "p3": 20, "p4": 20, "p5": 10, "p6": 5, "p7": 5 },
+        "route": { "source": "CAI", "destination": "HBE" },
+        "schedule": { "arrival": { "scheduled": "2026-06-08T11:00:00Z" } }
+      }
+    ],
+    "seed": 42,
+    "pax_count": 100
+  }'
+```
+
+### Full optimization (with baseline AERO + flights)
+```bash
+curl -X POST http://localhost:5000/api/optimize \
+  -H "Content-Type: application/json" \
+  -d '{
+    "aero_config": { "Departure": { "Checkpoints": [] } },
+    "flights": [
+      {
+        "flight_id": "MS-441",
+        "passengers": 150,
+        "personas": { "p1": 0, "p2": 0, "p3": 0, "p4": 70, "p5": 0, "p6": 20, "p7": 10 },
+        "route": { "source": "CAI", "destination": "HBE" },
+        "schedule": { "departure": { "scheduled": "2026-06-08T09:00:00Z" } }
+      }
+    ],
+    "seed": 42,
+    "pax_count": 100
+  }'
+```
+
+### Simulate a single config
+```bash
+curl -X POST http://localhost:5000/api/simulate \
+  -H "Content-Type: application/json" \
+  -d '{
+    "aero_config": { "Departure": { "Checkpoints": [] } },
+    "abs_config": { "weights": [0.2, 0.3, 0.1, 0.1, 0.1, 0.1, 0.1] },
+    "seed": 42,
+    "pax_count": 100
+  }'
+```
+
+### Insights from latest comparison
+```bash
+# Get latest filename
+LATEST=$(curl -s http://localhost:5000/api/comparisons/latest | jq -r .filename)
+
+# Generate insights
+curl -X POST http://localhost:5000/api/insights \
+  -H "Content-Type: application/json" \
+  -d "{\"comparison_file\": \"$LATEST\"}"
+```
+
+---
+
+## 6. Auth & Security
 
 | Concern | Implementation |
 |---|---|
@@ -609,7 +775,7 @@ interface ComparisonFile {
 
 ---
 
-## 6. Error Handling
+## 7. Error Handling
 
 ### Node.js (Express)
 All routes follow a consistent pattern:
@@ -638,7 +804,7 @@ All routes follow a consistent pattern:
 
 ---
 
-## 7. Environment Variables
+## 8. Environment Variables
 
 | Variable | Service | Default | Purpose |
 |---|---|---|---|
@@ -654,7 +820,7 @@ All routes follow a consistent pattern:
 
 ---
 
-## 8. Scripts
+## 9. Scripts
 
 ```bash
 # Node backend
@@ -672,3 +838,18 @@ uvicorn main:app --port 8000
 cd frontend
 npm run dev          # next dev (localhost:3000)
 ```
+
+---
+
+## 10. Changelog
+
+### v2.0.0 (2026-06-08)
+- **Model:** PPO v1 (7-dim obs, 130-dim action) → **PPO v2** (15-dim obs, 52-dim action)
+- **Observation:** Added PAX scale, flight count, peak PAX, flow ratios, first hour, unique ABS count
+- `/api/infer` (JSON): Now accepts `flights[]`, `schedule[]`, or `observation` for schedule-aware inference
+- `/api/optimize`: Automatically builds 15-dim observation from flight PAX counts
+- `GET /health`: Returns `ppo_v2`
+- Action space: 13 checkpoints × 4 features (lanes, staff/lane, cap/lane, efficiency)
+
+### v1.1.0 (2026-06-02)
+- Added `total_checkpoint_p95_delta`, `total_station_p95_delta`, `total_improvements_p95`, `total_regressions_p95`, `improvement_count`, `regression_count` to insights response
