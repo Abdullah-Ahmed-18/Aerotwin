@@ -25,7 +25,7 @@ CANONICAL_CHECKPOINTS = [
 ]
 
 ALL_CHECKPOINTS = [c["ref_id"] for c in CANONICAL_CHECKPOINTS]
-FEATURES_PER_CK = 10
+FEATURES_PER_CK = 4
 ACTION_DIM = len(CANONICAL_CHECKPOINTS) * FEATURES_PER_CK
 
 IATA_LOS_OPTIMUM = {
@@ -60,6 +60,8 @@ def featurize_absconfig(path):
     return w
 
 
+# ═════════════════════════ REPLACE extract_action() ═════════════════════════
+
 def extract_action(aeroconfig_path):
     cfg = json.loads(Path(aeroconfig_path).read_text(encoding="utf-8-sig"))
     ck_map = _map_checkpoints_by_type(cfg)
@@ -69,30 +71,28 @@ def extract_action(aeroconfig_path):
         if ck is None or not ck.get("Stations"):
             feats.extend([0.0] * FEATURES_PER_CK)
             continue
+
         all_st = ck["Stations"]
-        op_st = [s for s in all_st if s.get("Staffing_No", 0) > 0 or s.get("Avg_Service_Time", 0) > 0]
+        op_st = [s for s in all_st
+                 if s.get("Staffing_No", 0) > 0
+                 or s.get("Avg_Service_Time", 0) > 0]
+
         if not op_st:
             feats.extend([0.0] * FEATURES_PER_CK)
             continue
-        station_ids = [s.get("Station_ID", "") for s in all_st]
-        has_buffer = float(any("BUFFER" in sid or "Hold" in sid for sid in station_ids))
-        has_parallel = float(any("_PAR" in sid for sid in station_ids))
-        has_split = float(any(sid.endswith("_A") or sid.endswith("_B") for sid in station_ids))
-        total_tasks = sum(len(s.get("Tasks", [])) for s in op_st)
-        cond_probs = [t["Probability"] for s in op_st for t in s.get("Tasks", []) if t["Probability"] < 1.0]
-        mean_cond_prob = float(np.mean(cond_probs)) if cond_probs else 0.0
-        feats.extend([
-            float(len(op_st)),
-            float(sum(s.get("Staffing_No", 0) for s in op_st)),
-            float(sum(s.get("Max_Queue_Cap", 0) for s in op_st)),
-            float(np.mean([s.get("Efficiency_Factor", 1.0) for s in op_st])),
-            float(np.mean([s.get("Avg_Service_Time", 0) for s in op_st])),
-            has_buffer,
-            has_parallel,
-            has_split,
-            float(total_tasks),
-            mean_cond_prob,
-        ])
+
+        # ── 4 features per checkpoint ──
+        # 0: num_lanes      (station count)
+        # 1: staff_per_lane (mean staffing per operational station)
+        # 2: cap_per_lane   (mean queue cap per operational station)
+        # 3: efficiency     (mean efficiency factor)
+        num_lanes      = float(len(op_st))
+        staff_per_lane = float(np.mean([s.get("Staffing_No", 0)       for s in op_st]))
+        cap_per_lane   = float(np.mean([s.get("Max_Queue_Cap", 0)     for s in op_st]))
+        efficiency     = float(np.mean([s.get("Efficiency_Factor", 1.0) for s in op_st]))
+
+        feats.extend([num_lanes, staff_per_lane, cap_per_lane, efficiency])
+
     return np.asarray(feats, dtype=np.float32)
 
 

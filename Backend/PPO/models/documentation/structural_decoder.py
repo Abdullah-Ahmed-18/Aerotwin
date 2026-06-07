@@ -147,7 +147,7 @@ def summarize_config(cfg, baseline_cfg=None):
     print(f"\n{'='*70}")
     print(f"  LANE-BASED CONFIG SUMMARY")
     print(f"{'='*70}")
-    print(f"  {'Checkpoint':<22} {'Lanes':>6} {'Staff/L':>8} "
+    print(f"  {'Checkpoint':<<22} {'Lanes':>6} {'Staff/L':>8} "
           f"{'Cap/L':>7} {'Eff':>7}")
     print(f"  {'-'*68}")
 

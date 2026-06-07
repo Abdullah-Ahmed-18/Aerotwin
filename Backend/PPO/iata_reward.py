@@ -68,83 +68,59 @@ def _band_penalty(value, band, sub_weight=1.0, over_weight=0.1):
 
 
 # ─────────────────────── REWARD FUNCTION ───────────────────────
-def compute_reward_iata(stats, csv_df=None,
-                        w_complete=10.0,
-                        w_journey=0.3,
-                        w_subopt=1.0,        # Sub-Optimum penalty weight
-                        w_overdesign=0.1,    # Over-Design penalty weight (mild)
-                        w_bottleneck=1.5):   # extra hit on the worst checkpoint
+def compute_iata_reward_v2(stats: dict) -> tuple:
     """
-    IATA-band-aware reward.
-
-    stats   : dict from parse_stats() in parse_iql_v2.py
-              (must contain per_checkpoint{cid: {mqt, p95, throughput}}
-               + completion_rate, mean_journey_min, p95_journey_min)
-    csv_df  : optional pandas DataFrame of the simlog CSV — enables
-              class-aware (Economy vs Premium) penalty computation.
-              If None, we apply the Economy band to all passengers.
+    Smoother IATA compliance reward with balanced penalties and near-green bonuses.
     """
-    # 1) Per-checkpoint band penalties
-    breach_total  = 0.0
-    breach_worst  = 0.0
-    waste_total   = 0.0
+    per_ck = stats.get("per_checkpoint", {})
+    if not per_ck:
+        return -1000.0, {"compliance_rate": 0.0, "green": 0, "near_green": 0, "total": 0}
 
-    for cid, los in IATA_LOS.items():
-        ck = stats["per_checkpoint"].get(cid)
-        if ck is None:
+    total_bonus   = 0.0
+    total_penalty = 0.0
+    green = 0
+    near_green = 0
+    checked = 0
+
+    for cid, data in per_ck.items():
+        los = IATA_LOS.get(cid)
+        if not los or not los.economy:
             continue
+        p95      = data.get("p95", 0.0)
+        lo, hi   = los.economy
+        checked += 1
 
-        # Use P95 wait (IATA is a service-quality standard; P95 is the
-        # right operating point — Optimum should hold for almost everyone).
-        wait = ck["p95"]
-
-        if csv_df is not None:
-            sub = csv_df[csv_df["Checkpoint"] == cid]
-            if len(sub) == 0:
-                continue
-            premium_mask = sub["Class"].isin(PREMIUM_CLASSES)
-            eco_p95     = sub.loc[~premium_mask, "wait_min"].quantile(0.95) \
-                          if (~premium_mask).any() else 0.0
-            prem_p95    = sub.loc[ premium_mask, "wait_min"].quantile(0.95) \
-                          if   premium_mask.any()  else 0.0
-
-            eco_pen = _band_penalty(eco_p95,  los.economy,
-                                    sub_weight=w_subopt,
-                                    over_weight=w_overdesign)
-            prm_pen = _band_penalty(prem_p95, los.premium,
-                                    sub_weight=w_subopt,
-                                    over_weight=w_overdesign)
-            sub_pen = max(0.0, eco_pen) + max(0.0, prm_pen)
-            # split waste vs breach for bookkeeping
-            waste  = (eco_pen if eco_p95  < (los.economy or (0,0))[0] else 0.0) \
-                   + (prm_pen if prem_p95 < (los.premium or (0,0))[0] else 0.0)
-            breach = sub_pen - waste
+        if lo <= p95 <= hi:
+            # Perfect — inside IATA band
+            total_bonus   += 100.0
+            green         += 1
+        elif p95 < lo:
+            # Over-designed (too many staff)
+            # Penalty: -10, scaled by how far below the band
+            total_penalty += 10.0 * (lo - p95) / max(lo, 1e-6)
         else:
-            pen    = _band_penalty(wait, los.economy,
-                                   sub_weight=w_subopt,
-                                   over_weight=w_overdesign)
-            lo_eco = (los.economy or (0,0))[0]
-            waste  = pen if wait < lo_eco else 0.0
-            breach = pen - waste
+            # Under-designed (too few staff)
+            # Penalty: -15 (was -25), scaled by how far above
+            total_penalty += 15.0 * (p95 - hi) / max(hi, 1e-6)
 
-        waste_total  += waste
-        breach_total += breach
-        breach_worst  = max(breach_worst, breach)
+            # ── NEAR-GREEN BONUS ──
+            # If p95 is within 50% above the upper limit, give partial credit
+            # This creates a "yellow zone" that guides the actor toward green
+            if p95 <= hi * 1.5:
+                total_bonus += 20.0
+                near_green  += 1
 
-    # 2) Throughput / completion / journey terms
-    reward = (
-        + w_complete  * stats["completion_rate"]
-        - w_journey   * stats["mean_journey_min"] / 60.0
-        - 0.15        * stats["p95_journey_min"]  / 60.0
-        - breach_total                       # already weighted
-        - w_bottleneck * breach_worst        # extra penalty on bottleneck
-        - waste_total                        # mild over-design penalty
-    )
-    return float(reward), {
-        "breach_total": breach_total,
-        "breach_worst": breach_worst,
-        "waste_total":  waste_total,
-        "completion":   stats["completion_rate"],
+    throughput_bonus = stats.get("total_throughput", 0) * 0.05
+    completion_bonus = stats.get("completion_rate",  0) * 20.0
+    raw = total_bonus - total_penalty + throughput_bonus + completion_bonus
+
+    return raw, {
+        "compliance_rate": green / max(checked, 1),
+        "near_green_rate": near_green / max(checked, 1),
+        "green":           green,
+        "near_green":      near_green,
+        "total_checked":   checked,
+        "completion":      stats.get("completion_rate", 0),
     }
 
 

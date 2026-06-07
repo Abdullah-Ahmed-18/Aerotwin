@@ -2480,9 +2480,84 @@ app.get('/api/runs/:id/replay', (req, res) => {
 const PPO_SERVICE_URL = process.env.PPO_SERVICE_URL || "http://127.0.0.1:8000";
 
 /**
+ * Build a 15-dim PPO v2 observation + ABS weights from a flights array.
+ * Reuses the same logic as /api/optimize.
+ */
+function buildObservationFromFlights(flights) {
+    const weights = [0, 0, 0, 0, 0, 0, 0];
+    let totalPax = 0;
+    let depPax = 0;
+    let arrPax = 0;
+    let peakPax = 0;
+    let firstHour = 24;
+    const uniqueAbs = new Set();
+
+    for (const flight of flights) {
+        let pax = 0;
+        if (flight.payload_stats && flight.payload_stats.total_passengers) {
+            const match = String(flight.payload_stats.total_passengers).match(/(\d+)/);
+            if (match) pax = parseInt(match[1], 10);
+        }
+        if (!pax && flight.passengers) {
+            pax = parseInt(flight.passengers, 10) || 0;
+        }
+        if (!pax) pax = 100;
+
+        const personas = flight.personas || {};
+        for (let i = 0; i < 7; i++) {
+            weights[i] += (personas[`p${i + 1}`] || 0) * pax;
+        }
+        totalPax += pax;
+        peakPax = Math.max(peakPax, pax);
+        uniqueAbs.add(flight.flight_iata || flight.flight_id || 'default');
+
+        const dest = flight.route?.destination;
+        const source = flight.route?.source;
+        if (dest === TARGET_AIRPORT) {
+            arrPax += pax;
+        } else if (source === TARGET_AIRPORT) {
+            depPax += pax;
+        } else {
+            depPax += pax;
+        }
+
+        const sched = flight.schedule?.departure?.scheduled || flight.schedule?.arrival?.scheduled;
+        if (sched) {
+            try {
+                const h = new Date(sched).getUTCHours();
+                if (Number.isFinite(h)) firstHour = Math.min(firstHour, h);
+            } catch {}
+        }
+    }
+
+    if (totalPax > 0) {
+        for (let i = 0; i < 7; i++) {
+            weights[i] = weights[i] / totalPax;
+        }
+    }
+    if (firstHour === 24) firstHour = 12;
+
+    const observation = [
+        ...weights,
+        Math.min(totalPax / 2000, 1.0),
+        Math.min(flights.length / 10, 1.0),
+        Math.min(peakPax / 1000, 1.0),
+        depPax / Math.max(totalPax, 1),
+        arrPax / Math.max(totalPax, 1),
+        firstHour / 24,
+        Math.min(uniqueAbs.size / 5, 1.0),
+        (totalPax / Math.max(flights.length, 1)) / 500,
+    ].map(v => Math.max(0, Math.min(1, v)));
+
+    return { weights, observation, totalPax };
+}
+
+/**
  * POST /api/infer
  * Proxies to the Python PPO FastAPI service.
  * Accepts JSON body OR multipart file upload (abs_file + optional aero_file).
+ * If flights[] is provided in the JSON body, computes the 15-dim observation
+ * from actual PAX counts and sends it to the model.
  * Returns: { aero_config, action_norm }
  */
 app.post('/api/infer', upload.fields([{ name: 'abs_file', maxCount: 1 }, { name: 'aero_file', maxCount: 1 }]), async (req, res) => {
@@ -2499,7 +2574,13 @@ app.post('/api/infer', upload.fields([{ name: 'abs_file', maxCount: 1 }, { name:
                 payload.aero_config = JSON.parse(aeroFile.buffer.toString());
             }
         } else {
-            payload = req.body;
+            payload = { ...req.body };
+            // If flights are provided, build the proper 15-dim observation
+            if (payload.flights && Array.isArray(payload.flights) && payload.flights.length > 0) {
+                const { weights, observation } = buildObservationFromFlights(payload.flights);
+                payload.abs_config = { weights };
+                payload.observation = observation;
+            }
         }
 
         const response = await axios.post(`${PPO_SERVICE_URL}/infer`, payload, {
@@ -2533,40 +2614,15 @@ app.post('/api/optimize', async (req, res) => {
             return res.status(400).json({ error: 'flights array is required and must not be empty' });
         }
 
-        // Derive ABS config from flight personas weighted by passenger count
-        const weights = [0, 0, 0, 0, 0, 0, 0];
-        let totalPax = 0;
-
-        for (const flight of flights) {
-            let pax = 0;
-            if (flight.payload_stats && flight.payload_stats.total_passengers) {
-                const match = String(flight.payload_stats.total_passengers).match(/(\d+)/);
-                if (match) pax = parseInt(match[1], 10);
-            }
-            if (!pax && flight.passengers) {
-                pax = parseInt(flight.passengers, 10) || 0;
-            }
-            if (!pax) pax = 100; // fallback
-
-            const personas = flight.personas || {};
-            for (let i = 0; i < 7; i++) {
-                weights[i] += (personas[`p${i + 1}`] || 0) * pax;
-            }
-            totalPax += pax;
-        }
-
-        if (totalPax > 0) {
-            for (let i = 0; i < 7; i++) {
-                weights[i] = weights[i] / totalPax;
-            }
-        }
-
+        // Derive ABS weights + 15-dim observation from actual flight PAX
+        const { weights, observation } = buildObservationFromFlights(flights);
         const abs_config = { weights };
 
         // Call PPO service for inference + comparison
         const response = await axios.post(`${PPO_SERVICE_URL}/infer`, {
             aero_config,
             abs_config,
+            observation,
             seed,
             pax_count,
         }, {
@@ -2655,7 +2711,7 @@ app.get('/api/infer/health', async (req, res) => {
         return res.status(200).json(response.data);
     } catch (err) {
         console.error('[PPO Proxy] health check error:', err.message);
-        return res.status(503).json({ status: 'unavailable', model: 'ppo_v1', error: err.message });
+        return res.status(503).json({ status: 'unavailable', model: 'ppo_v2', error: err.message });
     }
 });
 

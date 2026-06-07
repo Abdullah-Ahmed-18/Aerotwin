@@ -6,19 +6,19 @@ import numpy as np
 
 
 class PPOPolicy(nn.Module):
-    """Minimal PPO MlpPolicy loader for inference only."""
+    """Minimal PPO MlpPolicy loader for inference only (v2)."""
 
     def __init__(self):
         super().__init__()
-        # Architecture inferred from policy.pth weights in ppo_v1_production.zip
+        # Architecture from ppo_v2_best.zip: obs=15, hidden=128, action=52
         self.pi_net = nn.Sequential(
-            nn.Linear(7, 256),
+            nn.Linear(15, 128),
             nn.Tanh(),
-            nn.Linear(256, 256),
+            nn.Linear(128, 128),
             nn.Tanh(),
         )
-        self.action_net = nn.Linear(256, 130)
-        self.log_std = nn.Parameter(torch.zeros(130))
+        self.action_net = nn.Linear(128, 52)
+        self.log_std = nn.Parameter(torch.zeros(52))
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         features = self.pi_net(x)
@@ -27,7 +27,7 @@ class PPOPolicy(nn.Module):
     def predict(self, observation, deterministic=True):
         """
         Mimics stable_baselines3 PPO.predict().
-        observation: np.ndarray of shape (batch, 7) or (7,)
+        observation: np.ndarray of shape (batch, 15) or (15,)
         Returns: (action, state) where action is np.ndarray
         """
         with torch.no_grad():

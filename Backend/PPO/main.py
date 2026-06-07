@@ -6,9 +6,8 @@ from datetime import datetime
 from typing import Tuple
 
 from model_loader import load_policy
-from parse_iql_v2 import featurize_absconfig, ALL_CHECKPOINTS, parse_stats
 from structural_decoder import action_to_aeroconfig_structural
-from iata_reward import compute_reward_iata, IATA_LOS
+from iata_reward import compute_iata_reward_v2, IATA_LOS
 from des_engine import run_single
 from des_output import write_stats, write_csv
 from insights import generate_insights, generate_insights_fallback, GEMINI_AVAILABLE, _load_comparison
@@ -16,9 +15,8 @@ from insights import generate_insights, generate_insights_fallback, GEMINI_AVAIL
 app = FastAPI()
 
 # ── Load once at startup ──
-MODEL = load_policy("./models/ppo_v1_production.zip")
-SCALERS = json.load(open("./models/reward_scaler.json"))
-ACTION_SC = json.load(open("./models/action_scaler.json"))
+MODEL = load_policy("./models/ppo_v2_best.zip")
+ACTION_SC = json.load(open("./models/action_scaler_v2.json"))
 BASELINE = json.load(open("./baseline/baseline.json"))
 
 a_min = np.array(ACTION_SC["a_min"], dtype=np.float32)
@@ -30,6 +28,80 @@ os.makedirs(COMPARISONS_DIR, exist_ok=True)
 
 
 # ── Helpers ─────────────────────────────────────────────────────
+
+def _build_observation(body: dict) -> np.ndarray:
+    """
+    Build a 15-dim observation vector for PPO v2.
+
+    Priority:
+      1. body["observation"]  → use directly (must be 15 floats)
+      2. body["schedule"]     → convert via schedule_to_obs
+      3. body["abs_config"]   → build from weights + pax_count defaults
+    """
+    # Direct observation override
+    obs_direct = body.get("observation")
+    if obs_direct is not None:
+        obs = np.asarray(obs_direct, dtype=np.float32)
+        if obs.shape == (15,):
+            return np.clip(obs, 0.0, 1.0)
+
+    # Schedule-based
+    schedule = body.get("schedule")
+    if schedule is not None and len(schedule) > 0:
+        return _schedule_to_obs(schedule)
+
+    # Fallback: abs_config weights + pax_count
+    abs_config = body.get("abs_config", body)
+    weights = np.asarray(abs_config.get("weights", [0.0] * 7), dtype=np.float32)
+    weights = weights / max(weights.sum(), 1e-9)
+    pax_count = body.get("pax_count", 100)
+
+    obs = np.zeros(15, dtype=np.float32)
+    obs[0:7] = weights
+    obs[7] = min(pax_count / 2000.0, 1.0)          # total_pax / 2000
+    obs[8] = 0.1                                    # 1 flight / 10
+    obs[9] = min(pax_count / 1000.0, 1.0)          # peak_pax / 1000
+    obs[10] = 0.5                                   # dep_pax / total_pax (unknown)
+    obs[11] = 0.5                                   # arr_pax / total_pax (unknown)
+    obs[12] = 0.5                                   # 12:00 / 24
+    obs[13] = 0.2                                   # 1 unique abs / 5
+    obs[14] = min(pax_count / 500.0, 1.0)          # avg_pax_per_flight / 500
+    return np.clip(obs, 0.0, 1.0)
+
+
+def _schedule_to_obs(schedule: list) -> np.ndarray:
+    """Replicates train_ppo_v2.schedule_to_obs() for inference."""
+    total_pax = sum(f.get("pax_count", 100) for f in schedule)
+    dep_pax = sum(f.get("pax_count", 100) for f in schedule
+                  if f.get("flow", "departure") == "departure")
+    arr_pax = sum(f.get("pax_count", 100) for f in schedule
+                  if f.get("flow", "arrival") == "arrival")
+    peak_pax = max(f.get("pax_count", 100) for f in schedule)
+    first_hour = min(f.get("hour", 12) for f in schedule)
+    unique_abs = len(set(f.get("abs_id", "default") for f in schedule))
+
+    # PAX-weighted ABS class mix
+    weighted = np.zeros(7, dtype=np.float32)
+    for f in schedule:
+        w = np.asarray(f.get("abs_weights", [0.0] * 7), dtype=np.float32)
+        w = w / (w.sum() + 1e-9)
+        weighted += w * (f.get("pax_count", 100) / max(total_pax, 1))
+    weighted = weighted / (weighted.sum() + 1e-9)
+
+    obs = np.concatenate([
+        weighted,
+        [total_pax / 2000.0],
+        [len(schedule) / 10.0],
+        [peak_pax / 1000.0],
+        [dep_pax / max(total_pax, 1)],
+        [arr_pax / max(total_pax, 1)],
+        [first_hour / 24.0],
+        [unique_abs / 5.0],
+        [(total_pax / max(len(schedule), 1)) / 500.0],
+    ]).astype(np.float32)
+
+    return np.clip(obs, 0.0, 1.0)
+
 
 def _run_simulation(aero_config: dict, abs_config: dict, seed: int = 42, pax_count: int = 100) -> Tuple[float, dict, list]:
     """Run DES and return (reward, stats_dict, event_records)."""
@@ -56,9 +128,10 @@ def _run_simulation(aero_config: dict, abs_config: dict, seed: int = 42, pax_cou
                 "completion_rate": 0.0,
             }
         else:
+            from parse_iql_v2 import parse_stats
             stats = parse_stats(stats_path)
 
-        reward, info = compute_reward_iata(stats, csv_df=None)
+        reward, info = compute_iata_reward_v2(stats)
         stats["reward"] = reward
         stats["reward_info"] = info
         return reward, stats, records
@@ -157,7 +230,7 @@ def _save_comparison(abs_config: dict, baseline_aero: dict, inferred_aero: dict,
 
 @app.get("/health")
 def health():
-    return {"status": "ok", "model": "ppo_v1"}
+    return {"status": "ok", "model": "ppo_v2"}
 
 
 @app.post("/infer")
@@ -177,6 +250,8 @@ async def infer(request: Request):
         aero_config = json.loads(await aero_file.read()) if aero_file else None
         seed = int(form.get("seed", 42))
         pax_count = int(form.get("pax_count", 100))
+        # Multipart doesn't support schedule/observation easily; build from abs_config
+        body = {"abs_config": abs_config, "pax_count": pax_count}
     else:
         body = await request.json()
         if "abs_config" in body:
@@ -191,24 +266,18 @@ async def infer(request: Request):
     baseline_cfg = aero_config if aero_config is not None else BASELINE
 
     # ── Inference ──
-    with tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False) as f:
-        json.dump(abs_config, f)
-        abs_path = f.name
+    obs = _build_observation(body)
+    action_norm, _ = MODEL.predict(obs[None, :], deterministic=True)
+    action_norm = np.clip(action_norm[0], 0, 1)
+    action_real = action_norm * a_range + a_min
 
-    try:
-        state = featurize_absconfig(abs_path)
-        action_norm, _ = MODEL.predict(state[None, :], deterministic=True)
-        action_norm = np.clip(action_norm[0], 0, 1)
-        action_real = action_norm * a_range + a_min
-
-        inferred_aero = action_to_aeroconfig_structural(
-            action_norm=action_norm,
-            action_real=action_real,
-            baseline_cfg=baseline_cfg,
-            episode=0
-        )
-    finally:
-        os.unlink(abs_path)
+    inferred_aero = action_to_aeroconfig_structural(
+        action_norm=action_norm,
+        action_real=action_real,
+        baseline_cfg=baseline_cfg,
+        episode=0,
+        continuous=False,
+    )
 
     # ── If no baseline AERO was provided, return inference only (backward compat) ──
     if aero_config is None:
