@@ -357,6 +357,26 @@ async def insights_endpoint(request: Request):
     except Exception:
         baseline_reward = inferred_reward = reward_delta = None
 
+    # If the AI config is worse or equal to baseline, don't show regressions
+    if reward_delta is not None and reward_delta <= 0:
+        return {
+            "summary": "Your current configuration is already well-optimized. The AI model found no improvements over your baseline.",
+            "already_optimized": True,
+            "structured": {
+                "baseline_reward": round(baseline_reward, 2) if isinstance(baseline_reward, (int, float)) else 0,
+                "inferred_reward": round(inferred_reward, 2) if isinstance(inferred_reward, (int, float)) else 0,
+                "reward_delta": round(reward_delta, 2) if isinstance(reward_delta, (int, float)) else 0,
+                "top_improvements": [],
+                "top_regressions": [],
+                "station_improvements": [],
+                "station_regressions": [],
+                "iata_compliance": {},
+                "operational_changes": [],
+            },
+            "model_used": "regression_guard",
+            "comparison_file": filepath,
+        }
+
     api_key = os.environ.get("GEMINI_API_KEY")
 
     try:
@@ -364,16 +384,6 @@ async def insights_endpoint(request: Request):
             result = generate_insights(filepath, api_key=api_key)
         else:
             result = generate_insights_fallback(filepath)
+        return result
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
-
-    # Attach a warning when the AI underperforms so the UI can show a banner
-    if reward_delta is not None and reward_delta <= 0:
-        result["ai_underperformed"] = True
-        result["warning"] = (
-            f"The AI configuration scored lower than baseline "
-            f"({inferred_reward:.2f} vs {baseline_reward:.2f}). "
-            f"Review the regressions and operational changes below to understand why."
-        )
-
-    return result
