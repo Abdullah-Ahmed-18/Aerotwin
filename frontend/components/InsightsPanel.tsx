@@ -16,6 +16,7 @@ import {
   Clock,
   Wrench,
   CheckCircle2,
+  Plane,
 } from 'lucide-react';
 
 interface StationInsight {
@@ -65,6 +66,8 @@ interface InsightsData {
   model_used: string;
   comparison_file: string;
   already_optimized?: boolean;
+  runTimestamp?: string;
+  flightsIncluded?: any[];
 }
 
 function formatMin(m: number): string {
@@ -90,19 +93,45 @@ export default function InsightsPanel() {
     async function load() {
       try {
         setLoading(true);
-        const latestRes = await fetch('http://localhost:5000/api/comparisons/latest');
-        if (!latestRes.ok) throw new Error('No comparison files available');
-        const { filename } = await latestRes.json();
+
+        // 1. Try to use the comparison file from the current/last simulation run
+        let comparisonFile: string | null = null;
+        let runTimestamp: string | null = null;
+        let flightsIncluded: any[] | null = null;
+
+        if (typeof window !== 'undefined') {
+          const savedOpt = localStorage.getItem('aerotwin:simOptimization');
+          if (savedOpt) {
+            const parsed = JSON.parse(savedOpt);
+            if (parsed.comparisonFile) {
+              comparisonFile = parsed.comparisonFile;
+              runTimestamp = parsed.runTimestamp || null;
+              flightsIncluded = parsed.flightsIncluded || null;
+            }
+          }
+        }
+
+        // 2. Fallback to latest comparison file if no run data
+        if (!comparisonFile) {
+          const latestRes = await fetch('http://localhost:5000/api/comparisons/latest');
+          if (!latestRes.ok) throw new Error('No comparison files available');
+          const { filename } = await latestRes.json();
+          comparisonFile = filename;
+        }
+
         const insightsRes = await fetch('http://localhost:5000/api/insights', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ comparison_file: filename }),
+          body: JSON.stringify({ comparison_file: comparisonFile }),
         });
         if (!insightsRes.ok) {
           const err = await insightsRes.json();
           throw new Error(err.error || 'Failed to load insights');
         }
         const data = await insightsRes.json();
+        // Attach run metadata
+        if (runTimestamp) data.runTimestamp = runTimestamp;
+        if (flightsIncluded) data.flightsIncluded = flightsIncluded;
         if (!cancelled) setInsights(data);
       } catch (e: any) {
         if (!cancelled) setError(e.message || 'Unknown error');
@@ -171,7 +200,9 @@ export default function InsightsPanel() {
   const improvementCount = s.improvement_count ?? s.top_improvements.length;
   const regressionCount = s.regression_count ?? s.top_regressions.length;
   const runId = runIdFromFilename(insights.comparison_file);
-  const now = new Date().toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+  const runDate = insights.runTimestamp
+    ? new Date(insights.runTimestamp).toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' })
+    : new Date().toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' });
 
   const rewardUp = s.reward_delta >= 0;
   const rewardPct = s.baseline_reward !== 0
@@ -247,7 +278,16 @@ export default function InsightsPanel() {
             <div className="flex items-center gap-3">
               <span className="font-['Inter'] text-xs font-semibold text-[#505f76] tracking-widest uppercase">Run ID: {runId}</span>
               <span className="font-['Inter'] text-xs text-[#505f76]">•</span>
-              <span className="font-['Inter'] text-xs text-[#505f76]">{now}</span>
+              <span className="font-['Inter'] text-xs text-[#505f76]">{runDate}</span>
+              {insights.flightsIncluded && insights.flightsIncluded.length > 0 && (
+                <>
+                  <span className="font-['Inter'] text-xs text-[#505f76]">•</span>
+                  <span className="font-['Inter'] text-xs text-[#505f76] flex items-center gap-1">
+                    <Plane size={12} />
+                    {insights.flightsIncluded.length} flight{insights.flightsIncluded.length !== 1 ? 's' : ''}
+                  </span>
+                </>
+              )}
             </div>
             <h1 className="font-['Space_Grotesk'] font-semibold text-[32px] leading-10 text-[#191c1e]">Reward Optimization</h1>
             <div className="flex items-center gap-2">
@@ -440,14 +480,7 @@ export default function InsightsPanel() {
         <section className="bg-white border border-[#c3c6d7] rounded mb-4">
           <div className="flex justify-between items-center p-6 border-b border-[#c3c6d7]">
             <h3 className="font-['Space_Grotesk'] font-semibold text-2xl text-[#191c1e]">Items for Operations Team</h3>
-            <div className="flex gap-2">
-              <button className="px-4 py-1.5 border border-[#737686] rounded font-['Inter'] text-xs font-semibold hover:bg-[#eceef0] transition-all flex items-center gap-1 text-[#191c1e]">
-                <Copy size={14} /> Copy All
-              </button>
-              <button className="px-4 py-1.5 bg-[#004ac6] text-white rounded font-['Inter'] text-xs font-semibold hover:bg-[#2563eb] transition-all flex items-center gap-1">
-                <Share2 size={14} /> Export
-              </button>
-            </div>
+            
           </div>
 
           <div className="divide-y divide-[#c3c6d7]">
@@ -605,7 +638,7 @@ export default function InsightsPanel() {
 
       {/* Model used footer */}
       <p className="text-right text-xs text-[#737686] font-['Inter'] mt-2">
-        Model: {insights.model_used} • File: {insights.comparison_file}
+        File: {insights.comparison_file}
       </p>
     </main>
   );

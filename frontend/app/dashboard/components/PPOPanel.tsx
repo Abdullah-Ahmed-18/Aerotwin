@@ -1,11 +1,15 @@
 'use client';
 
-import { Settings, AlertCircle } from 'lucide-react';
+import { Settings, AlertCircle, TrendingUp, FileCheck } from 'lucide-react';
 
 export interface ProposedConfig {
   checkpoints?: any[];
   summary?: any;
   improvement?: number;
+  comparison?: any;
+  savedTo?: string;
+  inferredAero?: any;
+  actionNorm?: number;
 }
 
 interface PPOPanelProps {
@@ -13,6 +17,11 @@ interface PPOPanelProps {
 }
 
 export default function PPOPanel({ proposed }: PPOPanelProps) {
+  const comparison = proposed?.comparison;
+  const baselineReward = comparison?.baseline_reward ?? comparison?.baseline?.reward ?? null;
+  const inferredReward = comparison?.inferred_reward ?? comparison?.inferred?.reward ?? null;
+  const rewardDelta = comparison?.reward_delta ?? (baselineReward !== null && inferredReward !== null ? inferredReward - baselineReward : null);
+
   return (
     <div className="bg-white/80 backdrop-blur-sm rounded-xl border border-slate-200 shadow-sm p-4 flex-1 flex flex-col">
       <div className="flex items-center gap-2 mb-2 shrink-0">
@@ -36,25 +45,46 @@ export default function PPOPanel({ proposed }: PPOPanelProps) {
           <div className="grid grid-cols-2 gap-2">
             <div className="p-2 bg-slate-50 rounded-lg border border-slate-200">
               <p className="text-[9px] font-bold text-slate-500 uppercase tracking-wider">
-                Current Score
+                Baseline Reward
               </p>
-              <p className="text-lg font-black text-slate-800">—</p>
+              <p className="text-lg font-black text-slate-800">
+                {baselineReward !== null ? baselineReward.toFixed(2) : '—'}
+              </p>
             </div>
-            <div className="p-2 bg-slate-50 rounded-lg border border-slate-200">
-              <p className="text-[9px] font-bold text-slate-500 uppercase tracking-wider">
-                Proposed Score
+            <div className="p-2 bg-indigo-50 rounded-lg border border-indigo-200">
+              <p className="text-[9px] font-bold text-indigo-500 uppercase tracking-wider">
+                AI Reward
               </p>
-              <p className="text-lg font-black text-slate-800">—</p>
+              <p className="text-lg font-black text-indigo-700">
+                {inferredReward !== null ? inferredReward.toFixed(2) : '—'}
+              </p>
             </div>
           </div>
-          <div className="p-2 bg-indigo-50 rounded-lg border border-indigo-100">
-            <p className="text-[10px] text-indigo-700 font-medium">
-              Improvement:{" "}
-              {proposed.improvement !== undefined
-                ? `${(proposed.improvement * 100).toFixed(1)}%`
-                : '—'}
-            </p>
-          </div>
+
+          {rewardDelta !== null && (
+            <div className={`p-2 rounded-lg border flex items-center gap-2 ${
+              rewardDelta >= 0
+                ? 'bg-green-50 border-green-200'
+                : 'bg-amber-50 border-amber-200'
+            }`}>
+              <TrendingUp size={14} className={rewardDelta >= 0 ? 'text-green-600' : 'text-amber-600'} />
+              <p className={`text-[10px] font-medium ${
+                rewardDelta >= 0 ? 'text-green-700' : 'text-amber-700'
+              }`}>
+                {rewardDelta >= 0 ? '+' : ''}{rewardDelta.toFixed(2)} reward delta
+                {baselineReward !== null && baselineReward !== 0
+                  ? ` (${(rewardDelta / Math.abs(baselineReward) * 100).toFixed(1)}%)`
+                  : ''}
+              </p>
+            </div>
+          )}
+
+          {proposed.savedTo && (
+            <div className="flex items-center gap-2 text-[10px] text-slate-500">
+              <FileCheck size={12} />
+              <span className="truncate">{proposed.savedTo.split('/').pop()}</span>
+            </div>
+          )}
         </div>
       )}
     </div>

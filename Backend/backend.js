@@ -1956,6 +1956,39 @@ function cleanupStaleRuns() {
 }
 cleanupStaleRuns();
 
+// POST /api/import-config — save an imported config to a run directory (no simulation)
+app.post('/api/import-config', (req, res) => {
+    try {
+        const { desconfig } = req.body;
+        if (!desconfig) {
+            return res.status(400).json({ error: 'Missing desconfig.' });
+        }
+
+        const runId = generateRunId();
+        const runDir = path.join(RUNS_DIR, runId);
+        fs.mkdirSync(runDir, { recursive: true });
+
+        // Write desconfig (AerotwinConfig.json format)
+        const desconfigPath = path.join(runDir, 'AerotwinConfig.json');
+        fs.writeFileSync(desconfigPath, JSON.stringify(desconfig, null, 2));
+
+        // Register in runs map as 'imported' (not running)
+        runs.set(runId, {
+            id: runId,
+            status: 'imported',
+            startTime: Date.now(),
+            runDir,
+            desconfigPath,
+        });
+
+        console.log(`[ImportConfig] Saved imported config to run ${runId}`);
+        return res.status(200).json({ runId, status: 'imported' });
+    } catch (error) {
+        console.error('[ImportConfig] POST /api/import-config error:', error);
+        return res.status(500).json({ error: 'Failed to save imported config.' });
+    }
+});
+
 // POST /api/runs — queue a new simulation run
 app.post('/api/runs', (req, res) => {
     try {

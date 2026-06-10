@@ -49,6 +49,9 @@ interface OptimizationState {
   status: 'idle' | 'running' | 'completed' | 'failed';
   result: any | null;
   error: string | null;
+  comparisonFile: string | null;
+  runTimestamp: string | null;
+  flightsIncluded: any[] | null;
 }
 
 interface SimulationState {
@@ -79,7 +82,7 @@ export function SimulationProvider({ children }: { children: ReactNode }) {
     results: null,
     error: null,
     progress: 0,
-    optimization: { status: 'idle', result: null, error: null },
+    optimization: { status: 'idle', result: null, error: null, comparisonFile: null, runTimestamp: null, flightsIncluded: null },
   });
 
   const router = useRouter();
@@ -121,8 +124,10 @@ export function SimulationProvider({ children }: { children: ReactNode }) {
     try {
       const savedRunId = localStorage.getItem('aerotwin:simRunId');
       const savedResults = localStorage.getItem('aerotwin:simResults');
+      const savedOptimization = localStorage.getItem('aerotwin:simOptimization');
       if (savedRunId && savedResults) {
         const parsed = JSON.parse(savedResults);
+        const parsedOpt = savedOptimization ? JSON.parse(savedOptimization) : null;
         setState(prev => ({
           ...prev,
           currentRunId: savedRunId,
@@ -130,6 +135,7 @@ export function SimulationProvider({ children }: { children: ReactNode }) {
           results: parsed,
           error: null,
           progress: 100,
+          optimization: parsedOpt || prev.optimization,
         }));
       }
     } catch (e) {
@@ -146,8 +152,11 @@ export function SimulationProvider({ children }: { children: ReactNode }) {
         localStorage.setItem('aerotwin:simRunId', state.currentRunId);
         localStorage.setItem('aerotwin:simResults', JSON.stringify(state.results));
       }
+      if (state.optimization.status === 'completed' && state.optimization.result) {
+        localStorage.setItem('aerotwin:simOptimization', JSON.stringify(state.optimization));
+      }
     } catch {}
-  }, [state.results, state.currentRunId, state.runStatus, hydrated]);
+  }, [state.results, state.currentRunId, state.runStatus, state.optimization, hydrated]);
 
   const startRun = useCallback(async (desconfig: any, flights: any[], absconfigs?: any) => {
     clearPoll();
@@ -252,7 +261,7 @@ export function SimulationProvider({ children }: { children: ReactNode }) {
   const startOptimization = useCallback(async (desconfig: any, flights: any[]) => {
     setState(prev => ({
       ...prev,
-      optimization: { status: 'running', result: null, error: null },
+      optimization: { status: 'running', result: null, error: null, comparisonFile: null, runTimestamp: null, flightsIncluded: null },
     }));
     try {
       const response = await fetch(`${API_BASE}/api/optimize`, {
@@ -266,13 +275,20 @@ export function SimulationProvider({ children }: { children: ReactNode }) {
       }
       setState(prev => ({
         ...prev,
-        optimization: { status: 'completed', result: data, error: null },
+        optimization: {
+          status: 'completed',
+          result: data,
+          error: null,
+          comparisonFile: data.savedTo || null,
+          runTimestamp: new Date().toISOString(),
+          flightsIncluded: flights,
+        },
       }));
       return data;
     } catch (err: any) {
       setState(prev => ({
         ...prev,
-        optimization: { status: 'failed', result: null, error: err.message },
+        optimization: { status: 'failed', result: null, error: err.message, comparisonFile: null, runTimestamp: null, flightsIncluded: null },
       }));
       throw err;
     }
@@ -284,6 +300,7 @@ export function SimulationProvider({ children }: { children: ReactNode }) {
       try {
         localStorage.removeItem('aerotwin:simRunId');
         localStorage.removeItem('aerotwin:simResults');
+        localStorage.removeItem('aerotwin:simOptimization');
       } catch {}
     }
     setState({
@@ -292,7 +309,7 @@ export function SimulationProvider({ children }: { children: ReactNode }) {
       results: null,
       error: null,
       progress: 0,
-      optimization: { status: 'idle', result: null, error: null },
+      optimization: { status: 'idle', result: null, error: null, comparisonFile: null, runTimestamp: null, flightsIncluded: null },
     });
   }, [clearPoll]);
 

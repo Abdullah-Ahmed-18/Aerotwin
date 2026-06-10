@@ -203,7 +203,7 @@ export default function DashboardPage() {
       {showBottomPanel && (
         <div className="h-56 shrink-0 flex gap-4">
           <ContentionChart />
-          <PPOPanel />
+          <PPOPanel proposed={simulation.optimization.result} />
         </div>
       )}
     </div>

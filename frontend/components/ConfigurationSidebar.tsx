@@ -45,6 +45,7 @@ export default function ConfigurationSidebar({ checkpoints = [], setCheckpoints 
     const [showImportConfirmModal, setShowImportConfirmModal] = useState(false);
     const [pendingImportCheckpoints, setPendingImportCheckpoints] = useState<Checkpoint[] | null>(null);
     const [pendingImportCounts, setPendingImportCounts] = useState<{ current: number; incoming: number } | null>(null);
+    const [pendingImportRawConfig, setPendingImportRawConfig] = useState<any>(null);
     const importInputRef = useRef<HTMLInputElement | null>(null);
 
     const getIconForType = (type: string) => {
@@ -91,12 +92,37 @@ export default function ConfigurationSidebar({ checkpoints = [], setCheckpoints 
         importInputRef.current?.click();
     };
 
-    const applyImportedCheckpoints = (imported: Checkpoint[]) => {
+    const saveImportedConfigToBackend = async (rawConfig: any, importedCount: number) => {
+        try {
+            const response = await fetch('http://localhost:5000/api/import-config', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ desconfig: rawConfig }),
+            });
+            if (response.ok) {
+                const result = await response.json();
+                localStorage.setItem('aerotwin:importedRunId', result.runId);
+                localStorage.setItem('aerotwin_desconfig', JSON.stringify(rawConfig));
+                setFormatStatus({
+                    type: 'success',
+                    message: `Imported ${importedCount} checkpoints and saved to run ${result.runId}`
+                });
+            }
+        } catch (err) {
+            console.error('Failed to save imported config to backend:', err);
+        }
+    };
+
+    const applyImportedCheckpoints = (imported: Checkpoint[], rawConfig?: any) => {
         setCheckpoints(imported);
         setFormatStatus({
             type: 'success',
             message: `Successfully imported configuration with ${imported.length} checkpoints`
         });
+
+        if (rawConfig) {
+            saveImportedConfigToBackend(rawConfig, imported.length);
+        }
     };
 
     const handleConfirmImport = () => {
@@ -105,15 +131,17 @@ export default function ConfigurationSidebar({ checkpoints = [], setCheckpoints 
             return;
         }
 
-        applyImportedCheckpoints(pendingImportCheckpoints);
+        applyImportedCheckpoints(pendingImportCheckpoints, pendingImportRawConfig);
         setPendingImportCheckpoints(null);
         setPendingImportCounts(null);
+        setPendingImportRawConfig(null);
         setShowImportConfirmModal(false);
     };
 
     const handleCancelImport = () => {
         setPendingImportCheckpoints(null);
         setPendingImportCounts(null);
+        setPendingImportRawConfig(null);
         setShowImportConfirmModal(false);
         setFormatStatus({
             type: 'error',
@@ -228,6 +256,7 @@ export default function ConfigurationSidebar({ checkpoints = [], setCheckpoints 
 
             if (checkpoints.length > 0) {
                 setPendingImportCheckpoints(checkpointsWithLinks);
+                setPendingImportRawConfig(parsed);
                 setPendingImportCounts({
                     current: checkpoints.length,
                     incoming: checkpointsWithLinks.length
@@ -237,7 +266,7 @@ export default function ConfigurationSidebar({ checkpoints = [], setCheckpoints 
                 return;
             }
 
-            applyImportedCheckpoints(checkpointsWithLinks);
+            applyImportedCheckpoints(checkpointsWithLinks, parsed);
         } catch (error) {
             const message = error instanceof Error ? error.message : 'Failed to import configuration';
             setFormatStatus({
